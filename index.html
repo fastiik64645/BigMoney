@@ -556,6 +556,58 @@
             color: #000;
         }
 
+        .mines-controls {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+
+        .mine-count-btn {
+            background: var(--element);
+            border: 1px solid var(--border);
+            color: var(--text2);
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .mine-count-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+        }
+
+        .mine-count-btn.special {
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            color: #000;
+        }
+
+        .custom-input-container {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .custom-input {
+            flex: 1;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
         .fixed-bet {
             background: var(--element);
             border: 1px solid var(--border);
@@ -979,8 +1031,8 @@
                 </div>
                 <div class="game-card-desc">Алмазы и мины 5x5</div>
                 <div class="game-card-stats">
-                    <span>💎 x1.2-2.0</span>
-                    <span>💣 8 мин</span>
+                    <span>💎 x1.2-24x</span>
+                    <span>💣 2-24 мин</span>
                 </div>
             </div>
 
@@ -1048,7 +1100,7 @@
                 <div class="auto-cashout">
                     <span>🎯 АВТОВЫВОД</span>
                     <div style="display: flex; gap: 10px; align-items: center;">
-                        <input type="number" class="auto-input" id="autoValue" value="1.3" step="0.1" min="1.1" max="2.0">
+                        <input type="number" class="auto-input" id="autoValue" value="1.3" step="0.1" min="1.1" max="10.0">
                         <div class="toggle-switch" id="autoCashoutToggle"></div>
                     </div>
                 </div>
@@ -1069,6 +1121,18 @@
             <div id="mines-game" class="game-view hidden">
                 <div class="mines-grid" id="minesGrid"></div>
                 <div class="current-multiplier" style="text-align: center; margin: 10px 0; font-size: 24px; color: var(--accent);" id="minesMultiplier">x1.0</div>
+                
+                <div class="mines-controls" id="mineCountControls">
+                    <button class="mine-count-btn" data-mines="2">2💣</button>
+                    <button class="mine-count-btn" data-mines="5">5💣</button>
+                    <button class="mine-count-btn" data-mines="10">10💣</button>
+                    <button class="mine-count-btn special" data-mines="custom">Своё</button>
+                </div>
+                
+                <div class="custom-input-container hidden" id="customMineInput">
+                    <input type="number" class="custom-input" id="customMines" placeholder="Кол-во мин (1-24)" min="1" max="24" value="3">
+                    <button class="mine-count-btn special" id="setCustomMines">OK</button>
+                </div>
 
                 <div class="bet-controls">
                     <input type="number" class="bet-input" id="minesBet" value="10" min="1" step="1">
@@ -1415,57 +1479,21 @@
             crashPoints = [{x:0, y:1.0}];
             
             let multiplier = 1.00;
+            let growth = 0.002;
+            let maxMultiplier = 100;
             
             if (hasBet) {
-                if (gamesPlayed < 2) {
-                    if (Math.random() < 0.7) {
-                        multiplier = 1.3 + Math.random() * 0.5;
-                    } else {
-                        multiplier = 1.1 + Math.random() * 0.2;
-                    }
-                } else {
-                    let randomWin = Math.random() * 100;
-                    if (randomWin < winRate) {
-                        multiplier = 1.3 + Math.random() * 2.5;
-                    } else {
-                        multiplier = 1.1 + Math.random() * 0.2;
-                    }
-                }
-            } else {
-                let target = 2.0 + Math.random() * 2.0;
-                let steps = 100;
+                let crashTime = 100 + Math.floor(Math.random() * 100);
                 let step = 0;
                 
                 crashInterval = setInterval(() => {
                     step++;
-                    multiplier = 1.0 + (target - 1.0) * (step / steps);
+                    multiplier += growth;
+                    growth *= 1.005;
+                    
+                    if (multiplier > maxMultiplier) multiplier = maxMultiplier;
                     
                     updateCrashDisplay(multiplier);
-                    
-                    if (step >= steps) {
-                        clearInterval(crashInterval);
-                        gameInProgress = false;
-                        addToHistory(multiplier);
-                        showResult('crash', multiplier.toFixed(2));
-                        setTimeout(() => {
-                            isWaiting = true;
-                            startWaiting();
-                        }, 3000);
-                    }
-                }, 50);
-                return;
-            }
-            
-            if (hasBet && multiplier < 1.5) {
-                let crashTime = 30 + Math.floor(Math.random() * 30);
-                let step = 0;
-                
-                crashInterval = setInterval(() => {
-                    step++;
-                    multiplier = 1.0 + (multiplier - 1.0) * (step / crashTime);
-                    
-                    updateCrashDisplay(multiplier);
-                    
                     updateButtonState();
                     
                     if (step >= crashTime) {
@@ -1486,9 +1514,20 @@
                             crashCashout();
                         }
                     }
+                    
+                    if (Math.random() < 0.001) {
+                        clearInterval(crashInterval);
+                        if (!cashoutUsed) {
+                            gameInProgress = false;
+                            addToHistory(multiplier);
+                            sendGameResult('crash', currentBet, 0);
+                            showResult('lose', currentBet.toFixed(2));
+                            resetCrash();
+                        }
+                    }
                 }, 50);
-            } else if (hasBet) {
-                let target = multiplier;
+            } else {
+                let target = 2.0 + Math.random() * 2.0;
                 let steps = 100;
                 let step = 0;
                 
@@ -1498,21 +1537,15 @@
                     
                     updateCrashDisplay(multiplier);
                     
-                    updateButtonState();
-                    
                     if (step >= steps) {
                         clearInterval(crashInterval);
-                        if (!cashoutUsed) {
-                            crashCashout();
-                        }
-                        return;
-                    }
-                    
-                    if (hasBet) {
-                        let autoVal = parseFloat(document.getElementById('autoValue').value);
-                        if (autoCashout && multiplier >= autoVal && !cashoutUsed) {
-                            crashCashout();
-                        }
+                        gameInProgress = false;
+                        addToHistory(multiplier);
+                        showResult('crash', multiplier.toFixed(2));
+                        setTimeout(() => {
+                            isWaiting = true;
+                            startWaiting();
+                        }, 3000);
                     }
                 }, 50);
             }
@@ -1634,6 +1667,8 @@
         let minesActive = false;
         let minesMultiplier = 1.0;
         let minesRevealedCount = 0;
+        let selectedMines = 5;
+        let showCustomInput = false;
 
         function initMines() {
             let grid = document.getElementById('minesGrid');
@@ -1642,17 +1677,13 @@
             minePositions = [];
             minesRevealedCount = 0;
             minesMultiplier = 1.0;
+            selectedMines = 5;
             
             document.getElementById('minesMultiplier').textContent = 'x' + minesMultiplier.toFixed(2);
             document.getElementById('cashoutMultiplier').textContent = minesMultiplier.toFixed(2);
             
-            for (let i = 0; i < 8; i++) {
-                let pos;
-                do {
-                    pos = Math.floor(Math.random() * 25);
-                } while (minePositions.includes(pos));
-                minePositions.push(pos);
-            }
+            document.querySelectorAll('.mine-count-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('[data-mines="5"]').classList.add('active');
             
             for (let i = 0; i < 25; i++) {
                 let cell = document.createElement('div');
@@ -1664,6 +1695,41 @@
             
             minesActive = false;
             document.getElementById('minesCashoutBtn').classList.add('hidden');
+            document.getElementById('customMineInput').classList.add('hidden');
+        }
+
+        document.querySelectorAll('.mine-count-btn[data-mines]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                let mines = this.dataset.mines;
+                
+                if (mines === 'custom') {
+                    document.getElementById('customMineInput').classList.remove('hidden');
+                    document.querySelectorAll('.mine-count-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                } else {
+                    selectedMines = parseInt(mines);
+                    document.getElementById('customMineInput').classList.add('hidden');
+                    document.querySelectorAll('.mine-count-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        document.getElementById('setCustomMines').addEventListener('click', function() {
+            let customValue = parseInt(document.getElementById('customMines').value);
+            if (customValue >= 1 && customValue <= 24) {
+                selectedMines = customValue;
+                document.getElementById('customMineInput').classList.add('hidden');
+            } else {
+                showError('mines', 'Введите число от 1 до 24');
+            }
+        });
+
+        function calculateMinesMultiplier(minesCount, revealedCount) {
+            if (revealedCount === 0) return 1.0;
+            let baseMultiplier = 1.0;
+            let difficultyFactor = 1.0 + (minesCount / 10);
+            return baseMultiplier + (revealedCount * 0.1 * difficultyFactor);
         }
 
         document.getElementById('minesPlayBtn').addEventListener('click', function() {
@@ -1681,7 +1747,7 @@
             minesRevealedCount = 0;
             minesMultiplier = 1.0;
             
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < selectedMines; i++) {
                 let pos;
                 do {
                     pos = Math.floor(Math.random() * 25);
@@ -1755,13 +1821,7 @@
                 cell.classList.add('revealed');
                 minesRevealedCount++;
                 
-                if (minesRevealedCount <= 3) {
-                    minesMultiplier = 1.0 + (minesRevealedCount * 0.2);
-                } else if (minesRevealedCount <= 6) {
-                    minesMultiplier = 1.6 + ((minesRevealedCount - 3) * 0.15);
-                } else {
-                    minesMultiplier = 2.05 + ((minesRevealedCount - 6) * 0.1);
-                }
+                minesMultiplier = calculateMinesMultiplier(selectedMines, minesRevealedCount);
                 
                 document.getElementById('minesMultiplier').textContent = 'x' + minesMultiplier.toFixed(2);
                 document.getElementById('cashoutMultiplier').textContent = minesMultiplier.toFixed(2);
