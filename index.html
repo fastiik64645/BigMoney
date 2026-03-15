@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Big Money</title>
+    <title>Big Money Casino</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -20,7 +20,7 @@
             --element: #1e232c;
             --accent: #ffd966;
             --accent-dark: #c5a53c;
-            --glow: rgba(255, 217, 102, 0.2);
+            --glow: rgba(255, 217, 102, 0.3);
             --text: #ffffff;
             --text2: #8f9bb3;
             --border: #2a313c;
@@ -38,16 +38,37 @@
             justify-content: center;
             align-items: center;
             padding: 8px;
+            position: relative;
+        }
+
+        .fire-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255,217,102,0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            animation: firePulse 3s infinite;
+        }
+
+        @keyframes firePulse {
+            0%,100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
         }
 
         .app {
             max-width: 480px;
             width: 100%;
-            background: var(--bg);
+            background: rgba(10,12,15,0.95);
+            backdrop-filter: blur(10px);
             border-radius: 32px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--accent);
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            box-shadow: 0 0 50px var(--glow);
+            position: relative;
+            z-index: 1;
         }
 
         .header {
@@ -59,29 +80,29 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--text2);
-            font-size: 24px;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-        }
-
         .logo {
             font-weight: 700;
-            font-size: 20px;
-            color: var(--accent);
+            font-size: 24px;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: logoGlow 2s infinite;
+        }
+
+        @keyframes logoGlow {
+            0%,100% { filter: drop-shadow(0 0 10px var(--accent)); }
+            50% { filter: drop-shadow(0 0 20px var(--accent)); }
         }
 
         .balance {
-            background: var(--element);
+            background: linear-gradient(135deg, var(--element), var(--card));
             padding: 8px 16px;
             border-radius: 40px;
             border: 1px solid var(--accent);
             color: var(--accent);
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 0 20px var(--glow);
         }
 
         .user-info {
@@ -96,15 +117,22 @@
         }
 
         .avatar {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--accent), #ffaa33);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
+            font-size: 20px;
             color: #000;
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .username {
+            font-weight: 600;
+            font-size: 16px;
         }
 
         .game-selector {
@@ -115,17 +143,37 @@
         }
 
         .game-card {
-            background: var(--card);
+            background: linear-gradient(135deg, var(--card), var(--element));
             border: 1px solid var(--border);
             border-radius: 24px;
             padding: 20px;
             cursor: pointer;
             transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, var(--glow), transparent);
+            animation: cardShine 3s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes cardShine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
         .game-card:hover {
             border-color: var(--accent);
-            transform: translateY(-2px);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px var(--glow);
         }
 
         .game-card-header {
@@ -136,31 +184,23 @@
         }
 
         .game-card-title {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 28px;
+            font-weight: 800;
             color: var(--accent);
+            text-shadow: 0 0 10px var(--accent);
         }
 
         .game-card-desc {
             color: var(--text2);
             font-size: 14px;
+            margin-bottom: 8px;
         }
 
         .game-card-stats {
             display: flex;
-            gap: 16px;
-            color: var(--text2);
-            font-size: 13px;
-        }
-
-        .back-to-menu {
-            background: var(--element);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 12px;
-            text-align: center;
-            margin: 20px 0;
-            cursor: pointer;
+            gap: 20px;
+            color: var(--accent);
+            font-size: 14px;
             font-weight: 600;
         }
 
@@ -176,9 +216,17 @@
         }
 
         .game-title {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--accent);
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titlePulse 1.5s infinite;
+        }
+
+        @keyframes titlePulse {
+            0%,100% { filter: drop-shadow(0 0 10px var(--accent)); }
+            50% { filter: drop-shadow(0 0 30px var(--accent)); }
         }
 
         .back-to-games {
@@ -188,27 +236,42 @@
             padding: 8px 16px;
             cursor: pointer;
             font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .back-to-games:hover {
+            border-color: var(--accent);
         }
 
         .timer-container {
             background: var(--card);
             border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
             text-align: center;
             border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
         }
 
         .timer-label {
             color: var(--text2);
-            font-size: 14px;
+            font-size: 16px;
             margin-bottom: 8px;
         }
 
         .timer-value {
-            font-size: 48px;
-            font-weight: 800;
+            font-size: 72px;
+            font-weight: 900;
             color: var(--accent);
+            text-shadow: 0 0 30px var(--accent);
+            line-height: 1;
+            animation: timerPop 1s infinite;
+        }
+
+        @keyframes timerPop {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .canvas-container {
@@ -218,28 +281,33 @@
             margin-bottom: 20px;
             border: 1px solid var(--border);
             position: relative;
-            height: 300px;
+            height: 320px;
         }
 
         .multiplier {
-            font-size: 56px;
+            font-size: 64px;
             font-weight: 900;
             text-align: center;
             color: var(--accent);
+            text-shadow: 0 0 30px var(--accent);
             margin-bottom: 20px;
-            position: relative;
-            z-index: 2;
+            animation: multiplierPulse 0.5s infinite;
+        }
+
+        @keyframes multiplierPulse {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
 
         .graph-container {
             position: relative;
-            height: 180px;
+            height: 200px;
             width: 100%;
             margin: 10px 0;
             background-image: 
                 linear-gradient(var(--grid) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-            background-size: 30px 30px;
+            background-size: 20px 20px;
             border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
@@ -253,48 +321,62 @@
             height: 100%;
             fill: none;
             stroke: var(--accent);
-            stroke-width: 3;
-            filter: drop-shadow(0 0 10px var(--accent));
+            stroke-width: 4;
+            filter: drop-shadow(0 0 15px var(--accent));
         }
 
         .graph-point {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
             background: var(--accent);
             border-radius: 50%;
-            box-shadow: 0 0 20px var(--accent);
+            box-shadow: 0 0 30px var(--accent);
             transform: translate(-50%, -50%);
+            animation: pointGlow 0.5s infinite;
+        }
+
+        @keyframes pointGlow {
+            0%,100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.3); }
         }
 
         .progress-container {
             width: 100%;
-            height: 20px;
+            height: 8px;
             background: var(--element);
-            border-radius: 10px;
+            border-radius: 4px;
             margin: 16px 0;
             overflow: hidden;
-            border: 1px solid var(--border);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--gold));
+            background: linear-gradient(90deg, var(--accent), var(--gold), var(--accent));
+            background-size: 200% 100%;
             width: 0%;
             transition: width 0.1s;
+            animation: progressMove 2s infinite;
+        }
+
+        @keyframes progressMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
         }
 
         .history-container {
             margin: 16px 0;
-            padding: 12px;
+            padding: 16px;
             background: var(--element);
             border-radius: 16px;
+            border: 1px solid var(--border);
         }
 
         .history-title {
             color: var(--text2);
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: 600;
         }
 
         .history-list {
@@ -308,19 +390,26 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 8px 12px;
-            font-weight: 600;
+            padding: 10px 16px;
+            font-weight: 700;
             color: var(--accent);
             white-space: nowrap;
-        }
-
-        .history-item.big {
-            color: var(--success);
             font-size: 16px;
+            animation: historyPop 0.3s;
         }
 
-        .history-item.small {
-            color: var(--text2);
+        @keyframes historyPop {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .history-item.x10 { color: var(--success); font-size: 18px; border-color: var(--success); }
+        .history-item.x20 { color: var(--gold); font-size: 20px; border-color: var(--gold); }
+        .history-item.x50 { color: var(--danger); font-size: 22px; border-color: var(--danger); animation: bigWin 1s infinite; }
+
+        @keyframes bigWin {
+            0%,100% { transform: scale(1); text-shadow: 0 0 10px var(--danger); }
+            50% { transform: scale(1.1); text-shadow: 0 0 20px var(--danger); }
         }
 
         .auto-cashout {
@@ -328,24 +417,27 @@
             align-items: center;
             justify-content: space-between;
             background: var(--element);
-            padding: 12px 16px;
+            padding: 16px;
             border-radius: 16px;
             margin: 16px 0;
+            border: 1px solid var(--border);
         }
 
         .auto-input {
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 8px 16px;
+            padding: 10px 20px;
             color: white;
             width: 100px;
             text-align: center;
+            font-size: 16px;
+            font-weight: 600;
         }
 
         .toggle-switch {
-            width: 50px;
-            height: 28px;
+            width: 60px;
+            height: 32px;
             background: var(--card);
             border-radius: 40px;
             position: relative;
@@ -360,8 +452,8 @@
         .toggle-switch::after {
             content: '';
             position: absolute;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             background: white;
             border-radius: 50%;
             top: 2px;
@@ -370,7 +462,7 @@
         }
 
         .toggle-switch.active::after {
-            left: 24px;
+            left: 30px;
         }
 
         .bet-controls {
@@ -384,45 +476,59 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 14px;
+            padding: 16px;
             color: white;
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: 600;
         }
 
         .fixed-bet {
             background: var(--element);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 14px;
+            padding: 16px;
             color: var(--accent);
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
             text-align: center;
-            width: 100%;
             margin: 16px 0;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px var(--glow);
         }
 
         .play-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            background: linear-gradient(135deg, var(--accent), var(--gold));
             border: none;
             color: #000;
-            font-weight: 700;
-            font-size: 18px;
-            padding: 16px;
+            font-weight: 800;
+            font-size: 20px;
+            padding: 18px;
             border-radius: 40px;
             cursor: pointer;
             margin: 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px var(--glow);
         }
 
-        .play-btn.small {
-            padding: 12px;
-            font-size: 14px;
+        .play-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: btnShine 3s infinite;
         }
 
-        .play-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        @keyframes btnShine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
         }
 
         .mines-grid {
@@ -440,19 +546,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
             transition: 0.3s;
         }
 
         .mine-cell::before {
             content: '?';
-            color: var(--text2);
+            color: var(--accent);
+            font-weight: 700;
         }
 
         .mine-cell:hover {
             border-color: var(--accent);
             transform: scale(1.05);
+            box-shadow: 0 0 20px var(--glow);
         }
 
         .mine-cell.revealed {
@@ -460,9 +568,15 @@
         }
 
         .mine-cell.revealed::before {
-            content: '●';
+            content: '💎';
             color: var(--success);
             font-size: 32px;
+            animation: gemRotate 1s infinite;
+        }
+
+        @keyframes gemRotate {
+            0%,100% { transform: rotate(0deg); }
+            50% { transform: rotate(10deg); }
         }
 
         .mine-cell.mine.revealed {
@@ -472,6 +586,14 @@
         .mine-cell.mine.revealed::before {
             content: '💣';
             color: var(--danger);
+            font-size: 32px;
+            animation: bombShake 0.3s infinite;
+        }
+
+        @keyframes bombShake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
         }
 
         .baccarat-history {
@@ -492,21 +614,29 @@
         .bet-option {
             background: var(--element);
             border: 1px solid var(--border);
-            padding: 16px;
+            padding: 20px;
             border-radius: 16px;
             text-align: center;
             cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .bet-option:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
         }
 
         .bet-option.selected {
             border-color: var(--accent);
             background: var(--glow);
+            box-shadow: 0 0 20px var(--glow);
         }
 
         .bet-option .coeff {
             color: var(--accent);
-            font-weight: 700;
-            font-size: 20px;
+            font-weight: 800;
+            font-size: 24px;
+            margin-top: 8px;
         }
 
         .slot-machine {
@@ -529,9 +659,9 @@
 
         .slot-reel-container {
             position: relative;
-            height: 120px;
+            height: 100px;
             overflow: hidden;
-            border-radius: 16px;
+            border-radius: 12px;
             background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
             border: 2px solid var(--border);
         }
@@ -539,83 +669,53 @@
         .slot-reel {
             position: absolute;
             width: 100%;
-            transition: top 3s cubic-bezier(0.1, 0.7, 0.3, 1);
+            transition: top 4s cubic-bezier(0.1, 0.8, 0.2, 1);
             will-change: top;
         }
 
         .slot-item {
-            height: 120px;
+            height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 64px;
+            font-size: 48px;
             font-weight: 900;
             color: var(--accent);
-            text-shadow: 0 0 20px var(--accent);
             border-bottom: 1px solid var(--border);
             background: linear-gradient(180deg, #222, #111);
         }
 
-        .slot-item.small {
-            color: #666;
-            font-size: 48px;
-        }
+        .slot-item[data-value="0"] { color: #666; }
+        .slot-item[data-value="1"] { color: #666; }
+        .slot-item[data-value="2"] { color: #666; }
+        .slot-item[data-value="3"] { color: #666; }
+        .slot-item[data-value="4"] { color: #666; }
+        .slot-item[data-value="5"] { color: #999; }
+        .slot-item[data-value="10"] { color: var(--gold); }
+        .slot-item[data-value="15"] { color: var(--gold); }
+        .slot-item[data-value="20"] { color: var(--gold); }
+        .slot-item[data-value="25"] { color: var(--gold); }
+        .slot-item[data-value="30"] { color: var(--success); }
+        .slot-item[data-value="40"] { color: var(--success); }
+        .slot-item[data-value="50"] { color: var(--success); }
+        .slot-item[data-value="60"] { color: var(--danger); }
+        .slot-item[data-value="70"] { color: var(--danger); }
+        .slot-item[data-value="80"] { color: var(--danger); }
+        .slot-item[data-value="90"] { color: var(--accent); font-size: 56px; }
+        .slot-item[data-value="100"] { color: var(--accent); font-size: 64px; animation: jackpotGlow 0.5s infinite; }
 
-        .slot-item.medium {
-            color: var(--gold);
-        }
-
-        .slot-item.big {
-            color: var(--success);
-            font-size: 72px;
-        }
-
-        .slot-item.jackpot {
-            color: var(--accent);
-            font-size: 80px;
-            animation: jackpot 0.5s infinite;
-        }
-
-        @keyframes jackpot {
+        @keyframes jackpotGlow {
             0%,100% { text-shadow: 0 0 30px var(--accent); transform: scale(1); }
             50% { text-shadow: 0 0 60px var(--accent); transform: scale(1.1); }
-        }
-
-        .slot-glow {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, 
-                transparent 0%,
-                rgba(255,217,102,0.1) 45%,
-                rgba(255,217,102,0.3) 50%,
-                rgba(255,217,102,0.1) 55%,
-                transparent 100%
-            );
-            pointer-events: none;
-            animation: glowMove 2s infinite;
-        }
-
-        @keyframes glowMove {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
         }
 
         .slot-result {
             text-align: center;
             margin-top: 20px;
-            font-size: 48px;
-            font-weight: 800;
+            font-size: 56px;
+            font-weight: 900;
             color: var(--accent);
             animation: resultPop 0.5s;
-        }
-
-        @keyframes resultPop {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
         }
 
         .chat-section {
@@ -626,18 +726,31 @@
         }
 
         .chat-messages {
-            min-height: 100px;
-            max-height: 200px;
+            min-height: 150px;
+            max-height: 250px;
             overflow-y: auto;
             margin-bottom: 12px;
         }
 
         .chat-message {
             background: var(--element);
-            padding: 10px 14px;
+            padding: 12px 16px;
             border-radius: 18px;
             margin-bottom: 8px;
             font-size: 14px;
+            border: 1px solid var(--border);
+            animation: messagePop 0.3s;
+        }
+
+        @keyframes messagePop {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .chat-message .name {
+            color: var(--accent);
+            font-weight: 700;
+            margin-right: 8px;
         }
 
         .chat-input {
@@ -650,28 +763,37 @@
             background: var(--element);
             border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 12px;
+            padding: 14px;
             color: white;
+            font-size: 14px;
         }
 
         .chat-input button {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent), var(--gold));
             border: none;
             border-radius: 40px;
-            padding: 12px 20px;
+            padding: 14px 24px;
             color: #000;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
         }
 
         .error-message {
-            background: rgba(244, 67, 54, 0.2);
+            background: rgba(244,67,54,0.2);
             border: 1px solid var(--danger);
             border-radius: 16px;
             padding: 12px;
             margin: 10px 0;
             color: var(--danger);
             text-align: center;
+            font-weight: 600;
+            animation: errorShake 0.5s;
+        }
+
+        @keyframes errorShake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .win-popup {
@@ -681,20 +803,23 @@
             transform: translate(-50%, -50%);
             background: linear-gradient(135deg, var(--accent), var(--gold));
             color: #000;
-            padding: 30px 50px;
-            border-radius: 30px;
-            font-size: 48px;
+            padding: 40px 70px;
+            border-radius: 50px;
+            font-size: 56px;
             font-weight: 900;
             z-index: 1000;
-            animation: pop 1s;
+            animation: winPop 1.5s forwards;
             box-shadow: 0 0 100px var(--accent);
-            border: 2px solid white;
+            border: 3px solid white;
+            white-space: nowrap;
         }
 
-        @keyframes pop {
+        @keyframes winPop {
             0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            20% { transform: translate(-50%, -50%) scale(1.2); }
+            40% { transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translate(-50%, -80%); }
         }
 
         .hidden {
@@ -703,9 +828,10 @@
     </style>
 </head>
 <body>
+    <div class="fire-effect"></div>
+
     <div class="app">
         <div class="header">
-            <div class="back-btn" onclick="window.history.back()">←</div>
             <div class="logo">BIG MONEY</div>
             <div class="balance" id="balanceDisplay">
                 <span id="balanceAmount">0.00</span>
@@ -714,40 +840,40 @@
 
         <div class="user-info">
             <div class="avatar" id="userAvatar">👤</div>
-            <div id="userName">Игрок</div>
+            <div class="username" id="userName">Игрок</div>
         </div>
 
         <div id="gameSelector" class="game-selector">
             <div class="game-card" onclick="selectGame('crash')">
                 <div class="game-card-header">
                     <div class="game-card-title">CRASH</div>
-                    <div>📈</div>
+                    <div style="font-size: 32px;">📈</div>
                 </div>
-                <div class="game-card-desc">Лови момент и забирай</div>
+                <div class="game-card-desc">Лови момент и забирай куш</div>
                 <div class="game-card-stats">
-                    <span>🎯 x1-3.9</span>
-                    <span>⚡ 70% до x2</span>
+                    <span>🔥 x15.2</span>
+                    <span>⚡ 78% побед</span>
                 </div>
             </div>
 
             <div class="game-card" onclick="selectGame('mines')">
                 <div class="game-card-header">
                     <div class="game-card-title">MINES</div>
-                    <div>💣</div>
+                    <div style="font-size: 32px;">💎</div>
                 </div>
-                <div class="game-card-desc">5x5 поле, алмазы и мины</div>
+                <div class="game-card-desc">Алмазы и мины 5x5</div>
                 <div class="game-card-stats">
-                    <span>💎 x1-5</span>
-                    <span>💣 5 мин</span>
+                    <span>💎 x5.2</span>
+                    <span>💣 3 мины</span>
                 </div>
             </div>
 
             <div class="game-card" onclick="selectGame('baccarat')">
                 <div class="game-card-header">
                     <div class="game-card-title">BACCARAT</div>
-                    <div>🎴</div>
+                    <div style="font-size: 32px;">🎴</div>
                 </div>
-                <div class="game-card-desc">Игрок vs Банкир</div>
+                <div class="game-card-desc">Игрок против Банкира</div>
                 <div class="game-card-stats">
                     <span>👤 x2</span>
                     <span>🏦 x1.95</span>
@@ -757,12 +883,12 @@
             <div class="game-card" onclick="selectGame('slot')">
                 <div class="game-card-header">
                     <div class="game-card-title">SLOT</div>
-                    <div>🎰</div>
+                    <div style="font-size: 32px;">🎰</div>
                 </div>
                 <div class="game-card-desc">Ставка 10$</div>
                 <div class="game-card-stats">
-                    <span>🎰 0-100$</span>
-                    <span>💎 Джекпот 100$</span>
+                    <span>💰 до 100$</span>
+                    <span>🎰 x10 джекпот</span>
                 </div>
             </div>
         </div>
@@ -775,15 +901,15 @@
 
             <div id="crash-game" class="game-view">
                 <div class="timer-container">
-                    <div class="timer-label">Следующая игра</div>
+                    <div class="timer-label">⚡ НОВАЯ ИГРА ЧЕРЕЗ</div>
                     <div class="timer-value" id="crashTimer">10</div>
                 </div>
 
                 <div class="canvas-container">
                     <div class="multiplier" id="crashMultiplier">1.00x</div>
                     <div class="graph-container" id="graphContainer">
-                        <svg class="graph-line" viewBox="0 0 400 180" preserveAspectRatio="none">
-                            <path id="graphPath" d="M0 180 L400 180" stroke="var(--accent)" stroke-width="3" fill="none"/>
+                        <svg class="graph-line" viewBox="0 0 400 200" preserveAspectRatio="none">
+                            <path id="graphPath" d="M0 200 L400 200" stroke="var(--accent)" stroke-width="4" fill="none"/>
                         </svg>
                         <div class="graph-point" id="graphPoint" style="left: 0%; bottom: 0%;"></div>
                     </div>
@@ -793,14 +919,14 @@
                 </div>
 
                 <div class="history-container">
-                    <div class="history-title">📊 История игр</div>
+                    <div class="history-title">🔥 ПОСЛЕДНИЕ ВЫИГРЫШИ</div>
                     <div class="history-list" id="crashHistory"></div>
                 </div>
 
                 <div class="auto-cashout">
-                    <span>🎯 Автовывод</span>
+                    <span>🎯 АВТОВЫВОД</span>
                     <div style="display: flex; gap: 10px; align-items: center;">
-                        <input type="number" class="auto-input" id="autoValue" value="2.0" step="0.1" min="1.1" max="3.9">
+                        <input type="number" class="auto-input" id="autoValue" value="1.5" step="0.1" min="1.1" max="3.9">
                         <div class="toggle-switch" id="autoCashoutToggle"></div>
                     </div>
                 </div>
@@ -810,7 +936,7 @@
                 </div>
 
                 <div class="error-message hidden" id="crashError"></div>
-                <button class="play-btn" id="crashPlayBtn">СТАВИТЬ</button>
+                <button class="play-btn" id="crashPlayBtn">🔥 СДЕЛАТЬ СТАВКУ</button>
             </div>
 
             <div id="mines-game" class="game-view hidden">
@@ -821,7 +947,7 @@
                 </div>
 
                 <div class="error-message hidden" id="minesError"></div>
-                <button class="play-btn" id="minesPlayBtn">СДЕЛАТЬ СТАВКУ</button>
+                <button class="play-btn" id="minesPlayBtn">💎 НАЧАТЬ ИГРУ</button>
                 <button class="play-btn small hidden" id="minesCashoutBtn">💰 ЗАБРАТЬ ВЫИГРЫШ</button>
             </div>
 
@@ -830,19 +956,19 @@
 
                 <div class="bet-options" id="baccaratBets">
                     <div class="bet-option" data-bet="player" data-coeff="2">
-                        <div>👤 Игрок</div>
+                        <div>👤 ИГРОК</div>
                         <div class="coeff">x2</div>
                     </div>
                     <div class="bet-option" data-bet="banker" data-coeff="1.95">
-                        <div>🏦 Банкир</div>
+                        <div>🏦 БАНКИР</div>
                         <div class="coeff">x1.95</div>
                     </div>
                     <div class="bet-option" data-bet="tie" data-coeff="8">
-                        <div>🤝 Ничья</div>
+                        <div>🤝 НИЧЬЯ</div>
                         <div class="coeff">x8</div>
                     </div>
                     <div class="bet-option" data-bet="playerPair" data-coeff="11">
-                        <div>👥 Пара</div>
+                        <div>👥 ПАРА</div>
                         <div class="coeff">x11</div>
                     </div>
                 </div>
@@ -852,7 +978,7 @@
                 </div>
 
                 <div class="error-message hidden" id="baccaratError"></div>
-                <button class="play-btn" id="baccaratPlayBtn">СДЕЛАТЬ СТАВКУ</button>
+                <button class="play-btn" id="baccaratPlayBtn">🎴 СДЕЛАТЬ СТАВКУ</button>
             </div>
 
             <div id="slot-game" class="game-view hidden">
@@ -860,23 +986,20 @@
                     <div class="slot-window">
                         <div class="slot-reel-container" id="slotContainer">
                             <div class="slot-reel" id="slotReel"></div>
-                            <div class="slot-glow"></div>
                         </div>
                     </div>
                     <div class="slot-result" id="slotResult">?</div>
                 </div>
 
-                <div class="fixed-bet">СТАВКА: 10$</div>
+                <div class="fixed-bet">💰 СТАВКА: 10$</div>
 
                 <div class="error-message hidden" id="slotError"></div>
-                <button class="play-btn" id="slotPlayBtn">КРУТИТЬ</button>
+                <button class="play-btn" id="slotPlayBtn">🎰 КРУТИТЬ</button>
             </div>
         </div>
 
         <div class="chat-section">
-            <div class="chat-messages" id="chatMessages">
-                <div style="color: var(--text2); text-align: center; padding: 20px;">Чат пуст</div>
-            </div>
+            <div class="chat-messages" id="chatMessages"></div>
             <div class="chat-input">
                 <input type="text" placeholder="Сообщение..." id="chatInput" maxlength="100">
                 <button id="sendChatBtn">→</button>
@@ -923,11 +1046,59 @@
         let hasBet = false;
         let currentBet = 0;
         let gameInProgress = false;
+        let gamesPlayed = 0;
+        let firstTimeBonus = true;
+
+        const chatNames = [
+            'GOD_OF_WAR', 'MONEY_MAKER', 'LUCKY_DEVIL', 'CRYPTO_KING', 
+            'BIG_WINNER', 'DIAMOND_HAND', 'MOON_TICKET', 'RICH_LIFE',
+            'GAMBLER_PRO', 'HIGH_ROLLER', 'BET_MASTER', 'WIN_STREAK'
+        ];
+
+        const chatMessages = [
+            'ЗАБРАЛ 3.2x 🔥', 'x8.5 упустил( Норм?', '+25$ за минуту', 'Ща поймаю крупный',
+            'Слил 100$ ну норм', 'В топе сегодня', 'У кого сколько выйгрыш?', 'x15.2 БОГ',
+            'Реально выйграть?', 'Первый раз играю', 'Сосед x5 забрал', 'Лови момент',
+            'Джекпот близко', 'Ща краш будет', 'Авто 1.5 всегда', 'В топ залетаю',
+            'Не везет сегодня', 'Отыграюсь ща', 'x2.3 норм', 'Кто на слоты?'
+        ];
+
+        function initChat() {
+            let chat = document.getElementById('chatMessages');
+            chat.innerHTML = '';
+            
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => addRandomChatMessage(), i * 3000);
+            }
+            
+            setInterval(addRandomChatMessage, 8000);
+        }
+
+        function addRandomChatMessage() {
+            let name = chatNames[Math.floor(Math.random() * chatNames.length)];
+            let msg = chatMessages[Math.floor(Math.random() * chatMessages.length)];
+            let time = new Date().getHours() + ':' + String(new Date().getMinutes()).padStart(2,'0');
+            
+            let div = document.createElement('div');
+            div.className = 'chat-message';
+            div.innerHTML = `<span class="name">${name}</span> ${msg} <span style="color:var(--text2); float:right;">${time}</span>`;
+            
+            let chat = document.getElementById('chatMessages');
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+            
+            if (chat.children.length > 20) {
+                chat.removeChild(chat.children[0]);
+            }
+        }
+
+        initChat();
 
         for (let i = 0; i < 20; i++) {
-            let x = (Math.random() * 3 + 1).toFixed(2);
-            if (i % 5 === 0) x = (Math.random() * 2 + 3).toFixed(2);
-            crashHistory.push(parseFloat(x));
+            if (i < 3) crashHistory.push((1 + Math.random() * 0.5).toFixed(2));
+            else if (i < 8) crashHistory.push((2 + Math.random() * 2).toFixed(2));
+            else if (i < 15) crashHistory.push((Math.random() * 10 + 3).toFixed(2));
+            else crashHistory.push((Math.random() * 30 + 5).toFixed(2));
         }
 
         function showGameSelector() {
@@ -947,7 +1118,7 @@
             currentGame = game;
             document.getElementById('gameSelector').classList.add('hidden');
             document.getElementById('gameContainer').classList.remove('hidden');
-            document.getElementById('currentGameTitle').textContent = game.toUpperCase();
+            document.getElementById('currentGameTitle').textContent = game === 'slot' ? 'SLOT' : game.toUpperCase();
             
             document.querySelectorAll('.game-view').forEach(g => g.classList.add('hidden'));
             document.getElementById(game + '-game').classList.remove('hidden');
@@ -967,13 +1138,14 @@
             let historyList = document.getElementById('crashHistory');
             historyList.innerHTML = '';
             
-            let recent = crashHistory.slice(-15);
+            let recent = crashHistory.slice(-20);
             recent.forEach(x => {
                 let item = document.createElement('div');
                 item.className = 'history-item';
-                if (x > 3) item.classList.add('big');
-                else if (x < 1.5) item.classList.add('small');
-                item.textContent = x.toFixed(2) + 'x';
+                if (x >= 10) item.classList.add('x10');
+                if (x >= 20) item.classList.add('x20');
+                if (x >= 50) item.classList.add('x50');
+                item.textContent = x + 'x';
                 historyList.appendChild(item);
             });
         }
@@ -1001,18 +1173,21 @@
             
             let multiplier = 1.00;
             let growth = 0.002;
-            let maxMultiplier = 3.9;
+            let maxMultiplier = 100;
             let shouldCrash;
             
             if (hasBet) {
-                shouldCrash = Math.random() * 100 > settings.win_rate;
+                if (gamesPlayed < 3 && firstTimeBonus) {
+                    shouldCrash = false;
+                } else {
+                    shouldCrash = Math.random() * 100 > settings.win_rate;
+                }
             } else {
                 shouldCrash = false;
-                if (Math.random() < 0.04) {
-                    multiplier = 1 + Math.random();
-                } else {
-                    multiplier = 5 + Math.random() * 20;
-                }
+                let r = Math.random();
+                if (r < 0.7) multiplier = 5 + Math.random() * 10;
+                else if (r < 0.9) multiplier = 15 + Math.random() * 20;
+                else multiplier = 35 + Math.random() * 50;
             }
             
             crashMultiplier = multiplier;
@@ -1020,16 +1195,16 @@
             
             crashInterval = setInterval(() => {
                 if (!hasBet) {
-                    multiplier += growth * 3;
+                    multiplier += growth * 5;
                 } else {
                     multiplier += growth;
-                    growth *= 1.008;
+                    growth *= 1.01;
                 }
                 
                 crashMultiplier = multiplier;
                 document.getElementById('crashMultiplier').innerHTML = multiplier.toFixed(2) + 'x';
                 
-                let progress = (multiplier / maxMultiplier) * 100;
+                let progress = (multiplier / 20) * 100;
                 if (progress > 100) progress = 100;
                 document.getElementById('crashProgress').style.width = progress + '%';
                 
@@ -1044,11 +1219,11 @@
                     }
                 }
                 
-                if (hasBet && shouldCrash && multiplier > 1.3 && Math.random() < 0.002) {
+                if (hasBet && shouldCrash && multiplier > 1.3 && Math.random() < 0.003) {
                     crashEnd();
                 }
                 
-                if (multiplier >= maxMultiplier) {
+                if (multiplier >= 100) {
                     if (hasBet) {
                         crashCashout();
                     } else {
@@ -1059,10 +1234,10 @@
         }
 
         function updateCrashGraph() {
-            let width = 400, height = 180;
+            let width = 400, height = 200;
             if (crashPoints.length < 2) return;
             
-            let maxY = Math.max(...crashPoints.map(p => p.y), 5);
+            let maxY = Math.max(...crashPoints.map(p => p.y), 10);
             let path = '';
             
             for (let i = 0; i < crashPoints.length; i++) {
@@ -1086,13 +1261,18 @@
         });
 
         document.getElementById('crashPlayBtn').addEventListener('click', function() {
-            if (gameInProgress) return;
+            if (gameInProgress) {
+                if (hasBet) {
+                    crashCashout();
+                }
+                return;
+            }
             
             let bet = parseFloat(document.getElementById('crashBet').value);
             let settings = gameSettings.crash || { min_bet: 1, max_bet: 1000 };
             
             if (bet < settings.min_bet || bet > settings.max_bet || bet > balance) {
-                showError('crash', 'Ставка недопустима');
+                showError('crash', 'Недостаточно средств!');
                 return;
             }
             
@@ -1100,20 +1280,22 @@
             updateBalance();
             hasBet = true;
             currentBet = bet;
-            document.getElementById('crashPlayBtn').textContent = 'СТАВКА СДЕЛАНА';
-            document.getElementById('crashPlayBtn').disabled = true;
+            gamesPlayed++;
+            
+            document.getElementById('crashPlayBtn').textContent = '💰 ЗАБРАТЬ';
+            document.getElementById('crashPlayBtn').style.background = 'linear-gradient(135deg, var(--success), #45a049)';
         });
 
         function crashCashout() {
-            if (!gameInProgress) return;
+            if (!gameInProgress || !hasBet) return;
             clearInterval(crashInterval);
             
             let win = currentBet * crashMultiplier;
             balance += win;
             updateBalance();
             
-            crashHistory.push(crashMultiplier);
-            if (crashHistory.length > 20) crashHistory.shift();
+            crashHistory.push(crashMultiplier.toFixed(2));
+            if (crashHistory.length > 30) crashHistory.shift();
             updateCrashHistory();
             
             showWinPopup(win);
@@ -1126,13 +1308,13 @@
             clearInterval(crashInterval);
             
             if (hasBet) {
-                crashHistory.push(crashMultiplier);
+                crashHistory.push(crashMultiplier.toFixed(2));
                 sendGameResult('crash', currentBet, 0);
             } else {
-                crashHistory.push(crashMultiplier);
+                crashHistory.push(crashMultiplier.toFixed(2));
             }
             
-            if (crashHistory.length > 20) crashHistory.shift();
+            if (crashHistory.length > 30) crashHistory.shift();
             updateCrashHistory();
             
             resetCrash();
@@ -1142,11 +1324,11 @@
             gameInProgress = false;
             hasBet = false;
             currentBet = 0;
-            document.getElementById('crashPlayBtn').textContent = 'СТАВИТЬ';
-            document.getElementById('crashPlayBtn').disabled = false;
+            document.getElementById('crashPlayBtn').textContent = '🔥 СДЕЛАТЬ СТАВКУ';
+            document.getElementById('crashPlayBtn').style.background = '';
             document.getElementById('crashMultiplier').innerHTML = '1.00x';
             document.getElementById('crashProgress').style.width = '0%';
-            document.getElementById('graphPath').setAttribute('d', 'M0 180 L400 180');
+            document.getElementById('graphPath').setAttribute('d', 'M0 200 L400 200');
             
             startCrashTimer();
         }
@@ -1157,7 +1339,7 @@
             window.minesRevealed = new Array(25).fill(false);
             window.minePositions = [];
             
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 3; i++) {
                 window.minePositions.push(Math.floor(Math.random() * 25));
             }
             
@@ -1178,7 +1360,7 @@
             let settings = gameSettings.mines || { win_rate: 30, min_bet: 1, max_bet: 500 };
             
             if (bet < settings.min_bet || bet > settings.max_bet || bet > balance) {
-                showError('mines', 'Ставка недопустима');
+                showError('mines', 'Недостаточно средств!');
                 return;
             }
             
@@ -1187,9 +1369,7 @@
             window.minesRevealed = new Array(25).fill(false);
             window.minePositions = [];
             
-            let mineCount = Math.floor(settings.win_rate / 10) + 3;
-            
-            for (let i = 0; i < mineCount; i++) {
+            for (let i = 0; i < 3; i++) {
                 let pos;
                 do {
                     pos = Math.floor(Math.random() * 25);
@@ -1224,7 +1404,7 @@
                 return;
             }
             
-            let win = window.minesBet * (1 + revealedCount * 0.3);
+            let win = window.minesBet * (1 + revealedCount * 0.5);
             
             balance += win;
             updateBalance();
@@ -1305,7 +1485,7 @@
             let settings = gameSettings.baccarat || { win_rate: 35, min_bet: 1, max_bet: 500 };
             
             if (bet < settings.min_bet || bet > settings.max_bet || bet > balance) {
-                showError('baccarat', 'Ставка недопустима');
+                showError('baccarat', 'Недостаточно средств!');
                 return;
             }
             
@@ -1317,11 +1497,15 @@
                 let win = false;
                 let mult = parseFloat(selected.dataset.coeff);
                 
-                if (rand < settings.win_rate) {
-                    if (selected.dataset.bet === 'player') win = true;
-                    else if (selected.dataset.bet === 'banker') win = true;
-                    else if (selected.dataset.bet === 'tie' && rand < 10) win = true;
-                    else if (selected.dataset.bet === 'playerPair' && rand < 5) win = true;
+                if (gamesPlayed < 3 && firstTimeBonus) {
+                    win = true;
+                } else {
+                    if (rand < settings.win_rate) {
+                        if (selected.dataset.bet === 'player') win = true;
+                        else if (selected.dataset.bet === 'banker') win = true;
+                        else if (selected.dataset.bet === 'tie' && rand < 10) win = true;
+                        else if (selected.dataset.bet === 'playerPair' && rand < 5) win = true;
+                    }
                 }
                 
                 let winAmount = 0;
@@ -1331,6 +1515,7 @@
                     showWinPopup(winAmount);
                 }
                 
+                gamesPlayed++;
                 updateBaccaratHistory();
                 sendGameResult('baccarat', bet, winAmount);
             }, 2000);
@@ -1339,16 +1524,11 @@
         function initSlot() {
             let reel = document.getElementById('slotReel');
             let html = '';
+            let slotValues = [0,1,2,3,4,5,10,15,20,25,30,40,50,60,70,80,90,100];
             
             for (let i = 0; i < 100; i++) {
-                let val = Math.floor(Math.random() * 100);
-                let cls = 'slot-item';
-                if (val < 5) cls += ' small';
-                else if (val < 10) cls += ' medium';
-                else if (val < 20) cls += ' big';
-                else if (val >= 95) cls += ' jackpot';
-                
-                html += `<div class="${cls}">${val}</div>`;
+                let val = slotValues[Math.floor(Math.random() * slotValues.length)];
+                html += `<div class="slot-item" data-value="${val}">${val}</div>`;
             }
             
             reel.innerHTML = html;
@@ -1359,7 +1539,7 @@
             let settings = gameSettings.slot || { win_rate: 90 };
             
             if (bet > balance) {
-                showError('slot', 'Недостаточно средств');
+                showError('slot', 'Недостаточно средств!');
                 return;
             }
             
@@ -1367,23 +1547,29 @@
             updateBalance();
             
             let reel = document.getElementById('slotReel');
-            let itemHeight = 120;
+            let itemHeight = 100;
             let items = reel.children.length;
             
             let rand = Math.random() * 100;
             let result;
             
-            if (rand < settings.win_rate) {
-                result = Math.floor(Math.random() * 10);
+            if (gamesPlayed < 3 && firstTimeBonus) {
+                result = Math.random() < 0.5 ? 5 : 10;
             } else {
-                result = 10 + Math.floor(Math.random() * 90);
+                if (rand < settings.win_rate) {
+                    let low = [0,1,2,3,4,5,10,15];
+                    result = low[Math.floor(Math.random() * low.length)];
+                } else {
+                    let high = [20,25,30,40,50,60,70,80,90,100];
+                    result = high[Math.floor(Math.random() * high.length)];
+                }
             }
             
-            if (Math.random() < 0.01) result = 100;
+            if (Math.random() < 0.02 && !firstTimeBonus) result = 100;
             
             let targetIndex = -1;
             for (let i = 0; i < items; i++) {
-                if (parseInt(reel.children[i].textContent) === result) {
+                if (parseInt(reel.children[i].getAttribute('data-value')) === result) {
                     targetIndex = i;
                     break;
                 }
@@ -1405,12 +1591,8 @@
                     showWinPopup(winAmount);
                 }
                 
-                document.getElementById('slotResult').textContent = result + '$';
-                
-                if (result === 100) {
-                    document.getElementById('slotResult').style.color = 'var(--accent)';
-                    document.getElementById('slotResult').style.animation = 'jackpot 0.5s infinite';
-                }
+                document.getElementById('slotResult').textContent = winAmount + '$';
+                gamesPlayed++;
                 
                 sendGameResult('slot', bet, winAmount);
                 
@@ -1431,7 +1613,7 @@
             
             let div = document.createElement('div');
             div.className = 'chat-message';
-            div.innerHTML = `<b>${firstName}:</b> ${msg}`;
+            div.innerHTML = `<span class="name">${firstName}</span> ${msg}`;
             
             let chat = document.getElementById('chatMessages');
             chat.appendChild(div);
