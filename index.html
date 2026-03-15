@@ -14,11 +14,11 @@
         }
 
         :root {
-            --bg-dark: #0a0c10;
-            --bg-card: #151a22;
-            --bg-element: #1f2630;
+            --bg-dark: #0a0c0f;
+            --bg-card: #14181f;
+            --bg-element: #1e232c;
             --accent: #ffd966;
-            --accent-glow: rgba(255, 217, 102, 0.2);
+            --accent-glow: rgba(255, 217, 102, 0.3);
             --text-primary: #ffffff;
             --text-secondary: #8f9bb3;
             --border-color: #2a313c;
@@ -35,16 +35,67 @@
             align-items: center;
             padding: 12px;
             margin: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 10s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
         }
 
         .app {
             max-width: 420px;
             width: 100%;
-            background: var(--bg-dark);
+            background: rgba(10, 12, 15, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 32px;
             overflow: hidden;
-            border: 1px solid #252b33;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 217, 102, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 217, 102, 0.05);
+            position: relative;
+            z-index: 1;
+        }
+
+        .app::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--accent), transparent, var(--accent));
+            border-radius: 34px;
+            opacity: 0.1;
+            z-index: -1;
+            animation: borderGlow 3s infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.2; }
         }
 
         .header {
@@ -52,9 +103,10 @@
             align-items: center;
             justify-content: space-between;
             padding: 16px 20px;
-            background: rgba(10, 12, 16, 0.95);
+            background: rgba(20, 24, 31, 0.8);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
+            position: relative;
         }
 
         .header-left {
@@ -75,24 +127,32 @@
             align-items: center;
             justify-content: center;
             border-radius: 12px;
-            transition: 0.2s;
+            transition: all 0.2s;
         }
 
         .back-btn:hover {
             background: var(--bg-element);
             color: white;
+            transform: scale(1.05);
         }
 
         .balance {
-            background: var(--bg-card);
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-element));
             padding: 8px 16px;
             border-radius: 40px;
             display: flex;
             align-items: center;
             gap: 8px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--accent);
             font-weight: 600;
             color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+            animation: balancePulse 2s infinite;
+        }
+
+        @keyframes balancePulse {
+            0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
+            50% { box-shadow: 0 0 30px var(--accent-glow); }
         }
 
         .balance span {
@@ -114,12 +174,18 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent), #ffaa33);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #0a0c10;
             font-weight: 700;
+            animation: avatarPulse 2s infinite;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .tabs {
@@ -129,6 +195,7 @@
             background: var(--bg-dark);
             overflow-x: auto;
             scrollbar-width: none;
+            position: relative;
         }
 
         .tabs::-webkit-scrollbar {
@@ -144,14 +211,42 @@
             font-weight: 600;
             font-size: 14px;
             white-space: nowrap;
-            transition: 0.2s;
+            transition: all 0.3s;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: var(--accent);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .tab:hover::before {
+            width: 200px;
+            height: 200px;
         }
 
         .tab.active {
             background: var(--accent);
             border-color: var(--accent);
             color: #0a0c10;
+            animation: tabGlow 2s infinite;
+        }
+
+        @keyframes tabGlow {
+            0%, 100% { box-shadow: 0 0 10px var(--accent-glow); }
+            50% { box-shadow: 0 0 20px var(--accent-glow); }
         }
 
         .game-container {
@@ -166,11 +261,17 @@
         }
 
         .game-title {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 28px;
+            font-weight: 800;
             background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: titleGlow 2s infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px var(--accent-glow)); }
+            50% { filter: drop-shadow(0 0 20px var(--accent-glow)); }
         }
 
         .game-desc {
@@ -178,11 +279,11 @@
             font-size: 14px;
         }
 
-        #crash-game, #mines-game, #minelav-game, #baccarat-game, #chest-game {
+        #crash-game, #mines-game, #baccarat-game, #chest-game {
             display: none;
         }
 
-        #crash-game.active, #mines-game.active, #minelav-game.active, #baccarat-game.active, #chest-game.active {
+        #crash-game.active, #mines-game.active, #baccarat-game.active, #chest-game.active {
             display: block;
         }
 
@@ -193,19 +294,45 @@
             margin-bottom: 20px;
             border: 1px solid var(--border-color);
             position: relative;
+            overflow: hidden;
+        }
+
+        .canvas-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+            animation: scanline 3s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0% { left: -100%; }
+            100% { left: 200%; }
         }
 
         .multiplier {
-            font-size: 48px;
-            font-weight: 800;
+            font-size: 64px;
+            font-weight: 900;
             text-align: center;
             color: var(--accent);
-            text-shadow: 0 0 20px var(--accent-glow);
+            text-shadow: 0 0 30px var(--accent-glow);
             margin-bottom: 20px;
+            animation: multiplierPulse 1s infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes multiplierPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
 
         .multiplier small {
-            font-size: 24px;
+            font-size: 32px;
             color: var(--text-secondary);
         }
 
@@ -216,6 +343,7 @@
             border-radius: 4px;
             overflow: hidden;
             margin: 20px 0;
+            position: relative;
         }
 
         .progress-fill {
@@ -223,6 +351,65 @@
             background: linear-gradient(90deg, var(--accent) 0%, #ffaa33 100%);
             width: 0%;
             transition: width 0.1s linear;
+            position: relative;
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 10px;
+            height: 100%;
+            background: white;
+            filter: blur(5px);
+            animation: progressGlow 1s infinite;
+        }
+
+        @keyframes progressGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .graph-container {
+            position: relative;
+            height: 120px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .graph-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 3;
+            filter: drop-shadow(0 0 10px var(--accent));
+            animation: drawLine 0.5s ease-out;
+        }
+
+        @keyframes drawLine {
+            from { stroke-dashoffset: 1000; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        .graph-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--accent);
+            animation: pointPulse 1s infinite;
+        }
+
+        @keyframes pointPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.8; }
         }
 
         .auto-cashout {
@@ -233,6 +420,13 @@
             padding: 12px 16px;
             border-radius: 16px;
             margin: 16px 0;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .auto-cashout:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
         }
 
         .toggle-switch {
@@ -243,10 +437,12 @@
             position: relative;
             cursor: pointer;
             border: 1px solid var(--border-color);
+            transition: all 0.3s;
         }
 
         .toggle-switch.active {
             background: var(--accent);
+            border-color: var(--accent);
         }
 
         .toggle-switch::after {
@@ -258,11 +454,13 @@
             border-radius: 50%;
             top: 2px;
             left: 2px;
-            transition: 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .toggle-switch.active::after {
             left: 24px;
+            background: #0a0c10;
         }
 
         .bet-controls {
@@ -281,6 +479,13 @@
             color: white;
             font-size: 16px;
             font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .bet-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
         .bet-multipliers {
@@ -296,12 +501,14 @@
             border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s;
         }
 
         .bet-mult:hover {
             background: var(--accent);
             color: #0a0c10;
+            transform: scale(1.05);
+            border-color: var(--accent);
         }
 
         .play-btn {
@@ -314,14 +521,38 @@
             padding: 18px;
             border-radius: 40px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.3s;
             text-transform: uppercase;
             letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .play-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .play-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .play-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .play-btn:disabled::before {
+            display: none;
         }
 
         .mines-grid {
@@ -341,7 +572,7 @@
             justify-content: center;
             font-size: 24px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.3s;
             position: relative;
             overflow: hidden;
         }
@@ -350,104 +581,64 @@
             content: '?';
             color: var(--text-secondary);
             font-weight: 600;
+            animation: questionBlink 1.5s infinite;
+        }
+
+        @keyframes questionBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .mine-cell:hover {
+            transform: scale(1.05);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
         .mine-cell.revealed {
             background: var(--bg-card);
+            animation: revealCell 0.3s ease-out;
+        }
+
+        @keyframes revealCell {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .mine-cell.revealed::before {
-            content: '💎';
+            content: '●';
+            color: var(--success);
+            font-size: 32px;
+            animation: gemPulse 1s infinite;
+        }
+
+        @keyframes gemPulse {
+            0%, 100% { transform: scale(1); text-shadow: 0 0 10px var(--success); }
+            50% { transform: scale(1.1); text-shadow: 0 0 20px var(--success); }
         }
 
         .mine-cell.mine::before {
             content: '💣';
             color: var(--danger);
+            font-size: 24px;
+            animation: bombShake 0.5s infinite;
         }
 
-        .minelav-area {
-            position: relative;
-            height: 300px;
-            background: linear-gradient(180deg, #1a2a1a 0%, #2d3a2d 100%);
-            border-radius: 24px;
-            overflow: hidden;
-            margin: 20px 0;
-            border: 1px solid var(--border-color);
+        @keyframes bombShake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
         }
 
-        .blocks-layer {
-            display: grid;
-            grid-template-rows: repeat(5, 1fr);
-            height: 100%;
-            position: relative;
-            z-index: 2;
+        .mine-cell.mine.revealed {
+            background: rgba(244, 67, 54, 0.2);
+            animation: bombExplode 0.5s ease-out;
         }
 
-        .block-row {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 2px;
-            padding: 2px;
-        }
-
-        .block {
-            background: #5a6b5a;
-            border-radius: 8px;
-            box-shadow: inset 0 -2px 0 #2a3a2a;
-            transition: 0.1s;
-            position: relative;
-        }
-
-        .block.earth { background: #8b5a2b; }
-        .block.gold { background: #ffaa00; }
-        .block.redstone { background: #cc4400; }
-        .block.diamond { background: #33aaff; }
-
-        .pickaxe {
-            position: absolute;
-            width: 32px;
-            height: 32px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>');
-            background-size: contain;
-            animation: fall 0.5s linear;
-            z-index: 3;
-            pointer-events: none;
-        }
-
-        @keyframes fall {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(300px); }
-        }
-
-        .chests {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin: 20px 0;
-        }
-
-        .chest {
-            width: 70px;
-            height: 70px;
-            background: #8b5a2b;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            cursor: pointer;
-            position: relative;
-            border: 2px solid #ffaa00;
-            transition: 0.3s;
-        }
-
-        .chest:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #ffaa00;
-        }
-
-        .chest.opened {
-            background: #5a3a1a;
+        @keyframes bombExplode {
+            0% { transform: scale(1); background: rgba(244, 67, 54, 0.2); }
+            50% { transform: scale(1.2); background: rgba(244, 67, 54, 0.8); }
+            100% { transform: scale(1); background: rgba(244, 67, 54, 0.2); }
         }
 
         .baccarat-history {
@@ -458,19 +649,41 @@
         }
 
         .history-item {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             background: var(--bg-element);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
+            font-size: 20px;
+            animation: historyAppear 0.3s ease-out;
         }
 
-        .history-item.player { background: #4caf50; }
-        .history-item.banker { background: #f44336; }
-        .history-item.tie { background: #ffaa00; }
+        @keyframes historyAppear {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .history-item.player { background: #4caf50; color: white; animation: playerWin 0.5s; }
+        .history-item.banker { background: #f44336; color: white; animation: bankerWin 0.5s; }
+        .history-item.tie { background: #ffaa00; color: black; animation: tieWin 0.5s; }
+
+        @keyframes playerWin {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 30px #4caf50; }
+        }
+
+        @keyframes bankerWin {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 30px #f44336; }
+        }
+
+        @keyframes tieWin {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 30px #ffaa00; }
+        }
 
         .bet-options {
             display: grid;
@@ -486,18 +699,113 @@
             border-radius: 16px;
             text-align: center;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.3s;
+        }
+
+        .bet-option:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
         }
 
         .bet-option.selected {
             border-color: var(--accent);
             background: var(--accent-glow);
+            animation: optionSelect 0.3s ease-out;
+        }
+
+        @keyframes optionSelect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         .bet-option .coeff {
             color: var(--accent);
             font-weight: 700;
             font-size: 20px;
+            margin-top: 4px;
+        }
+
+        .chest-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            cursor: pointer;
+        }
+
+        .chest {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #8b5a2b, #5a3a1a);
+            border-radius: 30px 30px 20px 20px;
+            position: relative;
+            border: 3px solid #ffaa00;
+            box-shadow: 0 10px 0 #3a2a0a, 0 20px 30px rgba(0,0,0,0.5);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            animation: chestIdle 2s infinite;
+        }
+
+        @keyframes chestIdle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .chest::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 20px;
+            background: #ffaa00;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .chest::after {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 20px;
+            background: #ffaa00;
+            border-radius: 10px;
+        }
+
+        .chest.opening {
+            animation: chestOpen 1s forwards;
+        }
+
+        @keyframes chestOpen {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.1) rotate(5deg); }
+            40% { transform: scale(1.1) rotate(-5deg); }
+            60% { transform: scale(1.2); }
+            80% { transform: scale(1.3); }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .chest-result {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--accent);
+            text-shadow: 0 0 30px var(--accent);
+            animation: resultPop 0.5s ease-out;
+        }
+
+        @keyframes resultPop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .chat-section {
@@ -517,9 +825,17 @@
 
         .chat-message {
             margin-bottom: 8px;
-            padding: 8px 12px;
+            padding: 10px 14px;
             background: var(--bg-element);
-            border-radius: 12px;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            animation: messageAppear 0.3s ease-out;
+            border: 1px solid var(--border-color);
+        }
+
+        @keyframes messageAppear {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .chat-input {
@@ -534,16 +850,29 @@
             border-radius: 40px;
             padding: 12px 16px;
             color: white;
+            transition: all 0.3s;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
         .chat-input button {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent) 0%, #ffaa33 100%);
             border: none;
             border-radius: 40px;
             padding: 12px 24px;
             color: #0a0c10;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-input button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--accent);
         }
 
         .tournament-banner {
@@ -552,32 +881,95 @@
             padding: 16px;
             margin: 16px 0;
             border: 1px solid #ffaa00;
+            position: relative;
+            overflow: hidden;
+            animation: bannerGlow 2s infinite;
+        }
+
+        @keyframes bannerGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 170, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 170, 0, 0.5); }
         }
 
         .tournament-timer {
             font-size: 24px;
             font-weight: 700;
             color: var(--accent);
+            animation: timerPulse 1s infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .error-message {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid var(--danger);
+            border-radius: 16px;
+            padding: 12px;
+            margin: 10px 0;
+            color: var(--danger);
+            text-align: center;
+            animation: errorShake 0.5s;
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .win-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, var(--accent), #ffaa33);
+            color: #0a0c10;
+            padding: 30px 50px;
+            border-radius: 30px;
+            font-size: 48px;
+            font-weight: 900;
+            z-index: 1000;
+            animation: winPopup 1s forwards;
+            box-shadow: 0 0 100px var(--accent);
+            border: 2px solid white;
+        }
+
+        @keyframes winPopup {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            top: -10px;
+            animation: confettiFall 3s linear forwards;
+            z-index: 999;
+        }
+
+        @keyframes confettiFall {
+            to { transform: translateY(100vh) rotate(360deg); }
         }
 
         .hidden {
             display: none;
         }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
     </style>
 </head>
 <body>
+    <div class="particles" id="particles"></div>
+
     <div class="app">
         <div class="header">
             <div class="header-left">
                 <button class="back-btn" onclick="window.history.back()">←</button>
-                <span style="font-weight: 700; font-size: 20px;">BIG MONEY</span>
+                <span style="font-weight: 700; font-size: 20px; text-shadow: 0 0 10px var(--accent);">BIG MONEY</span>
             </div>
             <div class="user-info" id="userInfo">
                 <div class="avatar" id="userAvatar">👤</div>
@@ -593,7 +985,6 @@
         <div class="tabs" id="gameTabs">
             <button class="tab active" data-game="crash">CRASH</button>
             <button class="tab" data-game="mines">MINES</button>
-            <button class="tab" data-game="minelav">MINELAV</button>
             <button class="tab" data-game="baccarat">BACCARAT</button>
             <button class="tab" data-game="chest">СУНДУК</button>
         </div>
@@ -617,6 +1008,12 @@
 
                 <div class="canvas-container">
                     <div class="multiplier" id="crashMultiplier">1.00<small>x</small></div>
+                    <div class="graph-container" id="graphContainer">
+                        <svg class="graph-line" id="graphLine" viewBox="0 0 400 120" preserveAspectRatio="none">
+                            <path id="graphPath" d="M0 120 L400 120" stroke="var(--accent)" stroke-width="3" fill="none"/>
+                        </svg>
+                        <div class="graph-point" id="graphPoint" style="left: 0%; bottom: 0%;"></div>
+                    </div>
                     <div class="progress-bar">
                         <div class="progress-fill" id="crashProgress" style="width: 0%;"></div>
                     </div>
@@ -628,7 +1025,7 @@
                 </div>
 
                 <div class="bet-controls">
-                    <input type="number" class="bet-input" id="crashBet" value="10" min="0.5" step="0.5">
+                    <input type="number" class="bet-input" id="crashBet" value="10" min="1" step="1">
                     <div class="bet-multipliers">
                         <button class="bet-mult" data-mult="2">x2</button>
                         <button class="bet-mult" data-mult="5">x5</button>
@@ -636,6 +1033,7 @@
                     </div>
                 </div>
 
+                <div class="error-message hidden" id="crashError">Недостаточно средств!</div>
                 <button class="play-btn" id="crashPlayBtn">СТАВИТЬ</button>
             </div>
 
@@ -650,7 +1048,7 @@
                 <div class="mines-grid" id="minesGrid"></div>
 
                 <div class="bet-controls">
-                    <input type="number" class="bet-input" id="minesBet" value="10" min="0.5" step="0.5">
+                    <input type="number" class="bet-input" id="minesBet" value="10" min="1" step="1">
                     <div class="bet-multipliers">
                         <button class="bet-mult" data-mult="2">x2</button>
                         <button class="bet-mult" data-mult="5">x5</button>
@@ -658,36 +1056,9 @@
                     </div>
                 </div>
 
-                <button class="play-btn" id="minesPlayBtn">ИГРАТЬ</button>
-            </div>
-
-            <div id="minelav-game">
-                <div class="game-header">
-                    <div>
-                        <div class="game-title">MINELAV</div>
-                        <div class="game-desc">Кирки летят • Блоки ломаются</div>
-                    </div>
-                </div>
-
-                <div class="minelav-area" id="minelavArea">
-                    <div class="blocks-layer" id="blocksLayer"></div>
-                </div>
-
-                <div class="chests" id="chests">
-                    <div class="chest" data-mult="0.5">x0.5</div>
-                    <div class="chest" data-mult="2">x2</div>
-                    <div class="chest" data-mult="5">x5</div>
-                    <div class="chest" data-mult="10">x10</div>
-                </div>
-
-                <div class="bet-controls">
-                    <input type="number" class="bet-input" id="minelavBet" value="10" min="0.5" step="0.5">
-                    <div style="display: flex; gap: 8px;">
-                        <button class="bet-mult" id="dropPickaxe">⛏️ КИНУТЬ</button>
-                    </div>
-                </div>
-
-                <button class="play-btn" id="minelavPlayBtn">СТАВКА</button>
+                <div class="error-message hidden" id="minesError">Недостаточно средств!</div>
+                <button class="play-btn" id="minesPlayBtn">СДЕЛАТЬ СТАВКУ</button>
+                <button class="play-btn hidden" id="minesCashoutBtn" style="margin-top: 10px;">💰 ЗАБРАТЬ ВЫИГРЫШ</button>
             </div>
 
             <div id="baccarat-game">
@@ -701,26 +1072,26 @@
                 <div class="baccarat-history" id="baccaratHistory"></div>
 
                 <div class="bet-options" id="baccaratBets">
-                    <div class="bet-option" data-bet="player">
+                    <div class="bet-option" data-bet="player" data-coeff="2">
                         <div>👤 Игрок</div>
                         <div class="coeff">x2</div>
                     </div>
-                    <div class="bet-option" data-bet="banker">
+                    <div class="bet-option" data-bet="banker" data-coeff="1.95">
                         <div>🏦 Банкир</div>
                         <div class="coeff">x1.95</div>
                     </div>
-                    <div class="bet-option" data-bet="tie">
+                    <div class="bet-option" data-bet="tie" data-coeff="8">
                         <div>🤝 Ничья</div>
                         <div class="coeff">x8</div>
                     </div>
-                    <div class="bet-option" data-bet="playerPair">
+                    <div class="bet-option" data-bet="playerPair" data-coeff="11">
                         <div>👥 Пара игрока</div>
                         <div class="coeff">x11</div>
                     </div>
                 </div>
 
                 <div class="bet-controls">
-                    <input type="number" class="bet-input" id="baccaratBet" value="10" min="0.5" step="0.5">
+                    <input type="number" class="bet-input" id="baccaratBet" value="10" min="1" step="1">
                     <div class="bet-multipliers">
                         <button class="bet-mult" data-mult="2">x2</button>
                         <button class="bet-mult" data-mult="5">x5</button>
@@ -728,6 +1099,7 @@
                     </div>
                 </div>
 
+                <div class="error-message hidden" id="baccaratError">Недостаточно средств!</div>
                 <button class="play-btn" id="baccaratPlayBtn">СДЕЛАТЬ СТАВКУ</button>
             </div>
 
@@ -735,18 +1107,27 @@
                 <div class="game-header">
                     <div>
                         <div class="game-title">СУНДУК УДАЧИ</div>
-                        <div class="game-desc">Депозит от 10$ = бесплатный спин</div>
+                        <div class="game-desc">Испытай удачу!</div>
                     </div>
                 </div>
 
-                <div class="chests" style="justify-content: center;">
-                    <div class="chest" id="luckyChest">🎁</div>
+                <div class="chest-container" id="chestContainer">
+                    <div class="chest" id="chest">🎁</div>
                 </div>
 
-                <div style="text-align: center; margin: 20px 0; color: var(--accent); font-size: 32px; font-weight: 700;" id="chestResult">?</div>
+                <div class="chest-result" id="chestResult">?</div>
 
-                <button class="play-btn" id="chestPlayBtn">КРУТИТЬ (1 СПИН)</button>
-                <div style="text-align: center; margin-top: 12px; color: var(--text-secondary); font-size: 12px;">Бесплатно раз в 24ч</div>
+                <div class="bet-controls">
+                    <input type="number" class="bet-input" id="chestBet" value="10" min="1" step="1">
+                    <div class="bet-multipliers">
+                        <button class="bet-mult" data-mult="2">x2</button>
+                        <button class="bet-mult" data-mult="5">x5</button>
+                        <button class="bet-mult" data-mult="10">x10</button>
+                    </div>
+                </div>
+
+                <div class="error-message hidden" id="chestError">Недостаточно средств!</div>
+                <button class="play-btn" id="chestPlayBtn">ОТКРЫТЬ СУНДУК</button>
             </div>
 
             <div class="chat-section">
@@ -754,12 +1135,14 @@
                     <div style="color: #8f9bb3; text-align: center; padding: 20px;">Пока пусто. Напишите первым!</div>
                 </div>
                 <div class="chat-input">
-                    <input type="text" placeholder="Написать..." id="chatInput">
+                    <input type="text" placeholder="Написать..." id="chatInput" maxlength="100">
                     <button id="sendChatBtn">Отправить</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="win-popup hidden" id="winPopup">+0$</div>
 
     <script>
         const tg = window.Telegram.WebApp;
@@ -782,14 +1165,21 @@
         let userId = userData?.user_id || 0;
         let username = userData?.username || 'Игрок';
         let firstName = userData?.first_name || 'Игрок';
-        let totalGames = userData?.total_games || 0;
-        let totalWins = userData?.total_wins || 0;
 
         document.getElementById('balanceAmount').textContent = balance.toFixed(2);
         document.getElementById('userName').textContent = firstName;
         
         let avatar = document.getElementById('userAvatar');
         avatar.textContent = firstName.charAt(0).toUpperCase();
+
+        for (let i = 0; i < 30; i++) {
+            let particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (5 + Math.random() * 10) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            document.getElementById('particles').appendChild(particle);
+        }
 
         let gameActive = false;
         let autoCashout = false;
@@ -798,6 +1188,9 @@
         let currentGame = 'crash';
         let minesRevealed = [];
         let minePositions = [];
+        let minesBet = 0;
+        let minesMultiplier = 1;
+        let minesActive = false;
 
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
@@ -807,7 +1200,6 @@
                 document.querySelectorAll('.game-container > div').forEach(game => game.classList.remove('active'));
                 document.getElementById(`${currentGame}-game`).classList.add('active');
                 if (currentGame === 'mines') initMines();
-                if (currentGame === 'minelav') initMineLav();
                 if (currentGame === 'baccarat') updateBaccaratHistory();
             });
         });
@@ -827,34 +1219,79 @@
 
         function startCrash() {
             const bet = parseFloat(document.getElementById('crashBet').value);
-            if (bet > balance) {
-                tg.showAlert('Недостаточно средств!');
+            
+            if (bet < 1) {
+                showError('crash', 'Минимальная ставка 1$');
                 return;
             }
             
+            if (bet > balance) {
+                showError('crash', 'Недостаточно средств!');
+                return;
+            }
+            
+            hideError('crash');
             balance -= bet;
-            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+            updateBalance();
             
             gameActive = true;
             crashMultiplier = 1.00;
-            this.textContent = 'ЗАБРАТЬ';
+            document.getElementById('crashPlayBtn').textContent = 'ЗАБРАТЬ';
             
-            let growth = 0.002;
+            let growth = 0.005;
+            let points = [{x: 0, y: 0}];
+            
             crashInterval = setInterval(() => {
                 crashMultiplier += growth;
-                growth *= 1.008;
+                growth *= 1.01;
                 
                 document.getElementById('crashMultiplier').innerHTML = `${crashMultiplier.toFixed(2)}<small>x</small>`;
                 document.getElementById('crashProgress').style.width = `${Math.min(crashMultiplier * 10, 100)}%`;
+                
+                points.push({x: points.length, y: crashMultiplier});
+                if (points.length > 50) points.shift();
+                updateGraph(points);
                 
                 if (autoCashout && crashMultiplier >= 2.0) {
                     cashout();
                 }
                 
-                if (Math.random() < 0.002) {
+                if (Math.random() < 0.0015) {
                     crash();
                 }
-            }, 100);
+            }, 50);
+        }
+
+        function updateGraph(points) {
+            const width = 400;
+            const height = 120;
+            
+            if (points.length < 2) return;
+            
+            let maxY = Math.max(...points.map(p => p.y), 5);
+            let pathData = '';
+            
+            for (let i = 0; i < points.length; i++) {
+                const x = (i / (points.length - 1)) * width;
+                const y = height - (points[i].y / maxY) * height * 0.8;
+                
+                if (i === 0) {
+                    pathData += `M${x},${y}`;
+                } else {
+                    pathData += ` L${x},${y}`;
+                }
+            }
+            
+            const path = document.getElementById('graphPath');
+            path.setAttribute('d', pathData);
+            
+            const lastPoint = points[points.length - 1];
+            const lastX = width;
+            const lastY = height - (lastPoint.y / maxY) * height * 0.8;
+            
+            const point = document.getElementById('graphPoint');
+            point.style.left = (lastX - 6) + 'px';
+            point.style.bottom = (lastY - 6) + 'px';
         }
 
         function cashout() {
@@ -864,24 +1301,13 @@
             const bet = parseFloat(document.getElementById('crashBet').value);
             const win = bet * crashMultiplier;
             balance += win;
+            updateBalance();
             
-            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
             document.getElementById('crashPlayBtn').textContent = 'СТАВИТЬ';
             gameActive = false;
             
-            tg.HapticFeedback.notification('success');
-            tg.showPopup({
-                title: '🎉 ВЫИГРЫШ',
-                message: `+${win.toFixed(2)}$ (x${crashMultiplier.toFixed(2)})`,
-                buttons: [{type: 'ok'}]
-            });
-            
-            tg.sendData(JSON.stringify({
-                action: 'game_result',
-                game: 'crash',
-                bet: bet,
-                win: win
-            }));
+            showWinPopup(win);
+            sendGameResult('crash', bet, win);
         }
 
         function crash() {
@@ -889,13 +1315,8 @@
             document.getElementById('crashPlayBtn').textContent = 'СТАВИТЬ';
             gameActive = false;
             
-            tg.HapticFeedback.notification('error');
-            tg.sendData(JSON.stringify({
-                action: 'game_result',
-                game: 'crash',
-                bet: parseFloat(document.getElementById('crashBet').value),
-                win: 0
-            }));
+            const bet = parseFloat(document.getElementById('crashBet').value);
+            sendGameResult('crash', bet, 0);
         }
 
         function initMines() {
@@ -915,104 +1336,108 @@
                 cell.onclick = () => revealMine(i);
                 grid.appendChild(cell);
             }
+            
+            minesActive = false;
+            document.getElementById('minesCashoutBtn').classList.add('hidden');
         }
 
+        document.getElementById('minesPlayBtn').addEventListener('click', function() {
+            const bet = parseFloat(document.getElementById('minesBet').value);
+            
+            if (bet < 1) {
+                showError('mines', 'Минимальная ставка 1$');
+                return;
+            }
+            
+            if (bet > balance) {
+                showError('mines', 'Недостаточно средств!');
+                return;
+            }
+            
+            hideError('mines');
+            
+            minesBet = bet;
+            minesMultiplier = 1;
+            minesActive = true;
+            minesRevealed = new Array(25).fill(false);
+            minePositions = [];
+            
+            for (let i = 0; i < 5; i++) {
+                minePositions.push(Math.floor(Math.random() * 25));
+            }
+            
+            const grid = document.getElementById('minesGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'mine-cell';
+                cell.dataset.index = i;
+                cell.onclick = () => revealMine(i);
+                grid.appendChild(cell);
+            }
+            
+            balance -= bet;
+            updateBalance();
+            
+            document.getElementById('minesPlayBtn').classList.add('hidden');
+            document.getElementById('minesCashoutBtn').classList.remove('hidden');
+        });
+
+        document.getElementById('minesCashoutBtn').addEventListener('click', function() {
+            if (!minesActive) return;
+            
+            const revealedCount = minesRevealed.filter(r => r).length;
+            if (revealedCount === 0) {
+                showError('mines', 'Сначала откройте хотя бы одну клетку!');
+                return;
+            }
+            
+            const win = minesBet * (1 + revealedCount * 0.5);
+            
+            balance += win;
+            updateBalance();
+            
+            minesActive = false;
+            document.getElementById('minesPlayBtn').classList.remove('hidden');
+            document.getElementById('minesCashoutBtn').classList.add('hidden');
+            
+            showWinPopup(win);
+            sendGameResult('mines', minesBet, win);
+            
+            initMines();
+        });
+
         function revealMine(index) {
-            if (minesRevealed[index]) return;
+            if (!minesActive || minesRevealed[index]) return;
             
             const cell = document.querySelector(`[data-index="${index}"]`);
             minesRevealed[index] = true;
-            const bet = parseFloat(document.getElementById('minesBet').value);
             
             if (minePositions.includes(index)) {
                 cell.classList.add('revealed', 'mine');
-                tg.HapticFeedback.notification('error');
-                tg.sendData(JSON.stringify({
-                    action: 'game_result',
-                    game: 'mines',
-                    bet: bet,
-                    win: 0
-                }));
-                setTimeout(initMines, 1000);
+                
+                for (let i = 0; i < 25; i++) {
+                    if (minePositions.includes(i)) {
+                        const mineCell = document.querySelector(`[data-index="${i}"]`);
+                        if (mineCell) mineCell.classList.add('revealed', 'mine');
+                    }
+                }
+                
+                minesActive = false;
+                document.getElementById('minesPlayBtn').classList.remove('hidden');
+                document.getElementById('minesCashoutBtn').classList.add('hidden');
+                
+                sendGameResult('mines', minesBet, 0);
             } else {
                 cell.classList.add('revealed');
+                
                 const revealedCount = minesRevealed.filter(r => r).length;
-                const win = bet * (0.2 * revealedCount);
-                balance += win;
-                document.getElementById('balanceAmount').textContent = balance.toFixed(2);
-                tg.HapticFeedback.impactOccurred('light');
-                
-                if (revealedCount === 20) {
-                    tg.sendData(JSON.stringify({
-                        action: 'game_result',
-                        game: 'mines',
-                        bet: bet,
-                        win: bet * 5
-                    }));
-                }
+                const possibleMines = 5 - minePositions.filter(p => !minesRevealed[p]).length;
+                const safeLeft = 25 - revealedCount - possibleMines;
+                minesMultiplier = 1 + (revealedCount * 0.5);
             }
         }
-
-        function initMineLav() {
-            const blocksLayer = document.getElementById('blocksLayer');
-            blocksLayer.innerHTML = '';
-            
-            for (let row = 0; row < 5; row++) {
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'block-row';
-                
-                for (let col = 0; col < 6; col++) {
-                    const block = document.createElement('div');
-                    block.className = 'block';
-                    
-                    const rand = Math.random();
-                    if (rand < 0.5) block.classList.add('earth');
-                    else if (rand < 0.7) block.classList.add('gold');
-                    else if (rand < 0.9) block.classList.add('redstone');
-                    else block.classList.add('diamond');
-                    
-                    rowDiv.appendChild(block);
-                }
-                blocksLayer.appendChild(rowDiv);
-            }
-        }
-
-        document.getElementById('dropPickaxe').addEventListener('click', function() {
-            const area = document.getElementById('minelavArea');
-            const pickaxe = document.createElement('div');
-            pickaxe.className = 'pickaxe';
-            pickaxe.style.left = Math.random() * 350 + 'px';
-            area.appendChild(pickaxe);
-            
-            const bet = parseFloat(document.getElementById('minelavBet').value);
-            
-            setTimeout(() => {
-                pickaxe.remove();
-                const win = bet * 0.3;
-                balance += win;
-                document.getElementById('balanceAmount').textContent = balance.toFixed(2);
-                tg.HapticFeedback.impactOccurred('heavy');
-                initMineLav();
-                
-                tg.sendData(JSON.stringify({
-                    action: 'game_result',
-                    game: 'minelav',
-                    bet: bet,
-                    win: win
-                }));
-            }, 500);
-        });
-
-        document.getElementById('minelavPlayBtn').addEventListener('click', function() {
-            const bet = parseFloat(document.getElementById('minelavBet').value);
-            if (bet > balance) {
-                tg.showAlert('Недостаточно средств');
-                return;
-            }
-            balance -= bet;
-            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
-            document.getElementById('dropPickaxe').click();
-        });
 
         function updateBaccaratHistory() {
             const history = document.getElementById('baccaratHistory');
@@ -1048,102 +1473,99 @@
         document.getElementById('baccaratPlayBtn').addEventListener('click', function() {
             const selected = document.querySelector('.bet-option.selected');
             if (!selected) {
-                tg.showAlert('Выберите ставку!');
+                showError('baccarat', 'Выберите ставку!');
                 return;
             }
             
             const bet = parseFloat(document.getElementById('baccaratBet').value);
-            if (bet > balance) {
-                tg.showAlert('Недостаточно средств');
+            
+            if (bet < 1) {
+                showError('baccarat', 'Минимальная ставка 1$');
                 return;
             }
             
+            if (bet > balance) {
+                showError('baccarat', 'Недостаточно средств!');
+                return;
+            }
+            
+            hideError('baccarat');
             balance -= bet;
+            updateBalance();
             
             const rand = Math.random();
             let win = false;
-            let multiplier = 0;
+            let multiplier = parseFloat(selected.dataset.coeff);
             
             if (rand < 0.45) {
-                if (selected.dataset.bet === 'player') {
-                    win = true;
-                    multiplier = 2;
-                }
+                win = selected.dataset.bet === 'player';
             } else if (rand < 0.9) {
-                if (selected.dataset.bet === 'banker') {
-                    win = true;
-                    multiplier = 1.95;
-                }
+                win = selected.dataset.bet === 'banker';
             } else {
-                if (selected.dataset.bet === 'tie') {
-                    win = true;
-                    multiplier = 8;
-                }
+                win = selected.dataset.bet === 'tie' || selected.dataset.bet === 'playerPair';
             }
             
             let winAmount = 0;
             if (win) {
                 winAmount = bet * multiplier;
                 balance += winAmount;
-                tg.HapticFeedback.notification('success');
-                tg.showPopup({
-                    title: 'ПОБЕДА!',
-                    message: `+${winAmount.toFixed(2)}$`,
-                    buttons: [{type: 'ok'}]
-                });
-            } else {
-                tg.HapticFeedback.notification('error');
-                tg.showPopup({
-                    title: 'ПРОИГРЫШ',
-                    message: `-${bet.toFixed(2)}$`,
-                    buttons: [{type: 'ok'}]
-                });
+                updateBalance();
+                showWinPopup(winAmount);
             }
             
-            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
             updateBaccaratHistory();
-            
-            tg.sendData(JSON.stringify({
-                action: 'game_result',
-                game: 'baccarat',
-                bet: bet,
-                win: winAmount
-            }));
+            sendGameResult('baccarat', bet, winAmount);
         });
 
         document.getElementById('chestPlayBtn').addEventListener('click', function() {
+            const bet = parseFloat(document.getElementById('chestBet').value);
+            
+            if (bet < 1) {
+                showError('chest', 'Минимальная ставка 1$');
+                return;
+            }
+            
+            if (bet > balance) {
+                showError('chest', 'Недостаточно средств!');
+                return;
+            }
+            
+            hideError('chest');
+            balance -= bet;
+            updateBalance();
+            
+            const chest = document.getElementById('chest');
+            chest.classList.add('opening');
+            
             const rand = Math.random();
-            let win = 0;
+            let multiplier = 0;
             
-            if (rand < 0.3) win = 0.5;
-            else if (rand < 0.5) win = 1;
-            else if (rand < 0.7) win = 2;
-            else if (rand < 0.85) win = 5;
-            else if (rand < 0.95) win = 10;
-            else win = 25;
+            if (rand < 0.3) multiplier = 0.5;
+            else if (rand < 0.5) multiplier = 1;
+            else if (rand < 0.7) multiplier = 2;
+            else if (rand < 0.85) multiplier = 3;
+            else if (rand < 0.95) multiplier = 5;
+            else multiplier = 10;
             
-            balance += win;
-            document.getElementById('chestResult').textContent = win.toFixed(2) + '$';
-            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+            const win = bet * multiplier;
             
-            tg.HapticFeedback.notification('success');
-            tg.showPopup({
-                title: 'СУНДУК',
-                message: `+${win.toFixed(2)}$`,
-                buttons: [{type: 'ok'}]
-            });
-            
-            document.getElementById('luckyChest').style.transform = 'scale(1.2)';
             setTimeout(() => {
-                document.getElementById('luckyChest').style.transform = 'scale(1)';
-            }, 200);
-            
-            tg.sendData(JSON.stringify({
-                action: 'game_result',
-                game: 'chest',
-                bet: 0,
-                win: win
-            }));
+                chest.classList.remove('opening');
+                chest.style.animation = 'none';
+                chest.offsetHeight;
+                chest.style.animation = null;
+                
+                if (win > 0) {
+                    balance += win;
+                    updateBalance();
+                    document.getElementById('chestResult').textContent = `+${win.toFixed(2)}$`;
+                    showWinPopup(win);
+                } else {
+                    document.getElementById('chestResult').textContent = '0$';
+                }
+                
+                sendGameResult('chest', bet, win);
+            }, 1000);
         });
 
         document.getElementById('sendChatBtn').addEventListener('click', function() {
@@ -1182,10 +1604,71 @@
                 const mult = parseFloat(this.dataset.mult);
                 const input = this.closest('.bet-controls').querySelector('.bet-input');
                 if (input) {
-                    input.value = (parseFloat(input.value) * mult).toFixed(2);
+                    let val = parseFloat(input.value) * mult;
+                    input.value = Math.max(1, Math.floor(val));
                 }
             });
         });
+
+        function showError(game, message) {
+            const errorEl = document.getElementById(game + 'Error');
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.remove('hidden');
+                setTimeout(() => hideError(game), 3000);
+            }
+        }
+
+        function hideError(game) {
+            const errorEl = document.getElementById(game + 'Error');
+            if (errorEl) errorEl.classList.add('hidden');
+        }
+
+        function showWinPopup(amount) {
+            const popup = document.getElementById('winPopup');
+            popup.textContent = `+${amount.toFixed(2)}$`;
+            popup.classList.remove('hidden');
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => createConfetti(), i * 50);
+            }
+            
+            setTimeout(() => {
+                popup.classList.add('hidden');
+            }, 2000);
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            confetti.style.width = (5 + Math.random() * 10) + 'px';
+            confetti.style.height = confetti.style.width;
+            confetti.style.animationDuration = (2 + Math.random() * 3) + 's';
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 5000);
+        }
+
+        function sendGameResult(game, bet, win) {
+            tg.sendData(JSON.stringify({
+                action: 'game_result',
+                game: game,
+                bet: bet,
+                win: win
+            }));
+            
+            if (win > bet) {
+                tg.HapticFeedback.notification('success');
+            } else if (win === 0 && bet > 0) {
+                tg.HapticFeedback.notification('error');
+            }
+        }
+
+        function updateBalance() {
+            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+        }
 
         function updateTimer() {
             const end = new Date();
@@ -1204,7 +1687,6 @@
         setInterval(updateTimer, 1000);
         updateTimer();
         initMines();
-        initMineLav();
         updateBaccaratHistory();
 
         tg.onEvent('mainButtonClicked', () => tg.close());
