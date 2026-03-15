@@ -206,6 +206,142 @@
             font-weight: 600;
         }
 
+        .rating-section {
+            margin: 20px 0;
+            background: var(--card);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .rating-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .rating-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .rating-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .rating-tab {
+            background: var(--element);
+            border: 1px solid var(--border);
+            color: var(--text2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .rating-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+        }
+
+        .rating-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rating-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--element);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .rating-place {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .rating-place.gold {
+            color: var(--gold);
+            text-shadow: 0 0 10px var(--gold);
+        }
+
+        .rating-place.silver {
+            color: #c0c0c0;
+            text-shadow: 0 0 10px #c0c0c0;
+        }
+
+        .rating-place.bronze {
+            color: #cd7f32;
+            text-shadow: 0 0 10px #cd7f32;
+        }
+
+        .rating-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .rating-info {
+            flex: 1;
+        }
+
+        .rating-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .rating-amount {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .rating-stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--text2);
+        }
+
+        .rating-stats span {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .rating-footer {
+            margin-top: 16px;
+            text-align: center;
+            color: var(--text2);
+            font-size: 12px;
+        }
+
         .game-container {
             padding: 0 20px 20px;
         }
@@ -1126,6 +1262,20 @@
             <div class="username" id="userName">Игрок</div>
         </div>
 
+        <div class="rating-section">
+            <div class="rating-header">
+                <div class="rating-title">🏆 ТОП ПО ДЕПОЗИТАМ</div>
+                <div class="rating-tabs">
+                    <div class="rating-tab active" data-rating="day">День</div>
+                    <div class="rating-tab" data-rating="week">Неделя</div>
+                    <div class="rating-tab" data-rating="month">Месяц</div>
+                    <div class="rating-tab" data-rating="all">Все</div>
+                </div>
+            </div>
+            <div class="rating-list" id="ratingList"></div>
+            <div class="rating-footer" id="ratingFooter"></div>
+        </div>
+
         <div id="gameSelector" class="game-selector">
             <div class="game-card" onclick="selectGame('crash')">
                 <div class="game-card-header">
@@ -1385,6 +1535,7 @@
         let balance = userData?.balance || 1000;
         let userId = userData?.user_id || 0;
         let firstName = userData?.first_name || 'Игрок';
+        let totalDeposit = userData?.total_deposit || 0;
 
         document.getElementById('balanceAmount').textContent = balance.toFixed(2);
         document.getElementById('userName').textContent = firstName;
@@ -1478,6 +1629,77 @@
         }
 
         initChat();
+
+        function updateRating(period) {
+            let ratingList = document.getElementById('ratingList');
+            let ratingFooter = document.getElementById('ratingFooter');
+            
+            let players = [
+                { name: 'CRYPTO_KING', deposit: 15000, games: 345, win: 15200 },
+                { name: 'BIG_WINNER', deposit: 12700, games: 289, win: 13100 },
+                { name: 'MONEY_MAKER', deposit: 9800, games: 412, win: 10100 },
+                { name: 'LUCKY_DEVIL', deposit: 7500, games: 156, win: 8200 },
+                { name: 'GOD_OF_WAR', deposit: 6200, games: 234, win: 5900 },
+                { name: 'DIAMOND_HAND', deposit: 5400, games: 178, win: 5600 },
+                { name: 'HIGH_ROLLER', deposit: 4300, games: 267, win: 4100 },
+                { name: 'BET_MASTER', deposit: 3900, games: 198, win: 3800 },
+                { name: 'RISK_TAKER', deposit: 3100, games: 145, win: 2900 },
+                { name: 'WIN_STREAK', deposit: 2800, games: 167, win: 2600 }
+            ];
+            
+            if (period === 'day') {
+                players = players.map(p => ({ ...p, deposit: Math.floor(p.deposit * 0.1) }));
+            } else if (period === 'week') {
+                players = players.map(p => ({ ...p, deposit: Math.floor(p.deposit * 0.4) }));
+            } else if (period === 'month') {
+                players = players.map(p => ({ ...p, deposit: Math.floor(p.deposit * 0.7) }));
+            }
+            
+            players.sort((a, b) => b.deposit - a.deposit);
+            
+            ratingList.innerHTML = '';
+            
+            players.forEach((player, index) => {
+                let placeClass = '';
+                if (index === 0) placeClass = 'gold';
+                else if (index === 1) placeClass = 'silver';
+                else if (index === 2) placeClass = 'bronze';
+                
+                let avatar = player.name.charAt(0);
+                
+                let item = document.createElement('div');
+                item.className = 'rating-item';
+                item.innerHTML = `
+                    <div class="rating-place ${placeClass}">${index + 1}</div>
+                    <div class="rating-avatar">${avatar}</div>
+                    <div class="rating-info">
+                        <div class="rating-name">${player.name}</div>
+                        <div class="rating-amount">${player.deposit}$</div>
+                        <div class="rating-stats">
+                            <span>${player.win}$</span> выигрыш • ${player.games} игр
+                        </div>
+                    </div>
+                `;
+                ratingList.appendChild(item);
+            });
+            
+            let userRank = players.findIndex(p => p.name === firstName.toUpperCase()) + 1;
+            if (userRank > 0) {
+                ratingFooter.textContent = `Ваше место в топе: ${userRank}`;
+            } else {
+                ratingFooter.textContent = `Ваш депозит: ${totalDeposit}$`;
+            }
+        }
+
+        document.querySelectorAll('.rating-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.rating-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                updateRating(this.dataset.rating);
+            });
+        });
+
+        updateRating('all');
 
         for (let i = 0; i < 5; i++) {
             crashHistory.push((1.1 + Math.random() * 0.8).toFixed(2));
