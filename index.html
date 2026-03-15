@@ -947,8 +947,8 @@
                 </div>
                 <div class="game-card-desc">Алмазы и мины 5x5</div>
                 <div class="game-card-stats">
-                    <span>💎 x5.2</span>
-                    <span>💣 5 мин</span>
+                    <span>💎 x1.2-2.0</span>
+                    <span>💣 8 мин</span>
                 </div>
             </div>
 
@@ -1029,6 +1029,7 @@
 
             <div id="mines-game" class="game-view hidden">
                 <div class="mines-grid" id="minesGrid"></div>
+                <div class="current-multiplier" style="text-align: center; margin: 10px 0; font-size: 24px; color: var(--accent);" id="minesMultiplier">x1.0</div>
 
                 <div class="bet-controls">
                     <input type="number" class="bet-input" id="minesBet" value="10" min="1" step="1">
@@ -1036,7 +1037,7 @@
 
                 <div class="error-message hidden" id="minesError"></div>
                 <button class="play-btn" id="minesPlayBtn">💎 НАЧАТЬ ИГРУ</button>
-                <button class="play-btn small hidden" id="minesCashoutBtn">💰 ЗАБРАТЬ ВЫИГРЫШ</button>
+                <button class="play-btn small hidden" id="minesCashoutBtn">💰 ЗАБРАТЬ (x<span id="cashoutMultiplier">1.0</span>)</button>
             </div>
 
             <div id="baccarat-game" class="game-view hidden">
@@ -1139,13 +1140,13 @@
         let gamesPlayed = 0;
         let isWaiting = false;
 
-        let winRate = 30;
+        let winRate = 20;
         let minBet = 1;
         let maxBet = 1000;
         let coefficient = 1.95;
 
         if (gameSettings.crash) {
-            winRate = gameSettings.crash.win_rate || 30;
+            winRate = gameSettings.crash.win_rate || 20;
             minBet = gameSettings.crash.min_bet || 1;
             maxBet = gameSettings.crash.max_bet || 1000;
             coefficient = gameSettings.crash.coefficient || 1.95;
@@ -1516,14 +1517,31 @@
             setTimeout(() => startWaiting(), 3000);
         }
 
+        // MINES
+        let minesRevealed = [];
+        let minePositions = [];
+        let minesBet = 0;
+        let minesActive = false;
+        let minesMultiplier = 1.0;
+        let minesRevealedCount = 0;
+
         function initMines() {
             let grid = document.getElementById('minesGrid');
             grid.innerHTML = '';
-            window.minesRevealed = new Array(25).fill(false);
-            window.minePositions = [];
+            minesRevealed = new Array(25).fill(false);
+            minePositions = [];
+            minesRevealedCount = 0;
+            minesMultiplier = 1.0;
             
-            for (let i = 0; i < 5; i++) {
-                window.minePositions.push(Math.floor(Math.random() * 25));
+            document.getElementById('minesMultiplier').textContent = 'x' + minesMultiplier.toFixed(2);
+            document.getElementById('cashoutMultiplier').textContent = minesMultiplier.toFixed(2);
+            
+            for (let i = 0; i < 8; i++) {
+                let pos;
+                do {
+                    pos = Math.floor(Math.random() * 25);
+                } while (minePositions.includes(pos));
+                minePositions.push(pos);
             }
             
             for (let i = 0; i < 25; i++) {
@@ -1534,7 +1552,7 @@
                 grid.appendChild(cell);
             }
             
-            window.minesActive = false;
+            minesActive = false;
             document.getElementById('minesCashoutBtn').classList.add('hidden');
         }
 
@@ -1546,17 +1564,19 @@
                 return;
             }
             
-            window.minesBet = bet;
-            window.minesActive = true;
-            window.minesRevealed = new Array(25).fill(false);
-            window.minePositions = [];
+            minesBet = bet;
+            minesActive = true;
+            minesRevealed = new Array(25).fill(false);
+            minePositions = [];
+            minesRevealedCount = 0;
+            minesMultiplier = 1.0;
             
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 8; i++) {
                 let pos;
                 do {
                     pos = Math.floor(Math.random() * 25);
-                } while (window.minePositions.includes(pos));
-                window.minePositions.push(pos);
+                } while (minePositions.includes(pos));
+                minePositions.push(pos);
             }
             
             let grid = document.getElementById('minesGrid');
@@ -1575,53 +1595,66 @@
             
             document.getElementById('minesPlayBtn').classList.add('hidden');
             document.getElementById('minesCashoutBtn').classList.remove('hidden');
+            document.getElementById('minesMultiplier').textContent = 'x' + minesMultiplier.toFixed(2);
+            document.getElementById('cashoutMultiplier').textContent = minesMultiplier.toFixed(2);
         });
 
         document.getElementById('minesCashoutBtn').addEventListener('click', function() {
-            if (!window.minesActive) return;
+            if (!minesActive) return;
             
-            let revealedCount = window.minesRevealed.filter(r => r).length;
-            if (revealedCount === 0) {
+            if (minesRevealedCount === 0) {
                 showError('mines', 'Откройте клетку');
                 return;
             }
             
-            let win = window.minesBet * (1 + revealedCount * 0.3);
+            let win = minesBet * minesMultiplier;
             
             balance += win;
             updateBalance();
             
-            window.minesActive = false;
+            minesActive = false;
             document.getElementById('minesPlayBtn').classList.remove('hidden');
             document.getElementById('minesCashoutBtn').classList.add('hidden');
             
             showWinPopup(win);
-            sendGameResult('mines', window.minesBet, win);
+            sendGameResult('mines', minesBet, win);
             
             initMines();
         });
 
         function revealMine(index) {
-            if (!window.minesActive || window.minesRevealed[index]) return;
+            if (!minesActive || minesRevealed[index]) return;
             
             let cell = document.querySelector(`[data-index="${index}"]`);
-            window.minesRevealed[index] = true;
+            minesRevealed[index] = true;
             
-            if (window.minePositions.includes(index)) {
+            if (minePositions.includes(index)) {
                 cell.classList.add('revealed', 'mine');
                 
-                window.minePositions.forEach(i => {
+                minePositions.forEach(i => {
                     let c = document.querySelector(`[data-index="${i}"]`);
                     if (c) c.classList.add('revealed', 'mine');
                 });
                 
-                window.minesActive = false;
+                minesActive = false;
                 document.getElementById('minesPlayBtn').classList.remove('hidden');
                 document.getElementById('minesCashoutBtn').classList.add('hidden');
                 
-                sendGameResult('mines', window.minesBet, 0);
+                sendGameResult('mines', minesBet, 0);
             } else {
                 cell.classList.add('revealed');
+                minesRevealedCount++;
+                
+                if (minesRevealedCount <= 3) {
+                    minesMultiplier = 1.0 + (minesRevealedCount * 0.2);
+                } else if (minesRevealedCount <= 6) {
+                    minesMultiplier = 1.6 + ((minesRevealedCount - 3) * 0.15);
+                } else {
+                    minesMultiplier = 2.05 + ((minesRevealedCount - 6) * 0.1);
+                }
+                
+                document.getElementById('minesMultiplier').textContent = 'x' + minesMultiplier.toFixed(2);
+                document.getElementById('cashoutMultiplier').textContent = minesMultiplier.toFixed(2);
             }
         }
 
