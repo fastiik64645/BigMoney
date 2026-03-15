@@ -1185,6 +1185,7 @@
         let cashoutUsed = false;
         let gamesPlayed = 0;
         let isWaiting = true;
+        let canPlaceBet = true;
 
         let winRate = 20;
         let minBet = 1;
@@ -1301,6 +1302,7 @@
             hasBet = false;
             currentBet = 0;
             gameInProgress = false;
+            canPlaceBet = true;
             startWaiting();
         }
 
@@ -1345,6 +1347,7 @@
 
         function startWaiting() {
             isWaiting = true;
+            canPlaceBet = true;
             countdown = 10;
             document.getElementById('waitingTimer').textContent = countdown;
             document.getElementById('waitingOverlay').classList.remove('hidden');
@@ -1362,6 +1365,7 @@
                     document.getElementById('crashCanvasContainer').classList.remove('waiting');
                     isWaiting = false;
                     gameInProgress = true;
+                    canPlaceBet = false;
                     
                     updateButtonState();
                     startCrashGame();
@@ -1373,10 +1377,17 @@
             let btn = document.getElementById('crashPlayBtn');
             
             if (isWaiting) {
-                btn.classList.remove('green', 'gold');
-                btn.classList.add('gray');
-                btn.textContent = '⏳ ОЖИДАЙТЕ';
-                btn.disabled = false;
+                if (hasBet) {
+                    btn.classList.remove('green', 'gold');
+                    btn.classList.add('gray');
+                    btn.textContent = '⏳ ОЖИДАЙТЕ';
+                    btn.disabled = false;
+                } else {
+                    btn.classList.remove('green', 'gray');
+                    btn.classList.add('gold');
+                    btn.textContent = '🔥 СДЕЛАТЬ СТАВКУ';
+                    btn.disabled = false;
+                }
             } else if (gameInProgress) {
                 if (hasBet) {
                     btn.classList.remove('gray', 'gold');
@@ -1554,7 +1565,7 @@
                 return;
             }
             
-            if (isWaiting && !hasBet) {
+            if (isWaiting && !hasBet && canPlaceBet) {
                 let bet = parseFloat(document.getElementById('crashBet').value);
                 
                 if (bet < minBet || bet > maxBet) {
