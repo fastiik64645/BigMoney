@@ -431,6 +431,8 @@
             gap: 8px;
             overflow-x: auto;
             padding-bottom: 4px;
+            justify-content: flex-start;
+            flex-direction: row-reverse;
         }
 
         .history-item {
@@ -1259,11 +1261,8 @@
 
         initChat();
 
-        for (let i = 0; i < 30; i++) {
-            if (i < 3) crashHistory.push((1.1 + Math.random() * 0.3).toFixed(2));
-            else if (i < 8) crashHistory.push((1.2 + Math.random() * 0.5).toFixed(2));
-            else if (i < 20) crashHistory.push((1.1 + Math.random() * 0.8).toFixed(2));
-            else crashHistory.push((5 + Math.random() * 10).toFixed(2));
+        for (let i = 0; i < 5; i++) {
+            crashHistory.push((1.1 + Math.random() * 0.8).toFixed(2));
         }
 
         function showGameSelector() {
@@ -1310,7 +1309,7 @@
             let historyList = document.getElementById('crashHistory');
             historyList.innerHTML = '';
             
-            let recent = crashHistory.slice(-25);
+            let recent = crashHistory.slice(-5);
             recent.forEach(x => {
                 let item = document.createElement('div');
                 item.className = 'history-item';
@@ -1445,10 +1444,8 @@
                     
                     if (step >= steps) {
                         clearInterval(crashInterval);
-                        crashHistory.push(multiplier.toFixed(2));
-                        if (crashHistory.length > 30) crashHistory.shift();
-                        updateCrashHistory();
                         gameInProgress = false;
+                        addToHistory(multiplier);
                         showResult('crash', multiplier.toFixed(2));
                         setTimeout(() => {
                             isWaiting = true;
@@ -1474,9 +1471,8 @@
                     if (step >= crashTime) {
                         clearInterval(crashInterval);
                         if (!cashoutUsed) {
-                            crashHistory.push(multiplier.toFixed(2));
-                            if (crashHistory.length > 30) crashHistory.shift();
-                            updateCrashHistory();
+                            gameInProgress = false;
+                            addToHistory(multiplier);
                             sendGameResult('crash', currentBet, 0);
                             showResult('lose', currentBet.toFixed(2));
                             resetCrash();
@@ -1554,6 +1550,14 @@
             point.style.bottom = lastY + 'px';
         }
 
+        function addToHistory(multiplier) {
+            crashHistory.push(multiplier.toFixed(2));
+            if (crashHistory.length > 5) {
+                crashHistory.shift();
+            }
+            updateCrashHistory();
+        }
+
         document.getElementById('autoCashoutToggle').addEventListener('click', function() {
             autoCashout = !autoCashout;
             this.classList.toggle('active');
@@ -1598,9 +1602,7 @@
             balance += win;
             updateBalance();
             
-            crashHistory.push(crashMultiplier.toFixed(2));
-            if (crashHistory.length > 30) crashHistory.shift();
-            updateCrashHistory();
+            addToHistory(crashMultiplier);
             
             showWinPopup(win);
             sendGameResult('crash', currentBet, win);
