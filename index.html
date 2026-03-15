@@ -597,6 +597,7 @@
             background: linear-gradient(135deg, #666, #444);
             color: #ccc;
             cursor: not-allowed;
+            pointer-events: none;
         }
 
         .play-btn:disabled {
@@ -1052,6 +1053,11 @@
 
                 <div class="bet-controls">
                     <input type="number" class="bet-input" id="crashBet" value="10" min="1" step="1">
+                    <div class="bet-multipliers">
+                        <button class="bet-mult" data-mult="2">x2</button>
+                        <button class="bet-mult" data-mult="5">x5</button>
+                        <button class="bet-mult" data-mult="10">x10</button>
+                    </div>
                 </div>
 
                 <div class="error-message hidden" id="crashError"></div>
@@ -1064,6 +1070,11 @@
 
                 <div class="bet-controls">
                     <input type="number" class="bet-input" id="minesBet" value="10" min="1" step="1">
+                    <div class="bet-multipliers">
+                        <button class="bet-mult" data-mult="2">x2</button>
+                        <button class="bet-mult" data-mult="5">x5</button>
+                        <button class="bet-mult" data-mult="10">x10</button>
+                    </div>
                 </div>
 
                 <div class="error-message hidden" id="minesError"></div>
@@ -1095,6 +1106,11 @@
 
                 <div class="bet-controls">
                     <input type="number" class="bet-input" id="baccaratBet" value="10" min="1" step="1">
+                    <div class="bet-multipliers">
+                        <button class="bet-mult" data-mult="2">x2</button>
+                        <button class="bet-mult" data-mult="5">x5</button>
+                        <button class="bet-mult" data-mult="10">x10</button>
+                    </div>
                 </div>
 
                 <div class="error-message hidden" id="baccaratError"></div>
@@ -1282,6 +1298,9 @@
         function initCrash() {
             updateCrashHistory();
             isWaiting = true;
+            hasBet = false;
+            currentBet = 0;
+            gameInProgress = false;
             startWaiting();
         }
 
@@ -1331,11 +1350,7 @@
             document.getElementById('waitingOverlay').classList.remove('hidden');
             document.getElementById('crashCanvasContainer').classList.add('waiting');
             
-            let btn = document.getElementById('crashPlayBtn');
-            btn.classList.remove('green', 'gold', 'gray');
-            btn.classList.add('gray');
-            btn.textContent = '⏳ ОЖИДАЙТЕ';
-            btn.disabled = true;
+            updateButtonState();
             
             waitingInterval = setInterval(() => {
                 countdown--;
@@ -1346,26 +1361,44 @@
                     document.getElementById('waitingOverlay').classList.add('hidden');
                     document.getElementById('crashCanvasContainer').classList.remove('waiting');
                     isWaiting = false;
+                    gameInProgress = true;
                     
-                    if (hasBet) {
-                        btn.classList.remove('gray');
-                        btn.classList.add('green');
-                        btn.textContent = `💰 ЗАБРАТЬ (${(currentBet * 1.0).toFixed(2)}$)`;
-                        btn.disabled = false;
-                    } else {
-                        btn.classList.remove('gray');
-                        btn.classList.add('gold');
-                        btn.textContent = '🔥 СДЕЛАТЬ СТАВКУ';
-                        btn.disabled = false;
-                    }
-                    
+                    updateButtonState();
                     startCrashGame();
                 }
             }, 1000);
         }
 
+        function updateButtonState() {
+            let btn = document.getElementById('crashPlayBtn');
+            
+            if (isWaiting) {
+                btn.classList.remove('green', 'gold');
+                btn.classList.add('gray');
+                btn.textContent = '⏳ ОЖИДАЙТЕ';
+                btn.disabled = false;
+            } else if (gameInProgress) {
+                if (hasBet) {
+                    btn.classList.remove('gray', 'gold');
+                    btn.classList.add('green');
+                    btn.textContent = `💰 ЗАБРАТЬ (${(currentBet * crashMultiplier).toFixed(2)}$)`;
+                    btn.disabled = false;
+                } else {
+                    btn.classList.remove('green', 'gold');
+                    btn.classList.add('gray');
+                    btn.textContent = '⏳ ОЖИДАЙТЕ';
+                    btn.disabled = false;
+                }
+            } else {
+                btn.classList.remove('green', 'gray');
+                btn.classList.add('gold');
+                btn.textContent = '🔥 СДЕЛАТЬ СТАВКУ';
+                btn.disabled = false;
+            }
+        }
+
         function startCrashGame() {
-            if (gameInProgress) return;
+            if (!gameInProgress) return;
             
             gameInProgress = true;
             cashoutUsed = false;
@@ -1425,8 +1458,7 @@
                     
                     updateCrashDisplay(multiplier);
                     
-                    let btn = document.getElementById('crashPlayBtn');
-                    btn.textContent = `💰 ЗАБРАТЬ (${(currentBet * multiplier).toFixed(2)}$)`;
+                    updateButtonState();
                     
                     if (step >= crashTime) {
                         clearInterval(crashInterval);
@@ -1459,8 +1491,7 @@
                     
                     updateCrashDisplay(multiplier);
                     
-                    let btn = document.getElementById('crashPlayBtn');
-                    btn.textContent = `💰 ЗАБРАТЬ (${(currentBet * multiplier).toFixed(2)}$)`;
+                    updateButtonState();
                     
                     if (step >= steps) {
                         clearInterval(crashInterval);
@@ -1523,7 +1554,7 @@
                 return;
             }
             
-            if (!gameInProgress && !isWaiting) {
+            if (isWaiting && !hasBet) {
                 let bet = parseFloat(document.getElementById('crashBet').value);
                 
                 if (bet < minBet || bet > maxBet) {
@@ -1542,9 +1573,7 @@
                 currentBet = bet;
                 gamesPlayed++;
                 
-                this.classList.remove('gold');
-                this.classList.add('green');
-                this.textContent = `💰 ЗАБРАТЬ (${bet}$)`;
+                updateButtonState();
             }
         });
 
