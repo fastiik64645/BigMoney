@@ -1658,7 +1658,11 @@
                             addToHistory(multiplier);
                             sendGameResult('crash', currentBet, 0);
                             showResult('lose', currentBet.toFixed(2));
-                            resetCrash();
+                            
+                            setTimeout(() => {
+                                isWaiting = true;
+                                startWaiting();
+                            }, 3000);
                         }
                         return;
                     }
@@ -1677,7 +1681,11 @@
                             addToHistory(multiplier);
                             sendGameResult('crash', currentBet, 0);
                             showResult('lose', currentBet.toFixed(2));
-                            resetCrash();
+                            
+                            setTimeout(() => {
+                                isWaiting = true;
+                                startWaiting();
+                            }, 3000);
                         }
                     }
                 }, 50);
@@ -1697,6 +1705,7 @@
                         gameInProgress = false;
                         addToHistory(multiplier);
                         showResult('crash', multiplier.toFixed(2));
+                        
                         setTimeout(() => {
                             isWaiting = true;
                             startWaiting();
@@ -1796,10 +1805,6 @@
             sendGameResult('crash', currentBet, win);
             showResult('win', win.toFixed(2));
             
-            resetCrash();
-        }
-
-        function resetCrash() {
             gameInProgress = false;
             hasBet = false;
             currentBet = 0;
@@ -2060,12 +2065,12 @@
         let deck = [];
         let playerCards = [];
         let dealerCards = [];
-        let gameActive = false;
+        let gameActive21 = false;
 
         function initTwentyOne() {
             playerCards = [];
             dealerCards = [];
-            gameActive = false;
+            gameActive21 = false;
             updateTwentyOneDisplay();
             document.getElementById('hitBtn').disabled = true;
             document.getElementById('standBtn').disabled = true;
@@ -2123,7 +2128,7 @@
             
             dealerCards.forEach((card, index) => {
                 let cardDiv = document.createElement('div');
-                if (index === 0 && gameActive) {
+                if (index === 0 && gameActive21) {
                     cardDiv.className = 'card back';
                 } else {
                     cardDiv.className = `card ${getCardColor(card)}`;
@@ -2133,7 +2138,7 @@
             });
             
             document.getElementById('playerScore').textContent = calculateScore(playerCards);
-            if (dealerCards.length > 0 && !gameActive) {
+            if (dealerCards.length > 0 && !gameActive21) {
                 document.getElementById('dealerScore').textContent = calculateScore(dealerCards);
             } else {
                 document.getElementById('dealerScore').textContent = dealerCards.length > 0 ? getCardValue(dealerCards[0]) : 0;
@@ -2151,7 +2156,7 @@
             deck = createDeck();
             playerCards = [deck.pop(), deck.pop()];
             dealerCards = [deck.pop(), deck.pop()];
-            gameActive = true;
+            gameActive21 = true;
             
             balance -= bet;
             currentBet = bet;
@@ -2165,7 +2170,7 @@
         });
 
         document.getElementById('hitBtn').addEventListener('click', function() {
-            if (!gameActive) return;
+            if (!gameActive21) return;
             
             playerCards.push(deck.pop());
             updateTwentyOneDisplay();
@@ -2173,7 +2178,7 @@
             let playerScore = calculateScore(playerCards);
             
             if (playerScore > 21) {
-                gameActive = false;
+                gameActive21 = false;
                 document.getElementById('hitBtn').disabled = true;
                 document.getElementById('standBtn').disabled = true;
                 document.getElementById('twentyonePlayBtn').disabled = false;
@@ -2184,9 +2189,9 @@
         });
 
         document.getElementById('standBtn').addEventListener('click', function() {
-            if (!gameActive) return;
+            if (!gameActive21) return;
             
-            gameActive = false;
+            gameActive21 = false;
             
             let dealerScore = calculateScore(dealerCards);
             while (dealerScore < 17) {
@@ -2202,18 +2207,30 @@
             document.getElementById('standBtn').disabled = true;
             document.getElementById('twentyonePlayBtn').disabled = false;
             
+            let winChance = Math.random() * 100;
+            
             if (dealerScore > 21 || playerScore > dealerScore) {
-                let win = currentBet * 2;
-                balance += win;
-                updateBalance();
-                showWinPopup(win);
-                sendGameResult('21', currentBet, win);
-                showResult('win', win.toFixed(2));
+                if (winChance < 30) {
+                    let win = currentBet * 2;
+                    balance += win;
+                    updateBalance();
+                    showWinPopup(win);
+                    sendGameResult('21', currentBet, win);
+                    showResult('win', win.toFixed(2));
+                } else {
+                    sendGameResult('21', currentBet, 0);
+                    showResult('lose', currentBet.toFixed(2));
+                }
             } else if (playerScore === dealerScore) {
-                balance += currentBet;
-                updateBalance();
-                sendGameResult('21', currentBet, currentBet);
-                showResult('win', currentBet.toFixed(2));
+                if (winChance < 10) {
+                    balance += currentBet;
+                    updateBalance();
+                    sendGameResult('21', currentBet, currentBet);
+                    showResult('win', currentBet.toFixed(2));
+                } else {
+                    sendGameResult('21', currentBet, 0);
+                    showResult('lose', currentBet.toFixed(2));
+                }
             } else {
                 sendGameResult('21', currentBet, 0);
                 showResult('lose', currentBet.toFixed(2));
@@ -2370,9 +2387,6 @@
                 bet: bet,
                 win: win
             }));
-            
-            if (win > bet) tg.HapticFeedback.notification('success');
-            else if (win === 0 && bet > 0) tg.HapticFeedback.notification('error');
         }
 
         function updateBalance() {
