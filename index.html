@@ -282,6 +282,56 @@
             border: 1px solid var(--border);
             position: relative;
             height: 300px;
+            transition: all 0.3s;
+        }
+
+        .canvas-container.waiting {
+            border: 4px solid var(--accent);
+            box-shadow: 0 0 30px var(--glow);
+            animation: borderPulse 1s infinite;
+        }
+
+        @keyframes borderPulse {
+            0%,100% { border-color: var(--accent); box-shadow: 0 0 30px var(--glow); }
+            50% { border-color: var(--gold); box-shadow: 0 0 50px var(--glow); }
+        }
+
+        .waiting-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(20,24,31,0.9);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            border-radius: 24px;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .waiting-timer {
+            font-size: 96px;
+            font-weight: 900;
+            color: var(--accent);
+            text-shadow: 0 0 40px var(--accent);
+            margin-bottom: 20px;
+            animation: timerPop 1s infinite;
+        }
+
+        .waiting-text {
+            color: var(--text2);
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .multiplier {
@@ -558,6 +608,193 @@
             100% { left: 100%; }
         }
 
+        .mines-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .mine-cell {
+            aspect-ratio: 1;
+            background: var(--element);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .mine-cell::before {
+            content: '?';
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .mine-cell:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--glow);
+        }
+
+        .mine-cell.revealed {
+            background: var(--card);
+        }
+
+        .mine-cell.revealed::before {
+            content: '💎';
+            color: var(--success);
+            font-size: 32px;
+            animation: gemRotate 1s infinite;
+        }
+
+        @keyframes gemRotate {
+            0%,100% { transform: rotate(0deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        .mine-cell.mine.revealed {
+            background: rgba(244,67,54,0.2);
+        }
+
+        .mine-cell.mine.revealed::before {
+            content: '💣';
+            color: var(--danger);
+            font-size: 32px;
+            animation: bombShake 0.3s infinite;
+        }
+
+        @keyframes bombShake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        .baccarat-history {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .bet-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .bet-option {
+            background: var(--element);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .bet-option:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .bet-option.selected {
+            border-color: var(--accent);
+            background: var(--glow);
+            box-shadow: 0 0 20px var(--glow);
+        }
+
+        .bet-option .coeff {
+            color: var(--accent);
+            font-weight: 800;
+            font-size: 24px;
+            margin-top: 8px;
+        }
+
+        .slot-machine {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 30px 20px;
+            margin: 20px 0;
+            border: 2px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slot-window {
+            background: #000;
+            border-radius: 20px;
+            padding: 20px;
+            border: 3px solid var(--accent);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .slot-reel-container {
+            position: relative;
+            height: 100px;
+            overflow: hidden;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+            border: 2px solid var(--border);
+        }
+
+        .slot-reel {
+            position: absolute;
+            width: 100%;
+            transition: top 4s cubic-bezier(0.1, 0.8, 0.2, 1);
+            will-change: top;
+        }
+
+        .slot-item {
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, #222, #111);
+        }
+
+        .slot-item[data-value="0"] { color: #666; }
+        .slot-item[data-value="1"] { color: #666; }
+        .slot-item[data-value="2"] { color: #666; }
+        .slot-item[data-value="3"] { color: #666; }
+        .slot-item[data-value="4"] { color: #666; }
+        .slot-item[data-value="5"] { color: #999; }
+        .slot-item[data-value="10"] { color: var(--gold); }
+        .slot-item[data-value="15"] { color: var(--gold); }
+        .slot-item[data-value="20"] { color: var(--gold); }
+        .slot-item[data-value="25"] { color: var(--gold); }
+        .slot-item[data-value="30"] { color: var(--success); }
+        .slot-item[data-value="40"] { color: var(--success); }
+        .slot-item[data-value="50"] { color: var(--success); }
+        .slot-item[data-value="60"] { color: var(--danger); }
+        .slot-item[data-value="70"] { color: var(--danger); }
+        .slot-item[data-value="80"] { color: var(--danger); }
+        .slot-item[data-value="90"] { color: var(--accent); font-size: 56px; }
+        .slot-item[data-value="100"] { color: var(--accent); font-size: 64px; animation: jackpotGlow 0.5s infinite; }
+
+        @keyframes jackpotGlow {
+            0%,100% { text-shadow: 0 0 30px var(--accent); transform: scale(1); }
+            50% { text-shadow: 0 0 60px var(--accent); transform: scale(1.1); }
+        }
+
+        .slot-result {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 56px;
+            font-weight: 900;
+            color: var(--accent);
+            animation: resultPop 0.5s;
+        }
+
         .chat-section {
             margin-top: 20px;
             background: var(--card);
@@ -705,6 +942,42 @@
                     <span>⚡ 90% слив</span>
                 </div>
             </div>
+
+            <div class="game-card" onclick="selectGame('mines')">
+                <div class="game-card-header">
+                    <div class="game-card-title">MINES</div>
+                    <div style="font-size: 32px;">💎</div>
+                </div>
+                <div class="game-card-desc">Алмазы и мины 5x5</div>
+                <div class="game-card-stats">
+                    <span>💎 x5.2</span>
+                    <span>💣 5 мин</span>
+                </div>
+            </div>
+
+            <div class="game-card" onclick="selectGame('baccarat')">
+                <div class="game-card-header">
+                    <div class="game-card-title">BACCARAT</div>
+                    <div style="font-size: 32px;">🎴</div>
+                </div>
+                <div class="game-card-desc">Игрок против Банкира</div>
+                <div class="game-card-stats">
+                    <span>👤 x2</span>
+                    <span>🏦 x1.95</span>
+                </div>
+            </div>
+
+            <div class="game-card" onclick="selectGame('slot')">
+                <div class="game-card-header">
+                    <div class="game-card-title">SLOT</div>
+                    <div style="font-size: 32px;">🎰</div>
+                </div>
+                <div class="game-card-desc">Ставка 10$</div>
+                <div class="game-card-stats">
+                    <span>💰 до 100$</span>
+                    <span>🎰 90% до 5$</span>
+                </div>
+            </div>
         </div>
 
         <div id="gameContainer" class="game-container hidden">
@@ -714,12 +987,11 @@
             </div>
 
             <div id="crash-game" class="game-view">
-                <div class="timer-container">
-                    <div class="timer-label">⚡ НОВАЯ ИГРА ЧЕРЕЗ</div>
-                    <div class="timer-value" id="crashTimer">10</div>
-                </div>
-
-                <div class="canvas-container">
+                <div class="canvas-container" id="crashCanvasContainer">
+                    <div class="waiting-overlay hidden" id="waitingOverlay">
+                        <div class="waiting-timer" id="waitingTimer">10</div>
+                        <div class="waiting-text">ДО СЛЕДУЮЩЕЙ ИГРЫ</div>
+                    </div>
                     <div class="multiplier" id="crashMultiplier">1.00x</div>
                     <div class="graph-container" id="graphContainer">
                         <svg class="graph-line" viewBox="0 0 400 180" preserveAspectRatio="none">
@@ -751,6 +1023,64 @@
 
                 <div class="error-message hidden" id="crashError"></div>
                 <button class="play-btn" id="crashPlayBtn">🔥 СДЕЛАТЬ СТАВКУ</button>
+            </div>
+
+            <div id="mines-game" class="game-view hidden">
+                <div class="mines-grid" id="minesGrid"></div>
+
+                <div class="bet-controls">
+                    <input type="number" class="bet-input" id="minesBet" value="10" min="1" step="1">
+                </div>
+
+                <div class="error-message hidden" id="minesError"></div>
+                <button class="play-btn" id="minesPlayBtn">💎 НАЧАТЬ ИГРУ</button>
+                <button class="play-btn small hidden" id="minesCashoutBtn">💰 ЗАБРАТЬ ВЫИГРЫШ</button>
+            </div>
+
+            <div id="baccarat-game" class="game-view hidden">
+                <div class="baccarat-history" id="baccaratHistory"></div>
+
+                <div class="bet-options" id="baccaratBets">
+                    <div class="bet-option" data-bet="player" data-coeff="2">
+                        <div>👤 ИГРОК</div>
+                        <div class="coeff">x2</div>
+                    </div>
+                    <div class="bet-option" data-bet="banker" data-coeff="1.95">
+                        <div>🏦 БАНКИР</div>
+                        <div class="coeff">x1.95</div>
+                    </div>
+                    <div class="bet-option" data-bet="tie" data-coeff="8">
+                        <div>🤝 НИЧЬЯ</div>
+                        <div class="coeff">x8</div>
+                    </div>
+                    <div class="bet-option" data-bet="playerPair" data-coeff="11">
+                        <div>👥 ПАРА</div>
+                        <div class="coeff">x11</div>
+                    </div>
+                </div>
+
+                <div class="bet-controls">
+                    <input type="number" class="bet-input" id="baccaratBet" value="10" min="1" step="1">
+                </div>
+
+                <div class="error-message hidden" id="baccaratError"></div>
+                <button class="play-btn" id="baccaratPlayBtn">🎴 СДЕЛАТЬ СТАВКУ</button>
+            </div>
+
+            <div id="slot-game" class="game-view hidden">
+                <div class="slot-machine">
+                    <div class="slot-window">
+                        <div class="slot-reel-container" id="slotContainer">
+                            <div class="slot-reel" id="slotReel"></div>
+                        </div>
+                    </div>
+                    <div class="slot-result" id="slotResult">?</div>
+                </div>
+
+                <div class="fixed-bet">💰 СТАВКА: 10$</div>
+
+                <div class="error-message hidden" id="slotError"></div>
+                <button class="play-btn" id="slotPlayBtn">🎰 КРУТИТЬ</button>
             </div>
         </div>
 
@@ -790,12 +1120,12 @@
         document.getElementById('userName').textContent = firstName;
         document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
 
-        let currentGame = 'crash';
+        let currentGame = null;
         let gameActive = false;
         let autoCashout = false;
         let crashMultiplier = 1.00;
         let crashInterval = null;
-        let timerInterval = null;
+        let waitingInterval = null;
         let crashPoints = [];
         let crashHistory = [];
         let countdown = 10;
@@ -804,6 +1134,7 @@
         let gameInProgress = false;
         let cashoutUsed = false;
         let gamesPlayed = 0;
+        let isWaiting = true;
 
         let winRate = 30;
         let minBet = 1;
@@ -894,20 +1225,27 @@
             document.getElementById('gameContainer').classList.remove('hidden');
             document.getElementById('currentGameTitle').textContent = game.toUpperCase();
             
+            document.querySelectorAll('.game-view').forEach(g => g.classList.add('hidden'));
+            document.getElementById(game + '-game').classList.remove('hidden');
+            
+            if (game === 'mines') initMines();
+            if (game === 'baccarat') updateBaccaratHistory();
+            if (game === 'slot') initSlot();
             if (game === 'crash') initCrash();
         }
 
         function clearAllIntervals() {
             if (crashInterval) clearInterval(crashInterval);
-            if (timerInterval) clearInterval(timerInterval);
+            if (waitingInterval) clearInterval(waitingInterval);
             gameActive = false;
             gameInProgress = false;
             cashoutUsed = false;
+            isWaiting = false;
         }
 
         function initCrash() {
             updateCrashHistory();
-            startCrashTimer();
+            startWaiting();
         }
 
         function updateCrashHistory() {
@@ -926,16 +1264,22 @@
             });
         }
 
-        function startCrashTimer() {
+        function startWaiting() {
+            isWaiting = true;
             countdown = 10;
-            document.getElementById('crashTimer').textContent = countdown;
+            document.getElementById('waitingTimer').textContent = countdown;
+            document.getElementById('waitingOverlay').classList.remove('hidden');
+            document.getElementById('crashCanvasContainer').classList.add('waiting');
             
-            timerInterval = setInterval(() => {
+            waitingInterval = setInterval(() => {
                 countdown--;
-                document.getElementById('crashTimer').textContent = countdown;
+                document.getElementById('waitingTimer').textContent = countdown;
                 
                 if (countdown <= 0) {
-                    clearInterval(timerInterval);
+                    clearInterval(waitingInterval);
+                    document.getElementById('waitingOverlay').classList.add('hidden');
+                    document.getElementById('crashCanvasContainer').classList.remove('waiting');
+                    isWaiting = false;
                     startCrashGame();
                 }
             }, 1000);
@@ -946,6 +1290,7 @@
             
             gameInProgress = true;
             cashoutUsed = false;
+            crashPoints = [{x:0, y:1.0}];
             
             let multiplier = 1.00;
             
@@ -981,7 +1326,7 @@
                         if (crashHistory.length > 30) crashHistory.shift();
                         updateCrashHistory();
                         gameInProgress = false;
-                        startCrashTimer();
+                        startWaiting();
                     }
                 }, 50);
                 return;
@@ -1088,7 +1433,7 @@
                 return;
             }
             
-            if (!gameInProgress) {
+            if (!gameInProgress && !isWaiting) {
                 let bet = parseFloat(document.getElementById('crashBet').value);
                 
                 if (bet > balance) {
@@ -1138,8 +1483,273 @@
             document.getElementById('crashProgress').style.width = '0%';
             document.getElementById('graphPath').setAttribute('d', 'M0 180 L400 180');
             
-            startCrashTimer();
+            startWaiting();
         }
+
+        function initMines() {
+            let grid = document.getElementById('minesGrid');
+            grid.innerHTML = '';
+            window.minesRevealed = new Array(25).fill(false);
+            window.minePositions = [];
+            
+            for (let i = 0; i < 5; i++) {
+                window.minePositions.push(Math.floor(Math.random() * 25));
+            }
+            
+            for (let i = 0; i < 25; i++) {
+                let cell = document.createElement('div');
+                cell.className = 'mine-cell';
+                cell.dataset.index = i;
+                cell.onclick = () => revealMine(i);
+                grid.appendChild(cell);
+            }
+            
+            window.minesActive = false;
+            document.getElementById('minesCashoutBtn').classList.add('hidden');
+        }
+
+        document.getElementById('minesPlayBtn').addEventListener('click', function() {
+            let bet = parseFloat(document.getElementById('minesBet').value);
+            
+            if (bet > balance) {
+                showError('mines', 'Недостаточно средств!');
+                return;
+            }
+            
+            window.minesBet = bet;
+            window.minesActive = true;
+            window.minesRevealed = new Array(25).fill(false);
+            window.minePositions = [];
+            
+            for (let i = 0; i < 5; i++) {
+                let pos;
+                do {
+                    pos = Math.floor(Math.random() * 25);
+                } while (window.minePositions.includes(pos));
+                window.minePositions.push(pos);
+            }
+            
+            let grid = document.getElementById('minesGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 25; i++) {
+                let cell = document.createElement('div');
+                cell.className = 'mine-cell';
+                cell.dataset.index = i;
+                cell.onclick = () => revealMine(i);
+                grid.appendChild(cell);
+            }
+            
+            balance -= bet;
+            updateBalance();
+            
+            document.getElementById('minesPlayBtn').classList.add('hidden');
+            document.getElementById('minesCashoutBtn').classList.remove('hidden');
+        });
+
+        document.getElementById('minesCashoutBtn').addEventListener('click', function() {
+            if (!window.minesActive) return;
+            
+            let revealedCount = window.minesRevealed.filter(r => r).length;
+            if (revealedCount === 0) {
+                showError('mines', 'Откройте клетку');
+                return;
+            }
+            
+            let win = window.minesBet * (1 + revealedCount * 0.3);
+            
+            balance += win;
+            updateBalance();
+            
+            window.minesActive = false;
+            document.getElementById('minesPlayBtn').classList.remove('hidden');
+            document.getElementById('minesCashoutBtn').classList.add('hidden');
+            
+            showWinPopup(win);
+            sendGameResult('mines', window.minesBet, win);
+            
+            initMines();
+        });
+
+        function revealMine(index) {
+            if (!window.minesActive || window.minesRevealed[index]) return;
+            
+            let cell = document.querySelector(`[data-index="${index}"]`);
+            window.minesRevealed[index] = true;
+            
+            if (window.minePositions.includes(index)) {
+                cell.classList.add('revealed', 'mine');
+                
+                window.minePositions.forEach(i => {
+                    let c = document.querySelector(`[data-index="${i}"]`);
+                    if (c) c.classList.add('revealed', 'mine');
+                });
+                
+                window.minesActive = false;
+                document.getElementById('minesPlayBtn').classList.remove('hidden');
+                document.getElementById('minesCashoutBtn').classList.add('hidden');
+                
+                sendGameResult('mines', window.minesBet, 0);
+            } else {
+                cell.classList.add('revealed');
+            }
+        }
+
+        function updateBaccaratHistory() {
+            let history = document.getElementById('baccaratHistory');
+            history.innerHTML = '';
+            
+            for (let i = 0; i < 8; i++) {
+                let item = document.createElement('div');
+                item.className = 'history-item';
+                
+                let rand = Math.random();
+                if (rand < 0.45) {
+                    item.classList.add('player');
+                    item.textContent = '👤';
+                } else if (rand < 0.9) {
+                    item.classList.add('banker');
+                    item.textContent = '🏦';
+                } else {
+                    item.classList.add('tie');
+                    item.textContent = '🤝';
+                }
+                
+                history.appendChild(item);
+            }
+        }
+
+        document.querySelectorAll('.bet-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                document.querySelectorAll('.bet-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        document.getElementById('baccaratPlayBtn').addEventListener('click', function() {
+            let selected = document.querySelector('.bet-option.selected');
+            if (!selected) {
+                showError('baccarat', 'Выберите ставку');
+                return;
+            }
+            
+            let bet = parseFloat(document.getElementById('baccaratBet').value);
+            
+            if (bet > balance) {
+                showError('baccarat', 'Недостаточно средств!');
+                return;
+            }
+            
+            balance -= bet;
+            updateBalance();
+            
+            setTimeout(() => {
+                let rand = Math.random() * 100;
+                let win = false;
+                let mult = parseFloat(selected.dataset.coeff);
+                
+                if (gamesPlayed < 2) {
+                    win = Math.random() < 0.7;
+                } else {
+                    win = Math.random() < 25;
+                }
+                
+                let winAmount = 0;
+                if (win) {
+                    winAmount = bet * mult;
+                    balance += winAmount;
+                    showWinPopup(winAmount);
+                }
+                
+                gamesPlayed++;
+                updateBaccaratHistory();
+                sendGameResult('baccarat', bet, winAmount);
+            }, 2000);
+        });
+
+        function initSlot() {
+            let reel = document.getElementById('slotReel');
+            let html = '';
+            let slotValues = [0,1,2,3,4,5,10,15,20,25,30,40,50,60,70,80,90,100];
+            
+            for (let i = 0; i < 150; i++) {
+                let val = slotValues[Math.floor(Math.random() * slotValues.length)];
+                html += `<div class="slot-item" data-value="${val}">${val}</div>`;
+            }
+            
+            reel.innerHTML = html;
+        }
+
+        document.getElementById('slotPlayBtn').addEventListener('click', function() {
+            let bet = 10;
+            
+            if (bet > balance) {
+                showError('slot', 'Недостаточно средств!');
+                return;
+            }
+            
+            balance -= bet;
+            updateBalance();
+            
+            let reel = document.getElementById('slotReel');
+            let itemHeight = 100;
+            let items = reel.children.length;
+            
+            let rand = Math.random() * 100;
+            let result;
+            
+            if (gamesPlayed < 2) {
+                result = Math.random() < 0.7 ? 5 : 0;
+            } else {
+                if (rand < 90) {
+                    let low = [0,1,2,3,4,5];
+                    result = low[Math.floor(Math.random() * low.length)];
+                } else {
+                    let high = [10,15,20,25,30,40,50];
+                    result = high[Math.floor(Math.random() * high.length)];
+                }
+            }
+            
+            if (Math.random() < 0.01 && gamesPlayed > 10) result = 100;
+            
+            let targetIndex = -1;
+            for (let i = 0; i < items; i++) {
+                if (parseInt(reel.children[i].getAttribute('data-value')) === result) {
+                    targetIndex = i;
+                    break;
+                }
+            }
+            
+            if (targetIndex === -1) targetIndex = Math.floor(Math.random() * items);
+            
+            let spins = 30 + Math.floor(Math.random() * 20);
+            let finalPos = -(targetIndex * itemHeight) - (spins * items * itemHeight);
+            
+            reel.style.transition = 'top 4s cubic-bezier(0.1, 0.8, 0.2, 1)';
+            reel.style.top = finalPos + 'px';
+            
+            setTimeout(() => {
+                let winAmount = result;
+                if (winAmount > 0) {
+                    balance += winAmount;
+                    updateBalance();
+                    showWinPopup(winAmount);
+                }
+                
+                document.getElementById('slotResult').textContent = winAmount + '$';
+                gamesPlayed++;
+                
+                sendGameResult('slot', bet, winAmount);
+                
+                setTimeout(() => {
+                    reel.style.transition = 'none';
+                    reel.style.top = '0px';
+                    setTimeout(() => {
+                        reel.style.transition = 'top 4s cubic-bezier(0.1, 0.8, 0.2, 1)';
+                    }, 50);
+                }, 3000);
+            }, 4000);
+        });
 
         document.getElementById('sendChatBtn').addEventListener('click', function() {
             let input = document.getElementById('chatInput');
