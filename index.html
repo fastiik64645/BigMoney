@@ -137,6 +137,161 @@
             font-size: 16px;
         }
 
+        .rating-section {
+            margin: 12px 20px;
+            background: var(--card);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .rating-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--element);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .rating-header:hover {
+            background: var(--border);
+        }
+
+        .rating-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rating-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .rating-arrow {
+            font-size: 20px;
+            color: var(--text2);
+            transition: transform 0.3s;
+        }
+
+        .rating-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .rating-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            background: var(--card);
+        }
+
+        .rating-content.open {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .rating-list {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rating-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--element);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .rating-place {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--text2);
+        }
+
+        .rating-place.gold {
+            color: var(--gold);
+            text-shadow: 0 0 10px var(--gold);
+        }
+
+        .rating-place.silver {
+            color: #c0c0c0;
+            text-shadow: 0 0 10px #c0c0c0;
+        }
+
+        .rating-place.bronze {
+            color: #cd7f32;
+            text-shadow: 0 0 10px #cd7f32;
+        }
+
+        .rating-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #000;
+        }
+
+        .rating-info {
+            flex: 1;
+        }
+
+        .rating-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .rating-amount {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .rating-stats {
+            display: flex;
+            gap: 12px;
+            margin-top: 4px;
+            font-size: 11px;
+            color: var(--text2);
+        }
+
+        .rating-stats span {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .rating-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text2);
+            font-size: 12px;
+        }
+
         .game-selector {
             display: flex;
             flex-direction: column;
@@ -165,11 +320,6 @@
             background: linear-gradient(45deg, transparent, var(--glow), transparent);
             animation: cardShine 3s infinite;
             pointer-events: none;
-        }
-
-        @keyframes cardShine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
         .game-card:hover {
@@ -204,142 +354,6 @@
             color: var(--accent);
             font-size: 14px;
             font-weight: 600;
-        }
-
-        .rating-section {
-            margin: 20px 0;
-            background: var(--card);
-            border-radius: 24px;
-            padding: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .rating-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .rating-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .rating-tabs {
-            display: flex;
-            gap: 8px;
-        }
-
-        .rating-tab {
-            background: var(--element);
-            border: 1px solid var(--border);
-            color: var(--text2);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .rating-tab.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #000;
-        }
-
-        .rating-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .rating-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: var(--element);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            animation: slideIn 0.3s;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .rating-place {
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 18px;
-        }
-
-        .rating-place.gold {
-            color: var(--gold);
-            text-shadow: 0 0 10px var(--gold);
-        }
-
-        .rating-place.silver {
-            color: #c0c0c0;
-            text-shadow: 0 0 10px #c0c0c0;
-        }
-
-        .rating-place.bronze {
-            color: #cd7f32;
-            text-shadow: 0 0 10px #cd7f32;
-        }
-
-        .rating-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--gold));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: #000;
-        }
-
-        .rating-info {
-            flex: 1;
-        }
-
-        .rating-name {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .rating-amount {
-            color: var(--accent);
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .rating-stats {
-            display: flex;
-            gap: 16px;
-            margin-top: 4px;
-            font-size: 12px;
-            color: var(--text2);
-        }
-
-        .rating-stats span {
-            color: var(--success);
-            font-weight: 600;
-        }
-
-        .rating-footer {
-            margin-top: 16px;
-            text-align: center;
-            color: var(--text2);
-            font-size: 12px;
         }
 
         .game-container {
@@ -379,34 +393,6 @@
 
         .back-to-games:hover {
             border-color: var(--accent);
-        }
-
-        .result-container {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-            border: 2px solid var(--accent);
-            animation: resultPulse 1s infinite;
-        }
-
-        @keyframes resultPulse {
-            0%,100% { box-shadow: 0 0 20px var(--glow); }
-            50% { box-shadow: 0 0 40px var(--glow); }
-        }
-
-        .result-label {
-            color: var(--text2);
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-
-        .result-value {
-            font-size: 48px;
-            font-weight: 900;
-            color: var(--accent);
-            text-shadow: 0 0 30px var(--accent);
         }
 
         .canvas-container {
@@ -1262,18 +1248,17 @@
             <div class="username" id="userName">Игрок</div>
         </div>
 
-        <div class="rating-section">
-            <div class="rating-header">
-                <div class="rating-title">🏆 ТОП ПО ДЕПОЗИТАМ</div>
-                <div class="rating-tabs">
-                    <div class="rating-tab active" data-rating="day">День</div>
-                    <div class="rating-tab" data-rating="week">Неделя</div>
-                    <div class="rating-tab" data-rating="month">Месяц</div>
-                    <div class="rating-tab" data-rating="all">Все</div>
+        <div class="rating-section" id="ratingSection">
+            <div class="rating-header" onclick="toggleRating()">
+                <div class="rating-header-left">
+                    <span class="rating-title">🏆 ТОП ПО ДЕПОЗИТАМ</span>
                 </div>
+                <span class="rating-arrow" id="ratingArrow">▼</span>
             </div>
-            <div class="rating-list" id="ratingList"></div>
-            <div class="rating-footer" id="ratingFooter"></div>
+            <div class="rating-content" id="ratingContent">
+                <div class="rating-list" id="ratingList"></div>
+                <div class="rating-footer" id="ratingFooter"></div>
+            </div>
         </div>
 
         <div id="gameSelector" class="game-selector">
@@ -1557,6 +1542,7 @@
         let gamesPlayed = 0;
         let isWaiting = true;
         let canPlaceBet = true;
+        let ratingOpen = false;
 
         let winRate = 20;
         let minBet = 1;
@@ -1630,12 +1616,12 @@
 
         initChat();
 
-        function updateRating(period) {
+        function updateRating() {
             let ratingList = document.getElementById('ratingList');
             let ratingFooter = document.getElementById('ratingFooter');
             
             let players = [
-                { name: 'KIn_', deposit: 250, games: 35, win: 560.23  },
+                { name: 'KIn_', deposit: 250, games: 35, win: 560.23 },
                 { name: 'ОЛЕГ МОНГОЛ', deposit: 213, games: 289, win: 435.12 },
                 { name: 'Cristi 300+rep', deposit: 178, games: 412, win: 282.32 },
                 { name: 'dev', deposit: 160, games: 156, win: 782.83 },
@@ -1647,14 +1633,6 @@
                 { name: 'Lxcurt', deposit: 100, games: 167, win: 134.32 }
             ];
             
-            if (period === 'day') {
-                players = players.map(p => ({ ...p, deposit: Math.floor(p.deposit * 0.1) }));
-            } else if (period === 'week') {
-                players = players.map(p => ({ ...p, deposit: Math.floor(p.deposit * 0.4) }));
-            } else if (period === 'month') {
-                players = players.map(p => ({ ...p, deposit: Math.floor(p.deposit * 0.7) }));
-            }
-            
             players.sort((a, b) => b.deposit - a.deposit);
             
             ratingList.innerHTML = '';
@@ -1665,7 +1643,10 @@
                 else if (index === 1) placeClass = 'silver';
                 else if (index === 2) placeClass = 'bronze';
                 
-                let avatar = player.name.charAt(0);
+                let avatar = player.name.charAt(0).toUpperCase();
+                if (avatar === 'О') avatar = 'О';
+                if (avatar === 'К') avatar = 'К';
+                if (avatar === 'C') avatar = 'C';
                 
                 let item = document.createElement('div');
                 item.className = 'rating-item';
@@ -1676,14 +1657,14 @@
                         <div class="rating-name">${player.name}</div>
                         <div class="rating-amount">${player.deposit}$</div>
                         <div class="rating-stats">
-                            <span>${player.win}$</span> выигрыш • ${player.games} игр
+                            <span>${player.win.toFixed(2)}$</span> выигрыш • ${player.games} игр
                         </div>
                     </div>
                 `;
                 ratingList.appendChild(item);
             });
             
-            let userRank = players.findIndex(p => p.name === firstName.toUpperCase()) + 1;
+            let userRank = players.findIndex(p => p.name.toLowerCase() === firstName.toLowerCase()) + 1;
             if (userRank > 0) {
                 ratingFooter.textContent = `Ваше место в топе: ${userRank}`;
             } else {
@@ -1691,15 +1672,22 @@
             }
         }
 
-        document.querySelectorAll('.rating-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.rating-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                updateRating(this.dataset.rating);
-            });
-        });
+        updateRating();
 
-        updateRating('all');
+        window.toggleRating = function() {
+            let content = document.getElementById('ratingContent');
+            let arrow = document.getElementById('ratingArrow');
+            
+            if (ratingOpen) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+            
+            ratingOpen = !ratingOpen;
+        };
 
         for (let i = 0; i < 5; i++) {
             crashHistory.push((1.1 + Math.random() * 0.8).toFixed(2));
@@ -2421,46 +2409,49 @@
             
             gameActive21 = false;
             
-            let dealerScore = calculateScore(dealerCards);
-            while (dealerScore < 17) {
-                dealerCards.push(deck.pop());
-                dealerScore = calculateScore(dealerCards);
-            }
-            
             updateTwentyOneDisplay();
             
-            let playerScore = calculateScore(playerCards);
-            
-            document.getElementById('hitBtn').disabled = true;
-            document.getElementById('standBtn').disabled = true;
-            document.getElementById('twentyonePlayBtn').disabled = false;
-            
-            if (playerScore > 21) {
-                sendGameResult('21', currentBet, 0);
-                showResult('lose', currentBet.toFixed(2));
-            } else if (dealerScore > 21) {
-                let win = currentBet * 2;
-                balance += win;
-                updateBalance();
-                showWinPopup(win);
-                sendGameResult('21', currentBet, win);
-                showResult('win', win.toFixed(2));
-            } else if (playerScore > dealerScore) {
-                let win = currentBet * 2;
-                balance += win;
-                updateBalance();
-                showWinPopup(win);
-                sendGameResult('21', currentBet, win);
-                showResult('win', win.toFixed(2));
-            } else if (playerScore === dealerScore) {
-                balance += currentBet;
-                updateBalance();
-                sendGameResult('21', currentBet, currentBet);
-                showResult('win', currentBet.toFixed(2));
-            } else {
-                sendGameResult('21', currentBet, 0);
-                showResult('lose', currentBet.toFixed(2));
-            }
+            setTimeout(() => {
+                while (calculateScore(dealerCards) < 17) {
+                    dealerCards.push(deck.pop());
+                }
+                
+                updateTwentyOneDisplay();
+                
+                let playerScore = calculateScore(playerCards);
+                let dealerScore = calculateScore(dealerCards);
+                
+                document.getElementById('hitBtn').disabled = true;
+                document.getElementById('standBtn').disabled = true;
+                document.getElementById('twentyonePlayBtn').disabled = false;
+                
+                if (playerScore > 21) {
+                    sendGameResult('21', currentBet, 0);
+                    showResult('lose', currentBet.toFixed(2));
+                } else if (dealerScore > 21) {
+                    let win = currentBet * 2;
+                    balance += win;
+                    updateBalance();
+                    showWinPopup(win);
+                    sendGameResult('21', currentBet, win);
+                    showResult('win', win.toFixed(2));
+                } else if (playerScore > dealerScore) {
+                    let win = currentBet * 2;
+                    balance += win;
+                    updateBalance();
+                    showWinPopup(win);
+                    sendGameResult('21', currentBet, win);
+                    showResult('win', win.toFixed(2));
+                } else if (playerScore === dealerScore) {
+                    balance += currentBet;
+                    updateBalance();
+                    sendGameResult('21', currentBet, currentBet);
+                    showResult('win', currentBet.toFixed(2));
+                } else {
+                    sendGameResult('21', currentBet, 0);
+                    showResult('lose', currentBet.toFixed(2));
+                }
+            }, 500);
         });
 
         // SLOT
