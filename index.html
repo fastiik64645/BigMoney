@@ -190,6 +190,27 @@
             font-size: 14px;
         }
 
+        .timer-container {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .timer-label {
+            color: var(--text2);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .timer-value {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
         .canvas-container {
             background: var(--card);
             border-radius: 24px;
@@ -197,6 +218,7 @@
             margin-bottom: 20px;
             border: 1px solid var(--border);
             position: relative;
+            height: 300px;
         }
 
         .multiplier {
@@ -205,20 +227,15 @@
             text-align: center;
             color: var(--accent);
             margin-bottom: 20px;
-        }
-
-        .timer {
-            font-size: 24px;
-            text-align: center;
-            color: var(--text2);
-            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
         }
 
         .graph-container {
             position: relative;
-            height: 200px;
+            height: 180px;
             width: 100%;
-            margin: 20px 0;
+            margin: 10px 0;
             background-image: 
                 linear-gradient(var(--grid) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid) 1px, transparent 1px);
@@ -248,6 +265,23 @@
             border-radius: 50%;
             box-shadow: 0 0 20px var(--accent);
             transform: translate(-50%, -50%);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background: var(--element);
+            border-radius: 10px;
+            margin: 16px 0;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--gold));
+            width: 0%;
+            transition: width 0.1s;
         }
 
         .history-container {
@@ -355,19 +389,17 @@
             font-size: 16px;
         }
 
-        .bet-multipliers {
-            display: flex;
-            gap: 8px;
-        }
-
-        .bet-mult {
+        .fixed-bet {
             background: var(--element);
             border: 1px solid var(--border);
-            color: var(--text2);
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
+            border-radius: 16px;
+            padding: 14px;
+            color: var(--accent);
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            width: 100%;
+            margin: 16px 0;
         }
 
         .play-btn {
@@ -391,20 +423,6 @@
         .play-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-        }
-
-        .no-bet-message {
-            text-align: center;
-            color: var(--success);
-            font-size: 24px;
-            font-weight: 700;
-            margin: 20px 0;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%,100% { opacity: 1; }
-            50% { opacity: 0.5; }
         }
 
         .mines-grid {
@@ -521,7 +539,7 @@
         .slot-reel {
             position: absolute;
             width: 100%;
-            transition: top 3s cubic-bezier(0.2, 0.8, 0.3, 1);
+            transition: top 3s cubic-bezier(0.1, 0.7, 0.3, 1);
             will-change: top;
         }
 
@@ -535,10 +553,11 @@
             color: var(--accent);
             text-shadow: 0 0 20px var(--accent);
             border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, #222, #111);
         }
 
         .slot-item.small {
-            color: var(--text2);
+            color: #666;
             font-size: 48px;
         }
 
@@ -547,14 +566,14 @@
         }
 
         .slot-item.big {
-            color: var(--danger);
+            color: var(--success);
             font-size: 72px;
         }
 
         .slot-item.jackpot {
             color: var(--accent);
             font-size: 80px;
-            animation: jackpot 1s infinite;
+            animation: jackpot 0.5s infinite;
         }
 
         @keyframes jackpot {
@@ -706,8 +725,8 @@
                 </div>
                 <div class="game-card-desc">Лови момент и забирай</div>
                 <div class="game-card-stats">
-                    <span>🎯 x1-100</span>
-                    <span>⚡ 70% до x3</span>
+                    <span>🎯 x1-3.9</span>
+                    <span>⚡ 70% до x2</span>
                 </div>
             </div>
 
@@ -740,10 +759,10 @@
                     <div class="game-card-title">SLOT</div>
                     <div>🎰</div>
                 </div>
-                <div class="game-card-desc">Крути барабан и выигрывай</div>
+                <div class="game-card-desc">Ставка 10$</div>
                 <div class="game-card-stats">
-                    <span>🎰 90% до 10$</span>
-                    <span>💎 Джекпот 100x</span>
+                    <span>🎰 0-100$</span>
+                    <span>💎 Джекпот 100$</span>
                 </div>
             </div>
         </div>
@@ -755,48 +774,43 @@
             </div>
 
             <div id="crash-game" class="game-view">
-                <div class="timer" id="crashTimer"></div>
+                <div class="timer-container">
+                    <div class="timer-label">Следующая игра</div>
+                    <div class="timer-value" id="crashTimer">10</div>
+                </div>
+
                 <div class="canvas-container">
                     <div class="multiplier" id="crashMultiplier">1.00x</div>
                     <div class="graph-container" id="graphContainer">
-                        <svg class="graph-line" viewBox="0 0 400 200" preserveAspectRatio="none">
-                            <path id="graphPath" d="M0 200 L400 200" stroke="var(--accent)" stroke-width="3" fill="none"/>
+                        <svg class="graph-line" viewBox="0 0 400 180" preserveAspectRatio="none">
+                            <path id="graphPath" d="M0 180 L400 180" stroke="var(--accent)" stroke-width="3" fill="none"/>
                         </svg>
                         <div class="graph-point" id="graphPoint" style="left: 0%; bottom: 0%;"></div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-fill" id="crashProgress" style="width: 0%;"></div>
                     </div>
                 </div>
 
                 <div class="history-container">
                     <div class="history-title">📊 История игр</div>
-                    <div class="history-list" id="crashHistory">
-                        <div class="history-item">1.2x</div>
-                        <div class="history-item">2.5x</div>
-                        <div class="history-item">8.7x</div>
-                        <div class="history-item">1.1x</div>
-                        <div class="history-item big">15.2x</div>
-                    </div>
+                    <div class="history-list" id="crashHistory"></div>
                 </div>
 
                 <div class="auto-cashout">
                     <span>🎯 Автовывод</span>
                     <div style="display: flex; gap: 10px; align-items: center;">
-                        <input type="number" class="auto-input" id="autoValue" value="2.0" step="0.5" min="1.1" max="100">
+                        <input type="number" class="auto-input" id="autoValue" value="2.0" step="0.1" min="1.1" max="3.9">
                         <div class="toggle-switch" id="autoCashoutToggle"></div>
                     </div>
                 </div>
 
                 <div class="bet-controls">
                     <input type="number" class="bet-input" id="crashBet" value="10" min="1" step="1">
-                    <div class="bet-multipliers">
-                        <button class="bet-mult" data-mult="2">x2</button>
-                        <button class="bet-mult" data-mult="5">x5</button>
-                        <button class="bet-mult" data-mult="10">x10</button>
-                    </div>
                 </div>
 
                 <div class="error-message hidden" id="crashError"></div>
                 <button class="play-btn" id="crashPlayBtn">СТАВИТЬ</button>
-                <div class="no-bet-message hidden" id="noBetMessage">Нет ставки - x8.5</div>
             </div>
 
             <div id="mines-game" class="game-view hidden">
@@ -804,11 +818,6 @@
 
                 <div class="bet-controls">
                     <input type="number" class="bet-input" id="minesBet" value="10" min="1" step="1">
-                    <div class="bet-multipliers">
-                        <button class="bet-mult" data-mult="2">x2</button>
-                        <button class="bet-mult" data-mult="5">x5</button>
-                        <button class="bet-mult" data-mult="10">x10</button>
-                    </div>
                 </div>
 
                 <div class="error-message hidden" id="minesError"></div>
@@ -840,11 +849,6 @@
 
                 <div class="bet-controls">
                     <input type="number" class="bet-input" id="baccaratBet" value="10" min="1" step="1">
-                    <div class="bet-multipliers">
-                        <button class="bet-mult" data-mult="2">x2</button>
-                        <button class="bet-mult" data-mult="5">x5</button>
-                        <button class="bet-mult" data-mult="10">x10</button>
-                    </div>
                 </div>
 
                 <div class="error-message hidden" id="baccaratError"></div>
@@ -862,14 +866,7 @@
                     <div class="slot-result" id="slotResult">?</div>
                 </div>
 
-                <div class="bet-controls">
-                    <input type="number" class="bet-input" id="slotBet" value="10" min="1" step="1">
-                    <div class="bet-multipliers">
-                        <button class="bet-mult" data-mult="2">x2</button>
-                        <button class="bet-mult" data-mult="5">x5</button>
-                        <button class="bet-mult" data-mult="10">x10</button>
-                    </div>
-                </div>
+                <div class="fixed-bet">СТАВКА: 10$</div>
 
                 <div class="error-message hidden" id="slotError"></div>
                 <button class="play-btn" id="slotPlayBtn">КРУТИТЬ</button>
@@ -921,16 +918,29 @@
         let crashInterval = null;
         let timerInterval = null;
         let crashPoints = [];
-        let crashHistory = [1.2, 2.5, 8.7, 1.1, 15.2, 3.3, 1.8, 4.2, 2.1, 1.4];
-        let countdown = 0;
+        let crashHistory = [];
+        let countdown = 10;
         let hasBet = false;
+        let currentBet = 0;
+        let gameInProgress = false;
+
+        for (let i = 0; i < 20; i++) {
+            let x = (Math.random() * 3 + 1).toFixed(2);
+            if (i % 5 === 0) x = (Math.random() * 2 + 3).toFixed(2);
+            crashHistory.push(parseFloat(x));
+        }
 
         function showGameSelector() {
             document.getElementById('gameSelector').classList.remove('hidden');
             document.getElementById('gameContainer').classList.add('hidden');
+            clearAllIntervals();
+        }
+
+        function clearAllIntervals() {
             if (crashInterval) clearInterval(crashInterval);
             if (timerInterval) clearInterval(timerInterval);
             gameActive = false;
+            gameInProgress = false;
         }
 
         function selectGame(game) {
@@ -950,100 +960,106 @@
 
         function initCrash() {
             updateCrashHistory();
-            startCountdown();
+            startCrashTimer();
         }
 
         function updateCrashHistory() {
             let historyList = document.getElementById('crashHistory');
             historyList.innerHTML = '';
             
-            let recent = crashHistory.slice(-10);
+            let recent = crashHistory.slice(-15);
             recent.forEach(x => {
                 let item = document.createElement('div');
                 item.className = 'history-item';
-                if (x > 5) item.classList.add('big');
-                else if (x < 2) item.classList.add('small');
-                item.textContent = x.toFixed(1) + 'x';
+                if (x > 3) item.classList.add('big');
+                else if (x < 1.5) item.classList.add('small');
+                item.textContent = x.toFixed(2) + 'x';
                 historyList.appendChild(item);
             });
         }
 
-        function startCountdown() {
+        function startCrashTimer() {
             countdown = 10;
-            hasBet = false;
-            document.getElementById('crashTimer').textContent = `⏳ Следующая игра через: ${countdown}с`;
-            document.getElementById('noBetMessage').classList.add('hidden');
+            document.getElementById('crashTimer').textContent = countdown;
             
             timerInterval = setInterval(() => {
                 countdown--;
-                if (countdown > 0) {
-                    document.getElementById('crashTimer').textContent = `⏳ Следующая игра через: ${countdown}с`;
-                    
-                    if (!hasBet) {
-                        let fakeMultiplier = (3 + Math.random() * 10).toFixed(2);
-                        document.getElementById('noBetMessage').textContent = `Нет ставки - x${fakeMultiplier}`;
-                        document.getElementById('noBetMessage').classList.remove('hidden');
-                    }
-                } else {
+                document.getElementById('crashTimer').textContent = countdown;
+                
+                if (countdown <= 0) {
                     clearInterval(timerInterval);
-                    document.getElementById('crashTimer').textContent = '🎮 ИГРА НАЧАЛАСЬ';
-                    document.getElementById('noBetMessage').classList.add('hidden');
-                    startCrashRound();
+                    startCrashGame();
                 }
             }, 1000);
         }
 
-        function startCrashRound() {
-            if (!hasBet) {
-                let bigMultiplier = (5 + Math.random() * 15).toFixed(2);
-                crashHistory.push(parseFloat(bigMultiplier));
-                if (crashHistory.length > 20) crashHistory.shift();
-                updateCrashHistory();
-                setTimeout(() => startCountdown(), 2000);
-                return;
+        function startCrashGame() {
+            if (gameInProgress) return;
+            
+            gameInProgress = true;
+            let settings = gameSettings.crash || { win_rate: 30 };
+            
+            let multiplier = 1.00;
+            let growth = 0.002;
+            let maxMultiplier = 3.9;
+            let shouldCrash;
+            
+            if (hasBet) {
+                shouldCrash = Math.random() * 100 > settings.win_rate;
+            } else {
+                shouldCrash = false;
+                if (Math.random() < 0.04) {
+                    multiplier = 1 + Math.random();
+                } else {
+                    multiplier = 5 + Math.random() * 20;
+                }
             }
             
-            let settings = gameSettings.crash || { win_rate: 30 };
-            let bet = parseFloat(document.getElementById('crashBet').value);
-            
-            gameActive = true;
-            crashMultiplier = 1.00;
-            crashPoints = [{x:0,y:0}];
-            document.getElementById('crashPlayBtn').textContent = 'ЗАБРАТЬ';
-            
-            let growth = 0.002;
-            let maxMultiplier = 100;
-            let shouldCrash = Math.random() * 100 > settings.win_rate;
+            crashMultiplier = multiplier;
+            crashPoints = [{x:0, y:multiplier}];
             
             crashInterval = setInterval(() => {
-                crashMultiplier += growth;
-                growth *= 1.008;
+                if (!hasBet) {
+                    multiplier += growth * 3;
+                } else {
+                    multiplier += growth;
+                    growth *= 1.008;
+                }
                 
-                if (Math.random() < 0.005) growth *= 1.5;
+                crashMultiplier = multiplier;
+                document.getElementById('crashMultiplier').innerHTML = multiplier.toFixed(2) + 'x';
                 
-                document.getElementById('crashMultiplier').innerHTML = crashMultiplier.toFixed(2) + 'x';
+                let progress = (multiplier / maxMultiplier) * 100;
+                if (progress > 100) progress = 100;
+                document.getElementById('crashProgress').style.width = progress + '%';
                 
-                crashPoints.push({x: crashPoints.length, y: crashMultiplier});
+                crashPoints.push({x: crashPoints.length, y: multiplier});
                 if (crashPoints.length > 50) crashPoints.shift();
                 updateCrashGraph();
                 
-                let autoVal = parseFloat(document.getElementById('autoValue').value);
-                if (autoCashout && crashMultiplier >= autoVal) {
-                    cashout();
+                if (hasBet) {
+                    let autoVal = parseFloat(document.getElementById('autoValue').value);
+                    if (autoCashout && multiplier >= autoVal) {
+                        crashCashout();
+                    }
                 }
                 
-                if (shouldCrash && crashMultiplier > 1.3 && Math.random() < 0.002) {
-                    crashGame();
+                if (hasBet && shouldCrash && multiplier > 1.3 && Math.random() < 0.002) {
+                    crashEnd();
                 }
                 
-                if (crashMultiplier >= maxMultiplier) {
-                    cashout();
+                if (multiplier >= maxMultiplier) {
+                    if (hasBet) {
+                        crashCashout();
+                    } else {
+                        crashEnd();
+                    }
                 }
             }, 50);
         }
 
         function updateCrashGraph() {
-            let width = 400, height = 200;
+            let width = 400, height = 180;
             if (crashPoints.length < 2) return;
             
             let maxY = Math.max(...crashPoints.map(p => p.y), 5);
@@ -1051,14 +1067,14 @@
             
             for (let i = 0; i < crashPoints.length; i++) {
                 let x = (i / (crashPoints.length - 1)) * width;
-                let y = height - (crashPoints[i].y / maxY) * height * 0.8;
+                let y = height - (crashPoints[i].y / maxY) * height * 0.9;
                 path += (i === 0 ? `M${x},${y}` : ` L${x},${y}`);
             }
             
             document.getElementById('graphPath').setAttribute('d', path);
             
             let last = crashPoints[crashPoints.length-1];
-            let lastY = height - (last.y / maxY) * height * 0.8;
+            let lastY = height - (last.y / maxY) * height * 0.9;
             let point = document.getElementById('graphPoint');
             point.style.left = width + 'px';
             point.style.bottom = lastY + 'px';
@@ -1070,60 +1086,69 @@
         });
 
         document.getElementById('crashPlayBtn').addEventListener('click', function() {
-            if (gameActive) {
-                cashout();
-            } else {
-                let bet = parseFloat(document.getElementById('crashBet').value);
-                let settings = gameSettings.crash || { min_bet: 1, max_bet: 1000 };
-                
-                if (bet < settings.min_bet || bet > settings.max_bet || bet > balance) {
-                    showError('crash', 'Ставка недопустима');
-                    return;
-                }
-                
-                balance -= bet;
-                updateBalance();
-                hasBet = true;
-                document.getElementById('noBetMessage').classList.add('hidden');
-            }
-        });
-
-        function cashout() {
-            if (!gameActive) return;
-            clearInterval(crashInterval);
+            if (gameInProgress) return;
             
             let bet = parseFloat(document.getElementById('crashBet').value);
-            let win = bet * crashMultiplier;
+            let settings = gameSettings.crash || { min_bet: 1, max_bet: 1000 };
+            
+            if (bet < settings.min_bet || bet > settings.max_bet || bet > balance) {
+                showError('crash', 'Ставка недопустима');
+                return;
+            }
+            
+            balance -= bet;
+            updateBalance();
+            hasBet = true;
+            currentBet = bet;
+            document.getElementById('crashPlayBtn').textContent = 'СТАВКА СДЕЛАНА';
+            document.getElementById('crashPlayBtn').disabled = true;
+        });
+
+        function crashCashout() {
+            if (!gameInProgress) return;
+            clearInterval(crashInterval);
+            
+            let win = currentBet * crashMultiplier;
             balance += win;
             updateBalance();
-            
-            document.getElementById('crashPlayBtn').textContent = 'СТАВИТЬ';
-            gameActive = false;
             
             crashHistory.push(crashMultiplier);
             if (crashHistory.length > 20) crashHistory.shift();
             updateCrashHistory();
             
             showWinPopup(win);
-            sendGameResult('crash', bet, win);
+            sendGameResult('crash', currentBet, win);
             
-            setTimeout(() => startCountdown(), 2000);
+            resetCrash();
         }
 
-        function crashGame() {
+        function crashEnd() {
             clearInterval(crashInterval);
-            document.getElementById('crashPlayBtn').textContent = 'СТАВИТЬ';
-            gameActive = false;
             
-            let bet = parseFloat(document.getElementById('crashBet').value);
+            if (hasBet) {
+                crashHistory.push(crashMultiplier);
+                sendGameResult('crash', currentBet, 0);
+            } else {
+                crashHistory.push(crashMultiplier);
+            }
             
-            crashHistory.push(crashMultiplier);
             if (crashHistory.length > 20) crashHistory.shift();
             updateCrashHistory();
             
-            sendGameResult('crash', bet, 0);
+            resetCrash();
+        }
+
+        function resetCrash() {
+            gameInProgress = false;
+            hasBet = false;
+            currentBet = 0;
+            document.getElementById('crashPlayBtn').textContent = 'СТАВИТЬ';
+            document.getElementById('crashPlayBtn').disabled = false;
+            document.getElementById('crashMultiplier').innerHTML = '1.00x';
+            document.getElementById('crashProgress').style.width = '0%';
+            document.getElementById('graphPath').setAttribute('d', 'M0 180 L400 180');
             
-            setTimeout(() => startCountdown(), 2000);
+            startCrashTimer();
         }
 
         function initMines() {
@@ -1162,7 +1187,7 @@
             window.minesRevealed = new Array(25).fill(false);
             window.minePositions = [];
             
-            let mineCount = Math.floor(settings.win_rate / 8) + 4;
+            let mineCount = Math.floor(settings.win_rate / 10) + 3;
             
             for (let i = 0; i < mineCount; i++) {
                 let pos;
@@ -1315,7 +1340,7 @@
             let reel = document.getElementById('slotReel');
             let html = '';
             
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 100; i++) {
                 let val = Math.floor(Math.random() * 100);
                 let cls = 'slot-item';
                 if (val < 5) cls += ' small';
@@ -1330,11 +1355,11 @@
         }
 
         document.getElementById('slotPlayBtn').addEventListener('click', function() {
-            let bet = parseFloat(document.getElementById('slotBet').value);
-            let settings = gameSettings.slot || { win_rate: 90, min_bet: 1, max_bet: 200 };
+            let bet = 10;
+            let settings = gameSettings.slot || { win_rate: 90 };
             
-            if (bet < settings.min_bet || bet > settings.max_bet || bet > balance) {
-                showError('slot', 'Ставка недопустима');
+            if (bet > balance) {
+                showError('slot', 'Недостаточно средств');
                 return;
             }
             
@@ -1342,7 +1367,6 @@
             updateBalance();
             
             let reel = document.getElementById('slotReel');
-            let container = document.getElementById('slotContainer');
             let itemHeight = 120;
             let items = reel.children.length;
             
@@ -1367,21 +1391,21 @@
             
             if (targetIndex === -1) targetIndex = Math.floor(Math.random() * items);
             
-            let spins = 20 + Math.floor(Math.random() * 10);
+            let spins = 30 + Math.floor(Math.random() * 20);
             let finalPos = -(targetIndex * itemHeight) - (spins * items * itemHeight);
             
+            reel.style.transition = 'top 4s cubic-bezier(0.1, 0.8, 0.2, 1)';
             reel.style.top = finalPos + 'px';
             
             setTimeout(() => {
-                let winAmount = result * bet;
-                
+                let winAmount = result;
                 if (winAmount > 0) {
                     balance += winAmount;
                     updateBalance();
                     showWinPopup(winAmount);
                 }
                 
-                document.getElementById('slotResult').textContent = result;
+                document.getElementById('slotResult').textContent = result + '$';
                 
                 if (result === 100) {
                     document.getElementById('slotResult').style.color = 'var(--accent)';
@@ -1394,10 +1418,10 @@
                     reel.style.transition = 'none';
                     reel.style.top = '0px';
                     setTimeout(() => {
-                        reel.style.transition = 'top 3s cubic-bezier(0.2, 0.8, 0.3, 1)';
+                        reel.style.transition = 'top 4s cubic-bezier(0.1, 0.8, 0.2, 1)';
                     }, 50);
                 }, 3000);
-            }, 3000);
+            }, 4000);
         });
 
         document.getElementById('sendChatBtn').addEventListener('click', function() {
@@ -1423,17 +1447,6 @@
 
         document.getElementById('chatInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') document.getElementById('sendChatBtn').click();
-        });
-
-        document.querySelectorAll('.bet-mult').forEach(btn => {
-            btn.addEventListener('click', function() {
-                let mult = parseFloat(this.dataset.mult);
-                let input = this.closest('.bet-controls').querySelector('.bet-input');
-                if (input) {
-                    let val = parseFloat(input.value) * mult;
-                    input.value = Math.max(1, Math.floor(val));
-                }
-            });
         });
 
         function showError(game, msg) {
