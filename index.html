@@ -1716,10 +1716,7 @@ const chatMessages = [
         function addRandomChatMessage() {
             let name = chatNames[Math.floor(Math.random() * chatNames.length)];
             let msg = chatMessages[Math.floor(Math.random() * chatMessages.length)];
-            let hours = Math.floor(Math.random() * 24);
-            let minutes = Math.floor(Math.random() * 60);
-            let time = hours + ':' + String(minutes).padStart(2,'0');
-        }
+            let time = new Date().getHours() + ':' + String(new Date().getMinutes()).padStart(2,'0');
             
             let div = document.createElement('div');
             div.className = 'chat-message';
