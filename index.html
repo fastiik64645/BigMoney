@@ -1546,10 +1546,16 @@
         let userData = null;
         let gameSettings = {};
 
-        if (dataParam) {
+        console.log('URL params:', window.location.search);
+        console.log('Data param:', dataParam);
+
+        if (dataParam && dataParam !== 'undefined' && dataParam !== 'null') {
             try {
-                userData = JSON.parse(decodeURIComponent(dataParam));
+                const decodedData = decodeURIComponent(dataParam);
+                console.log('Decoded data:', decodedData);
+                userData = JSON.parse(decodedData);
                 gameSettings = userData.settings || {};
+                console.log('User data parsed:', userData);
             } catch (e) {
                 console.error('Error parsing user data:', e);
             }
@@ -1570,6 +1576,9 @@
         };
         
         currencySymbol = currencyMap[userCurrency] || '$';
+
+        console.log('User ID:', userId);
+        console.log('Initial balance:', balance);
 
         document.getElementById('balanceAmount').textContent = balance.toFixed(2);
         document.getElementById('currencySymbol').textContent = currencySymbol;
@@ -1606,39 +1615,14 @@
             coefficient = gameSettings.crash.coefficient || 1.95;
         }
 
-        async function checkServerHealth() {
-            try {
-                const response = await fetch(`${API_URL}/api/health`);
-                const data = await response.json();
-                console.log('Server health:', data);
-                return data.status === 'healthy';
-            } catch (e) {
-                console.error('Server health check failed:', e);
-                return false;
-            }
-        }
-
-        async function updateBalanceFromServer() {
-            try {
-                const response = await fetch(`${API_URL}/api/user/${userId}`);
-                const data = await response.json();
-                if (data.success !== false) {
-                    balance = data.balance;
-                    userCurrency = data.currency;
-                    currencySymbol = currencyMap[userCurrency] || '$';
-                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
-                    document.getElementById('currencySymbol').textContent = currencySymbol;
-                    console.log('Balance updated from server:', balance);
-                } else {
-                    console.error('Error fetching user:', data.error);
-                }
-            } catch (e) {
-                console.error('Error fetching balance:', e);
-            }
-        }
-
         async function sendGameResult(game, bet, win) {
             console.log('Sending game result:', {game, bet, win, userId, currency: userCurrency});
+            
+            if (!userId) {
+                console.error('No user ID!');
+                return;
+            }
+            
             try {
                 const response = await fetch(`${API_URL}/api/game-result`, {
                     method: 'POST',
@@ -1670,13 +1654,28 @@
             }
         }
 
-        window.addEventListener('load', async function() {
-            const isHealthy = await checkServerHealth();
-            if (!isHealthy) {
-                console.error('Server is not healthy!');
+        async function updateBalanceFromServer() {
+            if (!userId) return;
+            try {
+                const response = await fetch(`${API_URL}/api/user/${userId}`);
+                const data = await response.json();
+                if (data.success) {
+                    balance = data.balance;
+                    userCurrency = data.currency;
+                    currencySymbol = currencyMap[userCurrency] || '$';
+                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+                    document.getElementById('currencySymbol').textContent = currencySymbol;
+                }
+            } catch (e) {
+                console.error('Error fetching balance:', e);
             }
-            await updateBalanceFromServer();
-            setInterval(updateBalanceFromServer, 30000);
+        }
+
+        window.addEventListener('load', function() {
+            if (userId) {
+                updateBalanceFromServer();
+                setInterval(updateBalanceFromServer, 30000);
+            }
         });
 
         const chatNames = [
@@ -2167,7 +2166,7 @@
                 }
                 
                 balance -= bet;
-                updateBalanceFromServer();
+                document.getElementById('balanceAmount').textContent = balance.toFixed(2);
                 hasBet = true;
                 currentBet = bet;
                 gamesPlayed++;
@@ -2184,7 +2183,7 @@
             
             let win = currentBet * crashMultiplier;
             balance += win;
-            updateBalanceFromServer();
+            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
             
             addToHistory(crashMultiplier);
             
@@ -2313,7 +2312,7 @@
             }
             
             balance -= bet;
-            updateBalanceFromServer();
+            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
             
             document.getElementById('minesPlayBtn').classList.add('hidden');
             document.getElementById('minesCashoutBtn').classList.remove('hidden');
@@ -2332,7 +2331,7 @@
             let win = minesBet * minesMultiplier;
             
             balance += win;
-            updateBalanceFromServer();
+            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
             
             minesActive = false;
             document.getElementById('minesPlayBtn').classList.remove('hidden');
@@ -2420,7 +2419,7 @@
             }
             
             balance -= bet;
-            updateBalanceFromServer();
+            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
             
             setTimeout(() => {
                 let rand = Math.random() * 100;
@@ -2437,7 +2436,7 @@
                 if (win) {
                     winAmount = bet * mult;
                     balance += winAmount;
-                    updateBalanceFromServer();
+                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
                     showWinPopup(winAmount);
                 }
                 
@@ -2545,7 +2544,7 @@
             
             balance -= bet;
             currentBet = bet;
-            updateBalanceFromServer();
+            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
             
             updateTwentyOneDisplay();
             
@@ -2600,20 +2599,20 @@
                 } else if (dealerScore > 21) {
                     let win = currentBet * 2;
                     balance += win;
-                    updateBalanceFromServer();
+                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
                     showWinPopup(win);
                     sendGameResult('21', currentBet, win);
                     showResult('win', win.toFixed(2));
                 } else if (playerScore > dealerScore) {
                     let win = currentBet * 2;
                     balance += win;
-                    updateBalanceFromServer();
+                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
                     showWinPopup(win);
                     sendGameResult('21', currentBet, win);
                     showResult('win', win.toFixed(2));
                 } else if (playerScore === dealerScore) {
                     balance += currentBet;
-                    updateBalanceFromServer();
+                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
                     sendGameResult('21', currentBet, currentBet);
                     showResult('win', currentBet.toFixed(2));
                 } else {
@@ -2645,7 +2644,7 @@
             }
             
             balance -= bet;
-            updateBalanceFromServer();
+            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
             
             let reel = document.getElementById('slotReel');
             let itemHeight = 100;
@@ -2688,7 +2687,7 @@
                 let winAmount = result;
                 if (winAmount > 0) {
                     balance += winAmount;
-                    updateBalanceFromServer();
+                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
                     showWinPopup(winAmount);
                 }
                 
