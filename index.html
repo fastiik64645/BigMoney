@@ -1283,7 +1283,7 @@
             <div class="logo">BIG MONEY</div>
             <div class="balance" id="balanceDisplay">
                 <span id="balanceAmount">0.00</span>
-                <span class="currency-badge" id="currencySymbol">$</span>
+                <span class="currency-badge" id="currencySymbol">₮</span>
             </div>
         </div>
 
@@ -1313,8 +1313,8 @@
                 </div>
                 <div class="game-card-desc">Лови момент и забирай куш</div>
                 <div class="game-card-stats">
-                    <span>🔥 x15.2</span>
-                    <span>⚡ 90% побед</span>
+                    <span>🔥 x120</span>
+                    <span>⚡ x1.0</span>
                 </div>
             </div>
 
@@ -1534,13 +1534,14 @@
         </div>
     </div>
 
-    <div class="win-popup hidden" id="winPopup">+0$</div>
+    <div class="win-popup hidden" id="winPopup">+0₮</div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.ready();
 
+        const USDT_TO_RUB = 72;
         const API_URL = 'http://localhost:8000';
         const urlParams = new URLSearchParams(window.location.search);
         const dataParam = urlParams.get('data');
@@ -1559,18 +1560,14 @@
         let firstName = userData?.first_name || 'Игрок';
         let username = userData?.username || 'player';
         let totalDeposit = userData?.total_deposit || 0;
-        let userCurrency = userData?.currency || 'USD';
-        let currencySymbol = '$';
-        
-        const currencyMap = {
-            'RUB': '₽',
-            'USD': '$',
-            'USDT': '₮'
-        };
-        
-        currencySymbol = currencyMap[userCurrency] || '$';
+        let userCurrency = userData?.currency || 'USDT';
+        let currencySymbol = '₮';
+        const currencyMap = {'RUB': '₽', 'USDT': '₮'};
+        currencySymbol = currencyMap[userCurrency] || '₮';
+        let balanceDisplay = balance;
+        if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
 
-        document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+        document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
         document.getElementById('currencySymbol').textContent = currencySymbol;
         document.getElementById('userName').textContent = firstName;
         document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
@@ -1594,6 +1591,8 @@
         let ratingOpen = false;
         let ctx = null;
         let canvas = null;
+        let crashTargetMultiplier = 2.0;
+        let crashGameActive = false;
 
         let winRate = gameSettings.crash?.win_rate || 20;
         let minBet = gameSettings.crash?.min_bet || 1;
@@ -1610,7 +1609,9 @@
                 const data = await response.json();
                 if (data.success) {
                     balance = data.new_balance;
-                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+                    let balanceDisplay = balance;
+                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     if (win > bet) showWinPopup(win);
                 }
             } catch (e) {}
@@ -1624,8 +1625,10 @@
                 if (data.success) {
                     balance = data.balance;
                     userCurrency = data.currency;
-                    currencySymbol = currencyMap[userCurrency] || '$';
-                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+                    currencySymbol = currencyMap[userCurrency] || '₮';
+                    let balanceDisplay = balance;
+                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     document.getElementById('currencySymbol').textContent = currencySymbol;
                 }
             } catch (e) {}
@@ -1638,7 +1641,7 @@
             }
         });
 
-        const chatNames = ['🥩стейк', 'ПСИХ 🧠', 'ворк био 200+', 'БЕЛЫЙ БРАТ', '🥖багет', 'вкусняшка', 'НЯМКА', 'ом ном ном', 'Аноним', '😋вкуснота', 'РАБОТЯГА', '⚡️hard work⚡️', 'ФРИЛАНС', 'удалёнка', 'КЕНТ', 'Аноним', 'Аноним', 'ЭПШТЕЙН НАХУ', 'Аноним', 'Аноним', 'ЧЕЛ', 'Аноним', 'Аноним', 'Палыч', 'Дядя Саша', 'Аноним', 'Аноним', 'Армен', 'Аноним', 'Ашот', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Фраер', 'Аноним', 'Смурф', 'Краш', 'Аноним', 'ебланище', 'Пока не придумал', 'Аноним', 'Лол', 'Аноним', 'Аноним', 'Аноним', 'хуесос', 'бимж', 'Аноним', 'Johnny', 'Аноним', 'Аноним', 'Max - хуйня', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Ken', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним'];
+        const chatNames = ['🥩стейк', 'ПСИХ 🧠', 'ворк био 200+', 'БЕЛЫЙ БРАТ', '🥖багет', 'вкусняшка', 'НЯМКА', 'ом ном ном', 'Аноним', '😋вкуснота', 'РАБОТЯГА', '⚡️hard work⚡️', 'ФРИЛАНС', 'удалёнка', 'КЕНТ', 'Аноним', 'Аноним', 'ЭПШТЕЙН НАХУ', 'Аноним', 'Аноним', 'ЧЕЛ', 'Аноним', 'Аноним', 'Палыч', 'Дядя Саша', 'Аноним', 'Аноним', 'Армен', 'Аноним', 'Ашот', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Фраер', 'Аноним', 'Смурф', 'Краш', 'Аноним', 'ебланище', 'Пока не придумал', 'Аноним', 'Лол', 'Аноним', 'Аноним', 'Аноним', 'хуесос', 'бимж', 'Аноним', 'Johnny', 'Аноним', 'Аноним', 'Max - хуйня', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Ken', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним'];
 
         const chatMessages = ['забрал 3.2х красава', 'x8.5 упустил блин', '25 баксов за минуту норм', 'а хуле у всех ники аноним', 'слил косарь ну такое', 'В топе сегодня сижу', 'у кого сколько выйгрыш?', 'X15.2 просто бог', 'Реально выйграть можно?', 'первый раз играю научите', 'друн х50 забрал повезло', 'хуйня', 'близко чую', 'ща краш будет выходите', 'Авто 1.3 всегда ставлю', 'в топ залетаю бля', 'Не везет сегодня блин', 'Отыграюсь ща', 'x2.3 норм для начала', 'кто на слоты подпишите?', 'бабки вывел сразу', 'положил 20 норм?', 'а сколько минимум?', 'реально заработать?', 'посоветуйте стратегию', 'на что ставите?', 'какой коэффициент лучше?', 'в минусе жестко ебвный', 'плюсанул немного', 'в ноль вышел ахуено', 'зависло ничего не грузит', 'админ есть?', 'почему не платит?', 'выплатили сразу', 'за 5 минут пришло', 'рекомендую всем', 'скам полный не заходите', 'норм проект давно тут', 'третий день играю', 'луше казино не видел', 'соседи подскажите', 'кто сколько вывел?', 'сегодня мой день', 'фортуна послала меня нахуй', 'вчера слил все', 'отыгрался сегодня', 'в плюсе 200 рублей', 'мелочь но приятно', 'на пиво заработал', 'на сигареты хватит', 'на бензин выйграл', 'на такси норм', 'шавуха сегодня моя', 'сегодня гуляем', 'ставлю последние', 'рискну все поставил', 'ол ин нахуй', 'да ну нафиг', 'бля буду не может быть', 'глазам не верю пиздец', 'да ладно херня какая-то', 'реально х10? ебать', 'повезло повезло сука', 'не верилось но взлетело нахуй', 'система дает', 'матчасть надо учить', 'аналитика рулит пизда', 'по графику четко', 'тех анализ топ', 'фундаментал норм', 'новости отслеживаю', 'тренд поймал', 'на коррекции зашел', 'на дне купил', 'на харе продал', 'идеальный вход бля', 'охуеть просто', 'пиздато получилось', 'господи спасибо сука', 'аллах акбар нахуй', 'чудеса ебаные', 'магия какая-то пиздец', 'фартануло блять', 'обломилось говно', 'не срослось нахуй', 'не прокатило блин', 'пролетел как фанера', 'улетел в минус пизда', 'в даун ушел', 'депозит слил', 'бабки кончились', 'пополнять надо', 'еще кину', 'кредитку взял', 'занял у друга', 'в ломбард сгонял', 'телефон заложил', 'все проиграл сука', 'дома пизда будет', 'жена убьет', 'кредит не отдам', 'в долгах как в шелках', 'кина не будет', 'денег нет но вы держитесь', 'победа бля', 'выйгрыш охуенный', 'крупняк залетел', 'два косаря плюсом', 'пятак поднял', 'черт возьми красава', 'ебейший заход', 'как так то', 'не понимаю блять', 'почему слив', 'алгоритмы шумят', 'нечестное казино', 'наебалово полное', 'лохотрон', 'развод для лохов', 'дураков нет', 'сам дурак', 'слабо зайти?', 'слабо поставить?', 'го в бой', 'кто со мной?', 'вместе веселее', 'за компанию', 'напились с другом', 'бухой играю', 'под газом', 'пьяный в хлам', 'не ведитесь пацаны', 'бросьте это дело', 'завязывай играть', 'последний раз', '100% последний', 'завтра все отыграю', 'в понедельник начну', 'с новой недели', 'с первого числа', 'новый месяц новый я', 'жизнь боль', 'кто ставил на 2.5?', 'авто кэф топ', 'ручкой надежнее', 'сам решаю', 'доверяй но проверяй', 'котлеты отдельно мухи отдельно', 'херня все это', 'надоело проигрывать', 'выйти в ноль и уйти', 'забрал и свалил', 'пассажиры выходят', 'конечная остановка', 'автобус уехал', 'а вот и нихуя', 'опять залетел'];
 
@@ -1690,9 +1693,6 @@
             players.forEach((player, index) => {
                 let placeClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
                 let avatar = player.name.charAt(0).toUpperCase();
-                if (avatar === 'О') avatar = 'О';
-                if (avatar === 'К') avatar = 'К';
-                if (avatar === 'C') avatar = 'C';
                 let item = document.createElement('div');
                 item.className = 'rating-item';
                 item.innerHTML = `
@@ -1727,7 +1727,7 @@
             ratingOpen = !ratingOpen;
         };
 
-        for (let i = 0; i < 5; i++) crashHistory.push((1.1 + Math.random() * 0.8).toFixed(2));
+        for (let i = 0; i < 5; i++) crashHistory.push((Math.random() * 3 + 1).toFixed(2));
 
         function showGameSelector() {
             document.getElementById('gameSelector').classList.remove('hidden');
@@ -1756,6 +1756,7 @@
             gameInProgress = false;
             cashoutUsed = false;
             isWaiting = false;
+            crashGameActive = false;
         }
 
         function initCrash() {
@@ -1768,15 +1769,23 @@
             gameInProgress = false;
             canPlaceBet = true;
             crashPoints = [{x: 0, y: 1.0}];
+            crashGameActive = false;
             startWaiting();
         }
 
         function generateCrashPoint() {
             let rand = Math.random() * 100;
-            if (rand <= winRate) {
-                return 2 + Math.random() * 8;
+            if (rand <= 30) {
+                return 1.0;
+            }
+            if (hasBet) {
+                if (rand <= winRate) {
+                    return 2 + Math.random() * 8;
+                } else {
+                    return 1.01 + Math.random() * 0.49;
+                }
             } else {
-                return 1.01 + Math.random() * 0.49;
+                return 2 + Math.random() * 118;
             }
         }
 
@@ -1809,7 +1818,7 @@
                 val.textContent = '-' + value + currencySymbol;
                 container.classList.add('lose');
             } else if (type === 'crash') {
-                label.textContent = '📈 КРАШ';
+                label.textContent = 'КРАШ';
                 val.textContent = value + 'x';
             }
             container.classList.remove('hidden');
@@ -1835,6 +1844,7 @@
                     isWaiting = false;
                     gameInProgress = true;
                     canPlaceBet = false;
+                    crashGameActive = true;
                     updateButtonState();
                     startCrashGame();
                 }
@@ -1869,10 +1879,15 @@
                     btn.disabled = false;
                 }
             } else if (gameInProgress) {
-                if (hasBet) {
+                if (hasBet && !cashoutUsed) {
                     btn.classList.remove('gray', 'gold');
                     btn.classList.add('green');
                     btn.textContent = `💰 ЗАБРАТЬ (${(currentBet * crashMultiplier).toFixed(2)}${currencySymbol})`;
+                    btn.disabled = false;
+                } else if (hasBet && cashoutUsed) {
+                    btn.classList.remove('green', 'gold');
+                    btn.classList.add('gray');
+                    btn.textContent = '⏳ ОЖИДАЙТЕ';
                     btn.disabled = false;
                 } else {
                     btn.classList.remove('green', 'gold');
@@ -1890,69 +1905,47 @@
 
         function startCrashGame() {
             if (!gameInProgress) return;
-            gameInProgress = true;
+            crashGameActive = true;
             cashoutUsed = false;
             crashPoints = [{x: 0, y: 1.0}];
             let multiplier = 1.0;
             let crashPoint = generateCrashPoint();
+            crashTargetMultiplier = crashPoint;
             let startTime = Date.now();
             
-            if (hasBet) {
-                crashInterval = setInterval(() => {
-                    let elapsed = (Date.now() - startTime) / 1000;
-                    if (elapsed < 2) {
-                        multiplier = 1.0 + (elapsed * 0.15);
-                    } else {
-                        multiplier = 1.3 * Math.pow(1.08, (elapsed - 2) * 10);
+            crashInterval = setInterval(() => {
+                let elapsed = (Date.now() - startTime) / 1000;
+                multiplier = 1.0 + (elapsed * 0.3);
+                
+                updateCrashDisplay(multiplier);
+                updateButtonState();
+                
+                if (multiplier >= crashPoint) {
+                    clearInterval(crashInterval);
+                    crashGameActive = false;
+                    gameInProgress = false;
+                    if (hasBet && !cashoutUsed) {
+                        hasBet = false;
+                        currentBet = 0;
+                        sendGameResult('crash', currentBet, 0);
+                        showResult('lose', currentBet.toFixed(2));
                     }
-                    
-                    updateCrashDisplay(multiplier);
-                    updateButtonState();
-                    
-                    if (multiplier >= crashPoint) {
-                        clearInterval(crashInterval);
-                        if (!cashoutUsed) {
-                            gameInProgress = false;
-                            addToHistory(multiplier);
-                            sendGameResult('crash', currentBet, 0);
-                            showResult('lose', currentBet.toFixed(2));
-                            hasBet = false;
-                            currentBet = 0;
-                            setTimeout(() => {
-                                isWaiting = true;
-                                startWaiting();
-                            }, 3000);
-                        }
-                        return;
+                    addToHistory(multiplier);
+                    if (!hasBet) showResult('crash', multiplier.toFixed(2));
+                    setTimeout(() => {
+                        isWaiting = true;
+                        startWaiting();
+                    }, 3000);
+                    return;
+                }
+                
+                if (hasBet && !cashoutUsed) {
+                    let autoVal = parseFloat(document.getElementById('autoValue').value);
+                    if (autoCashout && multiplier >= autoVal) {
+                        crashCashout();
                     }
-                    
-                    if (hasBet) {
-                        let autoVal = parseFloat(document.getElementById('autoValue').value);
-                        if (autoCashout && multiplier >= autoVal && !cashoutUsed) {
-                            crashCashout();
-                        }
-                    }
-                }, 50);
-            } else {
-                let target = 2.0 + Math.random() * 2.0;
-                let steps = 100;
-                let step = 0;
-                crashInterval = setInterval(() => {
-                    step++;
-                    multiplier = 1.0 + (target - 1.0) * (step / steps);
-                    updateCrashDisplay(multiplier);
-                    if (step >= steps) {
-                        clearInterval(crashInterval);
-                        gameInProgress = false;
-                        addToHistory(multiplier);
-                        showResult('crash', multiplier.toFixed(2));
-                        setTimeout(() => {
-                            isWaiting = true;
-                            startWaiting();
-                        }, 3000);
-                    }
-                }, 50);
-            }
+                }
+            }, 50);
         }
 
         function updateCrashDisplay(multiplier) {
@@ -1994,48 +1987,47 @@
         });
 
         document.getElementById('crashPlayBtn').addEventListener('click', function() {
-            if (gameInProgress && hasBet && !cashoutUsed) {
+            if (gameInProgress && hasBet && !cashoutUsed && crashGameActive) {
                 crashCashout();
                 return;
             }
             if (isWaiting && !hasBet && canPlaceBet) {
                 let bet = parseFloat(document.getElementById('crashBet').value);
-                if (bet < minBet || bet > maxBet) {
+                let betInCurrency = bet;
+                if (userCurrency === 'RUB') betInCurrency = bet / USDT_TO_RUB;
+                if (betInCurrency < minBet || betInCurrency > maxBet) {
                     showError('crash', `Ставка от ${minBet}${currencySymbol} до ${maxBet}${currencySymbol}`);
                     return;
                 }
-                if (bet > balance) {
+                if (betInCurrency > balance) {
                     showError('crash', 'Недостаточно средств!');
                     return;
                 }
-                balance -= bet;
-                document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+                balance -= betInCurrency;
+                let balanceDisplay = balance;
+                if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                 hasBet = true;
-                currentBet = bet;
+                currentBet = betInCurrency;
                 gamesPlayed++;
                 updateButtonState();
             }
         });
 
         function crashCashout() {
-            if (!gameInProgress || !hasBet || cashoutUsed) return;
+            if (!gameInProgress || !hasBet || cashoutUsed || !crashGameActive) return;
             cashoutUsed = true;
-            clearInterval(crashInterval);
             let win = currentBet * crashMultiplier;
             balance += win;
-            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
-            addToHistory(crashMultiplier);
+            let balanceDisplay = balance;
+            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             showWinPopup(win);
             sendGameResult('crash', currentBet, win);
             showResult('win', win.toFixed(2));
-            gameInProgress = false;
             hasBet = false;
             currentBet = 0;
-            cashoutUsed = false;
-            setTimeout(() => {
-                isWaiting = true;
-                startWaiting();
-            }, 3000);
+            updateButtonState();
         }
 
         let minesRevealed = [];
@@ -2103,11 +2095,13 @@
 
         document.getElementById('minesPlayBtn').addEventListener('click', function() {
             let bet = parseFloat(document.getElementById('minesBet').value);
-            if (bet > balance) {
+            let betInCurrency = bet;
+            if (userCurrency === 'RUB') betInCurrency = bet / USDT_TO_RUB;
+            if (betInCurrency > balance) {
                 showError('mines', 'Недостаточно средств!');
                 return;
             }
-            minesBet = bet;
+            minesBet = betInCurrency;
             minesActive = true;
             minesRevealed = new Array(25).fill(false);
             minePositions = [];
@@ -2128,8 +2122,10 @@
                 cell.onclick = () => revealMine(i);
                 grid.appendChild(cell);
             }
-            balance -= bet;
-            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+            balance -= betInCurrency;
+            let balanceDisplay = balance;
+            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             document.getElementById('minesPlayBtn').classList.add('hidden');
             document.getElementById('minesCashoutBtn').classList.remove('hidden');
             document.getElementById('minesMultiplier').textContent = 'x' + minesMultiplier.toFixed(2);
@@ -2144,7 +2140,9 @@
             }
             let win = minesBet * minesMultiplier;
             balance += win;
-            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+            let balanceDisplay = balance;
+            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             minesActive = false;
             document.getElementById('minesPlayBtn').classList.remove('hidden');
             document.getElementById('minesCashoutBtn').classList.add('hidden');
@@ -2211,28 +2209,31 @@
                 return;
             }
             let bet = parseFloat(document.getElementById('baccaratBet').value);
-            if (bet > balance) {
+            let betInCurrency = bet;
+            if (userCurrency === 'RUB') betInCurrency = bet / USDT_TO_RUB;
+            if (betInCurrency > balance) {
                 showError('baccarat', 'Недостаточно средств!');
                 return;
             }
-            balance -= bet;
-            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+            balance -= betInCurrency;
+            let balanceDisplay = balance;
+            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             setTimeout(() => {
-                let rand = Math.random() * 100;
-                let win = false;
+                let win = Math.random() < 0.25;
                 let mult = parseFloat(selected.dataset.coeff);
-                if (gamesPlayed < 2) win = Math.random() < 0.7;
-                else win = Math.random() < 25;
                 let winAmount = 0;
                 if (win) {
-                    winAmount = bet * mult;
+                    winAmount = betInCurrency * mult;
                     balance += winAmount;
-                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+                    balanceDisplay = balance;
+                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     showWinPopup(winAmount);
                 }
                 gamesPlayed++;
                 updateBaccaratHistory();
-                sendGameResult('baccarat', bet, winAmount);
+                sendGameResult('baccarat', betInCurrency, winAmount);
             }, 2000);
         });
 
@@ -2312,7 +2313,9 @@
 
         document.getElementById('twentyonePlayBtn').addEventListener('click', function() {
             let bet = parseFloat(document.getElementById('twentyoneBet').value);
-            if (bet > balance) {
+            let betInCurrency = bet;
+            if (userCurrency === 'RUB') betInCurrency = bet / USDT_TO_RUB;
+            if (betInCurrency > balance) {
                 showError('twentyone', 'Недостаточно средств!');
                 return;
             }
@@ -2320,9 +2323,11 @@
             playerCards = [deck.pop(), deck.pop()];
             dealerCards = [deck.pop(), deck.pop()];
             gameActive21 = true;
-            balance -= bet;
-            currentBet = bet;
-            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+            balance -= betInCurrency;
+            currentBet = betInCurrency;
+            let balanceDisplay = balance;
+            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             updateTwentyOneDisplay();
             document.getElementById('hitBtn').disabled = false;
             document.getElementById('standBtn').disabled = false;
@@ -2362,20 +2367,26 @@
                 } else if (dealerScore > 21) {
                     let win = currentBet * 2;
                     balance += win;
-                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+                    let balanceDisplay = balance;
+                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     showWinPopup(win);
                     sendGameResult('21', currentBet, win);
                     showResult('win', win.toFixed(2));
                 } else if (playerScore > dealerScore) {
                     let win = currentBet * 2;
                     balance += win;
-                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+                    let balanceDisplay = balance;
+                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     showWinPopup(win);
                     sendGameResult('21', currentBet, win);
                     showResult('win', win.toFixed(2));
                 } else if (playerScore === dealerScore) {
                     balance += currentBet;
-                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+                    let balanceDisplay = balance;
+                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     sendGameResult('21', currentBet, currentBet);
                     showResult('win', currentBet.toFixed(2));
                 } else {
@@ -2398,28 +2409,28 @@
 
         document.getElementById('slotPlayBtn').addEventListener('click', function() {
             let bet = 10;
-            if (bet > balance) {
+            let betInCurrency = bet;
+            if (userCurrency === 'RUB') betInCurrency = bet / USDT_TO_RUB;
+            if (betInCurrency > balance) {
                 showError('slot', 'Недостаточно средств!');
                 return;
             }
-            balance -= bet;
-            document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+            balance -= betInCurrency;
+            let balanceDisplay = balance;
+            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             let reel = document.getElementById('slotReel');
             let itemHeight = 100;
             let items = reel.children.length;
-            let rand = Math.random() * 100;
             let result;
-            if (gamesPlayed < 2) result = Math.random() < 0.7 ? 5 : 0;
-            else {
-                if (rand < 90) {
-                    let low = [0,1,2,3,4,5];
-                    result = low[Math.floor(Math.random() * low.length)];
-                } else {
-                    let high = [10,15,20,25,30,40,50];
-                    result = high[Math.floor(Math.random() * high.length)];
-                }
+            if (Math.random() < 0.9) {
+                let low = [0,1,2,3,4,5];
+                result = low[Math.floor(Math.random() * low.length)];
+            } else {
+                let high = [10,15,20,25,30,40,50,60,70,80,90,100];
+                result = high[Math.floor(Math.random() * high.length)];
             }
-            if (Math.random() < 0.01 && gamesPlayed > 10) result = 100;
+            if (Math.random() < 0.01) result = 100;
             let targetIndex = -1;
             for (let i = 0; i < items; i++) {
                 if (parseInt(reel.children[i].getAttribute('data-value')) === result) {
@@ -2436,12 +2447,14 @@
                 let winAmount = result;
                 if (winAmount > 0) {
                     balance += winAmount;
-                    document.getElementById('balanceAmount').textContent = balance.toFixed(2);
+                    balanceDisplay = balance;
+                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     showWinPopup(winAmount);
                 }
                 document.getElementById('slotResult').textContent = winAmount + currencySymbol;
                 gamesPlayed++;
-                sendGameResult('slot', bet, winAmount);
+                sendGameResult('slot', betInCurrency, winAmount);
                 setTimeout(() => {
                     reel.style.transition = 'none';
                     reel.style.top = '0px';
@@ -2496,7 +2509,9 @@
 
         function showWinPopup(amount) {
             let popup = document.getElementById('winPopup');
-            popup.textContent = `+${amount.toFixed(2)}${currencySymbol}`;
+            let amountDisplay = amount;
+            if (userCurrency === 'RUB') amountDisplay = amount * USDT_TO_RUB;
+            popup.textContent = `+${amountDisplay.toFixed(2)}${currencySymbol}`;
             popup.classList.remove('hidden');
             setTimeout(() => popup.classList.add('hidden'), 2000);
         }
