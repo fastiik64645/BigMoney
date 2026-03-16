@@ -1403,7 +1403,7 @@
                     </div>
 
                     <div class="bet-controls">
-                        <input type="number" class="bet-input" id="crashBet" value="10" min="1" step="1">
+                        <input type="number" class="bet-input" id="crashBet" value="36" min="1" step="1">
                         <div class="bet-multipliers">
                             <button class="bet-mult" data-mult="2">x2</button>
                             <button class="bet-mult" data-mult="5">x5</button>
@@ -1433,7 +1433,7 @@
                 </div>
 
                 <div class="bet-controls">
-                    <input type="number" class="bet-input" id="minesBet" value="10" min="1" step="1">
+                    <input type="number" class="bet-input" id="minesBet" value="36" min="1" step="1">
                     <div class="bet-multipliers">
                         <button class="bet-mult" data-mult="2">x2</button>
                         <button class="bet-mult" data-mult="5">x5</button>
@@ -1469,7 +1469,7 @@
                 </div>
 
                 <div class="bet-controls">
-                    <input type="number" class="bet-input" id="baccaratBet" value="10" min="1" step="1">
+                    <input type="number" class="bet-input" id="baccaratBet" value="36" min="1" step="1">
                     <div class="bet-multipliers">
                         <button class="bet-mult" data-mult="2">x2</button>
                         <button class="bet-mult" data-mult="5">x5</button>
@@ -1501,7 +1501,7 @@
                 </div>
 
                 <div class="bet-controls">
-                    <input type="number" class="bet-input" id="twentyoneBet" value="10" min="1" step="1">
+                    <input type="number" class="bet-input" id="twentyoneBet" value="36" min="1" step="1">
                 </div>
 
                 <div class="error-message hidden" id="twentyoneError"></div>
@@ -1600,13 +1600,25 @@
         let minBet = gameSettings.crash?.min_bet || 0.5;
         let maxBet = gameSettings.crash?.max_bet || 1000;
 
+        let minBetDisplay = minBet;
+        if (userCurrency === 'RUB') {
+            minBetDisplay = minBet * USDT_TO_RUB;
+            document.getElementById('crashBet').value = minBetDisplay;
+            document.getElementById('minesBet').value = minBetDisplay;
+            document.getElementById('baccaratBet').value = minBetDisplay;
+            document.getElementById('twentyoneBet').value = minBetDisplay;
+        }
+
         async function sendGameResult(game, bet, win) {
             if (!userId) return;
             try {
+                const betSend = bet;
+                const winSend = win;
+                
                 const response = await fetch(`${API_URL}/api/game-result`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId, game, bet, win, currency: userCurrency })
+                    body: JSON.stringify({ user_id: userId, game, bet: betSend, win: winSend, currency: userCurrency })
                 });
                 const data = await response.json();
                 if (data.success) {
@@ -1620,14 +1632,14 @@
                     if (win > bet) {
                         let winDisplay = win;
                         if (userCurrency === 'RUB') {
-                            winDisplay = win * USDT_TO_RUB;
+                            winDisplay = win;
                         }
                         showWinPopup(winDisplay);
                         showResult('win', winDisplay.toFixed(2));
                     } else if (win === 0 && bet > 0) {
                         let betDisplay = bet;
                         if (userCurrency === 'RUB') {
-                            betDisplay = bet * USDT_TO_RUB;
+                            betDisplay = bet;
                         }
                         showResult('lose', betDisplay.toFixed(2));
                     }
@@ -1762,6 +1774,7 @@
             document.getElementById('currentGameTitle').textContent = game === 'twentyone' ? '21' : game.toUpperCase();
             document.querySelectorAll('.game-view').forEach(g => g.classList.add('hidden'));
             document.getElementById(game + '-game').classList.remove('hidden');
+            updateBalanceFromServer();
             if (game === 'mines') initMines();
             if (game === 'baccarat') updateBaccaratHistory();
             if (game === 'slot') initSlot();
@@ -1904,7 +1917,7 @@
                     btn.classList.add('green');
                     let winDisplay = currentBet * crashMultiplier;
                     if (userCurrency === 'RUB') {
-                        winDisplay = winDisplay * USDT_TO_RUB;
+                        winDisplay = winDisplay;
                     }
                     btn.textContent = `💰 ЗАБРАТЬ (${winDisplay.toFixed(2)}${currencySymbol})`;
                     btn.disabled = false;
@@ -1951,7 +1964,7 @@
                     if (hasBet && !cashoutUsed) {
                         let betDisplay = currentBet;
                         if (userCurrency === 'RUB') {
-                            betDisplay = currentBet * USDT_TO_RUB;
+                            betDisplay = currentBet;
                         }
                         sendGameResult('crash', currentBet, 0);
                         showResult('lose', betDisplay.toFixed(2));
@@ -2070,7 +2083,7 @@
             document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             let winDisplay = win;
             if (userCurrency === 'RUB') {
-                winDisplay = win * USDT_TO_RUB;
+                winDisplay = win;
             }
             showWinPopup(winDisplay);
             sendGameResult('crash', currentBet, win);
@@ -2204,7 +2217,7 @@
             document.getElementById('minesCashoutBtn').classList.add('hidden');
             let winDisplay = win;
             if (userCurrency === 'RUB') {
-                winDisplay = win * USDT_TO_RUB;
+                winDisplay = win;
             }
             showWinPopup(winDisplay);
             sendGameResult('mines', minesBet, win);
@@ -2226,7 +2239,7 @@
                 document.getElementById('minesCashoutBtn').classList.add('hidden');
                 let betDisplay = minesBet;
                 if (userCurrency === 'RUB') {
-                    betDisplay = minesBet * USDT_TO_RUB;
+                    betDisplay = minesBet;
                 }
                 sendGameResult('mines', minesBet, 0);
                 showResult('lose', betDisplay.toFixed(2));
@@ -2302,14 +2315,14 @@
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     let winDisplay = winAmount;
                     if (userCurrency === 'RUB') {
-                        winDisplay = winAmount * USDT_TO_RUB;
+                        winDisplay = winAmount;
                     }
                     showWinPopup(winDisplay);
                     showResult('win', winDisplay.toFixed(2));
                 } else {
                     let betDisplay = betInCurrency;
                     if (userCurrency === 'RUB') {
-                        betDisplay = betInCurrency * USDT_TO_RUB;
+                        betDisplay = betInCurrency;
                     }
                     showResult('lose', betDisplay.toFixed(2));
                 }
@@ -2432,7 +2445,7 @@
                 document.getElementById('twentyonePlayBtn').disabled = false;
                 let betDisplay = currentBet;
                 if (userCurrency === 'RUB') {
-                    betDisplay = currentBet * USDT_TO_RUB;
+                    betDisplay = currentBet;
                 }
                 sendGameResult('21', currentBet, 0);
                 showResult('lose', betDisplay.toFixed(2));
@@ -2454,7 +2467,7 @@
                 if (playerScore > 21) {
                     let betDisplay = currentBet;
                     if (userCurrency === 'RUB') {
-                        betDisplay = currentBet * USDT_TO_RUB;
+                        betDisplay = currentBet;
                     }
                     sendGameResult('21', currentBet, 0);
                     showResult('lose', betDisplay.toFixed(2));
@@ -2468,7 +2481,7 @@
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     let winDisplay = win;
                     if (userCurrency === 'RUB') {
-                        winDisplay = win * USDT_TO_RUB;
+                        winDisplay = win;
                     }
                     showWinPopup(winDisplay);
                     sendGameResult('21', currentBet, win);
@@ -2483,7 +2496,7 @@
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     let winDisplay = win;
                     if (userCurrency === 'RUB') {
-                        winDisplay = win * USDT_TO_RUB;
+                        winDisplay = win;
                     }
                     showWinPopup(winDisplay);
                     sendGameResult('21', currentBet, win);
@@ -2497,14 +2510,14 @@
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     let betDisplay = currentBet;
                     if (userCurrency === 'RUB') {
-                        betDisplay = currentBet * USDT_TO_RUB;
+                        betDisplay = currentBet;
                     }
                     sendGameResult('21', currentBet, currentBet);
                     showResult('win', betDisplay.toFixed(2));
                 } else {
                     let betDisplay = currentBet;
                     if (userCurrency === 'RUB') {
-                        betDisplay = currentBet * USDT_TO_RUB;
+                        betDisplay = currentBet;
                     }
                     sendGameResult('21', currentBet, 0);
                     showResult('lose', betDisplay.toFixed(2));
@@ -2574,14 +2587,14 @@
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     let winDisplay = winAmount;
                     if (userCurrency === 'RUB') {
-                        winDisplay = winAmount * USDT_TO_RUB;
+                        winDisplay = winAmount;
                     }
                     showWinPopup(winDisplay);
                     showResult('win', winDisplay.toFixed(2));
                 } else {
                     let betDisplay = betInCurrency;
                     if (userCurrency === 'RUB') {
-                        betDisplay = betInCurrency * USDT_TO_RUB;
+                        betDisplay = betInCurrency;
                     }
                     showResult('lose', betDisplay.toFixed(2));
                 }
