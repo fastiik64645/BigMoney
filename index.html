@@ -1542,7 +1542,7 @@
         tg.ready();
 
         const USDT_TO_RUB = 72;
-        const API_URL = 'http://localhost:8000';
+        const API_URL = 'https://rochel-stimulable-fatidically.ngrok-free.dev';
         const urlParams = new URLSearchParams(window.location.search);
         const dataParam = urlParams.get('data');
         let userData = null;
@@ -1595,7 +1595,7 @@
         let crashGameActive = false;
 
         let winRate = gameSettings.crash?.win_rate || 20;
-        let minBet = gameSettings.crash?.min_bet || 1;
+        let minBet = gameSettings.crash?.min_bet || 0.5;
         let maxBet = gameSettings.crash?.max_bet || 1000;
 
         async function sendGameResult(game, bet, win) {
@@ -1624,7 +1624,9 @@
                         showResult('lose', betDisplay.toFixed(2));
                     }
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.error('Error sending game result:', e);
+            }
         }
 
         async function updateBalanceFromServer() {
@@ -2009,8 +2011,16 @@
                 let bet = parseFloat(document.getElementById('crashBet').value);
                 let betInCurrency = bet;
                 if (userCurrency === 'RUB') betInCurrency = bet / USDT_TO_RUB;
-                if (betInCurrency < minBet || betInCurrency > maxBet) {
-                    showError('crash', `Ставка от ${minBet}${currencySymbol} до ${maxBet}${currencySymbol}`);
+                if (betInCurrency < minBet) {
+                    let minDisplay = minBet;
+                    if (userCurrency === 'RUB') minDisplay = minBet * USDT_TO_RUB;
+                    showError('crash', `Минимальная ставка ${minDisplay.toFixed(2)}${currencySymbol}`);
+                    return;
+                }
+                if (betInCurrency > maxBet) {
+                    let maxDisplay = maxBet;
+                    if (userCurrency === 'RUB') maxDisplay = maxBet * USDT_TO_RUB;
+                    showError('crash', `Максимальная ставка ${maxDisplay.toFixed(2)}${currencySymbol}`);
                     return;
                 }
                 if (betInCurrency > balance) {
