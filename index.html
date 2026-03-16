@@ -30,9 +30,6 @@
             --grid: rgba(255, 217, 102, 0.1);
             --card-red: #f44336;
             --card-black: #2c3e50;
-            --crash-line: #ffd966;
-            --crash-bg: #14181f;
-            --crash-grid: rgba(255, 217, 102, 0.1);
         }
 
         body {
@@ -404,7 +401,6 @@
             border-color: var(--accent);
         }
 
-        /* Crash Game Styles - как на 1win */
         .crash-container {
             background: var(--card);
             border-radius: 24px;
@@ -442,8 +438,8 @@
             display: block;
             background: var(--element);
             background-image: 
-                linear-gradient(var(--crash-grid) 1px, transparent 1px),
-                linear-gradient(90deg, var(--crash-grid) 1px, transparent 1px);
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
             background-size: 30px 30px;
         }
 
@@ -825,7 +821,6 @@
             display: none !important;
         }
 
-        /* Другие игры (оставляем как было) */
         .mines-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -1378,7 +1373,6 @@
                 <div class="back-to-games" onclick="showGameSelector()">← К ИГРАМ</div>
             </div>
 
-            <!-- CRASH GAME - УЛУЧШЕННАЯ ВЕРСИЯ КАК НА 1WIN -->
             <div id="crash-game" class="game-view">
                 <div class="result-container hidden" id="resultContainer">
                     <div class="result-label" id="resultLabel"></div>
@@ -1422,7 +1416,6 @@
                 </div>
             </div>
 
-            <!-- MINES GAME -->
             <div id="mines-game" class="game-view hidden">
                 <div class="mines-grid" id="minesGrid"></div>
                 <div class="current-multiplier" id="minesMultiplier">x1.0</div>
@@ -1453,7 +1446,6 @@
                 <button class="play-btn green hidden" id="minesCashoutBtn">💰 ЗАБРАТЬ (x<span id="cashoutMultiplier">1.0</span>)</button>
             </div>
 
-            <!-- BACCARAT GAME -->
             <div id="baccarat-game" class="game-view hidden">
                 <div class="baccarat-history" id="baccaratHistory"></div>
 
@@ -1489,7 +1481,6 @@
                 <button class="play-btn gold" id="baccaratPlayBtn">🎴 СДЕЛАТЬ СТАВКУ</button>
             </div>
 
-            <!-- TWENTYONE GAME -->
             <div id="twentyone-game" class="game-view hidden">
                 <div class="twentyone-table">
                     <div class="dealer-area">
@@ -1517,7 +1508,6 @@
                 <button class="play-btn gold" id="twentyonePlayBtn">🃏 НАЧАТЬ ИГРУ</button>
             </div>
 
-            <!-- SLOT GAME -->
             <div id="slot-game" class="game-view hidden">
                 <div class="slot-machine">
                     <div class="slot-window">
@@ -1608,7 +1598,6 @@
         let winRate = gameSettings.crash?.win_rate || 20;
         let minBet = gameSettings.crash?.min_bet || 1;
         let maxBet = gameSettings.crash?.max_bet || 1000;
-        let coefficient = gameSettings.crash?.coefficient || 1.95;
 
         async function sendGameResult(game, bet, win) {
             if (!userId) return;
@@ -1769,7 +1758,6 @@
             isWaiting = false;
         }
 
-        // CRASH GAME - УЛУЧШЕННАЯ ВЕРСИЯ
         function initCrash() {
             canvas = document.getElementById('crashCanvas');
             ctx = canvas.getContext('2d');
@@ -1912,7 +1900,11 @@
             if (hasBet) {
                 crashInterval = setInterval(() => {
                     let elapsed = (Date.now() - startTime) / 1000;
-                    multiplier = Math.pow(1.015, elapsed * 50);
+                    if (elapsed < 2) {
+                        multiplier = 1.0 + (elapsed * 0.15);
+                    } else {
+                        multiplier = 1.3 * Math.pow(1.08, (elapsed - 2) * 10);
+                    }
                     
                     updateCrashDisplay(multiplier);
                     updateButtonState();
@@ -1966,33 +1958,26 @@
         function updateCrashDisplay(multiplier) {
             crashMultiplier = multiplier;
             document.getElementById('crashMultiplier').innerHTML = multiplier.toFixed(2) + 'x';
-            
             crashPoints.push({x: crashPoints.length, y: multiplier});
             if (crashPoints.length > 50) crashPoints.shift();
-            
             drawGraph();
         }
 
         function drawGraph() {
             if (!ctx || crashPoints.length < 2) return;
-            
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
             let maxY = Math.max(...crashPoints.map(p => p.y), 2);
-            
             ctx.beginPath();
             ctx.strokeStyle = '#ffd966';
             ctx.lineWidth = 3;
             ctx.shadowColor = '#ffd966';
             ctx.shadowBlur = 10;
-            
             for (let i = 0; i < crashPoints.length; i++) {
                 let x = (i / (crashPoints.length - 1)) * canvas.width;
                 let y = canvas.height - (crashPoints[i].y / maxY) * canvas.height * 0.9;
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
-            
             ctx.stroke();
             ctx.shadowBlur = 0;
         }
@@ -2053,7 +2038,6 @@
             }, 3000);
         }
 
-        // MINES GAME
         let minesRevealed = [];
         let minePositions = [];
         let minesBet = 0;
@@ -2192,7 +2176,6 @@
             }
         }
 
-        // BACCARAT GAME
         function updateBaccaratHistory() {
             let history = document.getElementById('baccaratHistory');
             history.innerHTML = '';
@@ -2253,7 +2236,6 @@
             }, 2000);
         });
 
-        // TWENTYONE GAME
         let deck = [];
         let playerCards = [];
         let dealerCards = [];
@@ -2403,7 +2385,6 @@
             }, 500);
         });
 
-        // SLOT GAME
         function initSlot() {
             let reel = document.getElementById('slotReel');
             let html = '';
@@ -2471,7 +2452,6 @@
             }, 4000);
         });
 
-        // CHAT
         document.getElementById('sendChatBtn').addEventListener('click', function() {
             let input = document.getElementById('chatInput');
             let msg = input.value.trim();
@@ -2489,7 +2469,6 @@
             if (e.key === 'Enter') document.getElementById('sendChatBtn').click();
         });
 
-        // BET MULTIPLIERS
         document.querySelectorAll('.bet-mult').forEach(btn => {
             btn.addEventListener('click', function() {
                 let mult = parseFloat(this.dataset.mult);
@@ -2501,7 +2480,6 @@
             });
         });
 
-        // UTILS
         function showError(game, msg) {
             let err = document.getElementById(game + 'Error');
             if (err) {
