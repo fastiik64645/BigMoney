@@ -1565,7 +1565,9 @@
         const currencyMap = {'RUB': '₽', 'USDT': '₮'};
         currencySymbol = currencyMap[userCurrency] || '₮';
         let balanceDisplay = balance;
-        if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+        if (userCurrency === 'RUB') {
+            balanceDisplay = balance * USDT_TO_RUB;
+        }
 
         document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
         document.getElementById('currencySymbol').textContent = currencySymbol;
@@ -1610,23 +1612,27 @@
                 if (data.success) {
                     balance = data.new_balance;
                     let balanceDisplay = balance;
-                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        balanceDisplay = balance * USDT_TO_RUB;
+                    }
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     
                     if (win > bet) {
                         let winDisplay = win;
-                        if (userCurrency === 'RUB') winDisplay = win * USDT_TO_RUB;
+                        if (userCurrency === 'RUB') {
+                            winDisplay = win * USDT_TO_RUB;
+                        }
                         showWinPopup(winDisplay);
                         showResult('win', winDisplay.toFixed(2));
                     } else if (win === 0 && bet > 0) {
                         let betDisplay = bet;
-                        if (userCurrency === 'RUB') betDisplay = bet * USDT_TO_RUB;
+                        if (userCurrency === 'RUB') {
+                            betDisplay = bet * USDT_TO_RUB;
+                        }
                         showResult('lose', betDisplay.toFixed(2));
                     }
                 }
-            } catch (e) {
-                console.error('Error sending game result:', e);
-            }
+            } catch (e) {}
         }
 
         async function updateBalanceFromServer() {
@@ -1639,7 +1645,9 @@
                     userCurrency = data.currency;
                     currencySymbol = currencyMap[userCurrency] || '₮';
                     let balanceDisplay = balance;
-                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        balanceDisplay = balance * USDT_TO_RUB;
+                    }
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     document.getElementById('currencySymbol').textContent = currencySymbol;
                 }
@@ -1895,7 +1903,9 @@
                     btn.classList.remove('gray', 'gold');
                     btn.classList.add('green');
                     let winDisplay = currentBet * crashMultiplier;
-                    if (userCurrency === 'RUB') winDisplay = winDisplay * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        winDisplay = winDisplay * USDT_TO_RUB;
+                    }
                     btn.textContent = `💰 ЗАБРАТЬ (${winDisplay.toFixed(2)}${currencySymbol})`;
                     btn.disabled = false;
                 } else if (hasBet && cashoutUsed) {
@@ -1929,7 +1939,7 @@
             
             crashInterval = setInterval(() => {
                 let elapsed = (Date.now() - startTime) / 1000;
-                multiplier = 1.0 + (elapsed * 0.3);
+                multiplier = 1.0 + Math.pow(elapsed, 1.5) * 0.8;
                 
                 updateCrashDisplay(multiplier);
                 updateButtonState();
@@ -1940,7 +1950,9 @@
                     gameInProgress = false;
                     if (hasBet && !cashoutUsed) {
                         let betDisplay = currentBet;
-                        if (userCurrency === 'RUB') betDisplay = currentBet * USDT_TO_RUB;
+                        if (userCurrency === 'RUB') {
+                            betDisplay = currentBet * USDT_TO_RUB;
+                        }
                         sendGameResult('crash', currentBet, 0);
                         showResult('lose', betDisplay.toFixed(2));
                         hasBet = false;
@@ -2010,16 +2022,22 @@
             if (isWaiting && !hasBet && canPlaceBet) {
                 let bet = parseFloat(document.getElementById('crashBet').value);
                 let betInCurrency = bet;
-                if (userCurrency === 'RUB') betInCurrency = bet / USDT_TO_RUB;
+                if (userCurrency === 'RUB') {
+                    betInCurrency = bet / USDT_TO_RUB;
+                }
                 if (betInCurrency < minBet) {
                     let minDisplay = minBet;
-                    if (userCurrency === 'RUB') minDisplay = minBet * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        minDisplay = minBet * USDT_TO_RUB;
+                    }
                     showError('crash', `Минимальная ставка ${minDisplay.toFixed(2)}${currencySymbol}`);
                     return;
                 }
                 if (betInCurrency > maxBet) {
                     let maxDisplay = maxBet;
-                    if (userCurrency === 'RUB') maxDisplay = maxBet * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        maxDisplay = maxBet * USDT_TO_RUB;
+                    }
                     showError('crash', `Максимальная ставка ${maxDisplay.toFixed(2)}${currencySymbol}`);
                     return;
                 }
@@ -2029,7 +2047,9 @@
                 }
                 balance -= betInCurrency;
                 let balanceDisplay = balance;
-                if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                if (userCurrency === 'RUB') {
+                    balanceDisplay = balance * USDT_TO_RUB;
+                }
                 document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                 hasBet = true;
                 currentBet = betInCurrency;
@@ -2044,10 +2064,14 @@
             let win = currentBet * crashMultiplier;
             balance += win;
             let balanceDisplay = balance;
-            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                balanceDisplay = balance * USDT_TO_RUB;
+            }
             document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             let winDisplay = win;
-            if (userCurrency === 'RUB') winDisplay = win * USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                winDisplay = win * USDT_TO_RUB;
+            }
             showWinPopup(winDisplay);
             sendGameResult('crash', currentBet, win);
             showResult('win', winDisplay.toFixed(2));
@@ -2122,7 +2146,9 @@
         document.getElementById('minesPlayBtn').addEventListener('click', function() {
             let bet = parseFloat(document.getElementById('minesBet').value);
             let betInCurrency = bet;
-            if (userCurrency === 'RUB') betInCurrency = bet / USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                betInCurrency = bet / USDT_TO_RUB;
+            }
             if (betInCurrency > balance) {
                 showError('mines', 'Недостаточно средств!');
                 return;
@@ -2150,7 +2176,9 @@
             }
             balance -= betInCurrency;
             let balanceDisplay = balance;
-            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                balanceDisplay = balance * USDT_TO_RUB;
+            }
             document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             document.getElementById('minesPlayBtn').classList.add('hidden');
             document.getElementById('minesCashoutBtn').classList.remove('hidden');
@@ -2167,13 +2195,17 @@
             let win = minesBet * minesMultiplier;
             balance += win;
             let balanceDisplay = balance;
-            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                balanceDisplay = balance * USDT_TO_RUB;
+            }
             document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             minesActive = false;
             document.getElementById('minesPlayBtn').classList.remove('hidden');
             document.getElementById('minesCashoutBtn').classList.add('hidden');
             let winDisplay = win;
-            if (userCurrency === 'RUB') winDisplay = win * USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                winDisplay = win * USDT_TO_RUB;
+            }
             showWinPopup(winDisplay);
             sendGameResult('mines', minesBet, win);
             initMines();
@@ -2193,7 +2225,9 @@
                 document.getElementById('minesPlayBtn').classList.remove('hidden');
                 document.getElementById('minesCashoutBtn').classList.add('hidden');
                 let betDisplay = minesBet;
-                if (userCurrency === 'RUB') betDisplay = minesBet * USDT_TO_RUB;
+                if (userCurrency === 'RUB') {
+                    betDisplay = minesBet * USDT_TO_RUB;
+                }
                 sendGameResult('mines', minesBet, 0);
                 showResult('lose', betDisplay.toFixed(2));
             } else {
@@ -2241,14 +2275,18 @@
             }
             let bet = parseFloat(document.getElementById('baccaratBet').value);
             let betInCurrency = bet;
-            if (userCurrency === 'RUB') betInCurrency = bet / USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                betInCurrency = bet / USDT_TO_RUB;
+            }
             if (betInCurrency > balance) {
                 showError('baccarat', 'Недостаточно средств!');
                 return;
             }
             balance -= betInCurrency;
             let balanceDisplay = balance;
-            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                balanceDisplay = balance * USDT_TO_RUB;
+            }
             document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             setTimeout(() => {
                 let win = Math.random() < 0.25;
@@ -2258,15 +2296,21 @@
                     winAmount = betInCurrency * mult;
                     balance += winAmount;
                     balanceDisplay = balance;
-                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        balanceDisplay = balance * USDT_TO_RUB;
+                    }
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     let winDisplay = winAmount;
-                    if (userCurrency === 'RUB') winDisplay = winAmount * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        winDisplay = winAmount * USDT_TO_RUB;
+                    }
                     showWinPopup(winDisplay);
                     showResult('win', winDisplay.toFixed(2));
                 } else {
                     let betDisplay = betInCurrency;
-                    if (userCurrency === 'RUB') betDisplay = betInCurrency * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        betDisplay = betInCurrency * USDT_TO_RUB;
+                    }
                     showResult('lose', betDisplay.toFixed(2));
                 }
                 gamesPlayed++;
@@ -2352,7 +2396,9 @@
         document.getElementById('twentyonePlayBtn').addEventListener('click', function() {
             let bet = parseFloat(document.getElementById('twentyoneBet').value);
             let betInCurrency = bet;
-            if (userCurrency === 'RUB') betInCurrency = bet / USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                betInCurrency = bet / USDT_TO_RUB;
+            }
             if (betInCurrency > balance) {
                 showError('twentyone', 'Недостаточно средств!');
                 return;
@@ -2364,7 +2410,9 @@
             balance -= betInCurrency;
             currentBet = betInCurrency;
             let balanceDisplay = balance;
-            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                balanceDisplay = balance * USDT_TO_RUB;
+            }
             document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             updateTwentyOneDisplay();
             document.getElementById('hitBtn').disabled = false;
@@ -2383,7 +2431,9 @@
                 document.getElementById('standBtn').disabled = true;
                 document.getElementById('twentyonePlayBtn').disabled = false;
                 let betDisplay = currentBet;
-                if (userCurrency === 'RUB') betDisplay = currentBet * USDT_TO_RUB;
+                if (userCurrency === 'RUB') {
+                    betDisplay = currentBet * USDT_TO_RUB;
+                }
                 sendGameResult('21', currentBet, 0);
                 showResult('lose', betDisplay.toFixed(2));
             }
@@ -2403,17 +2453,23 @@
                 document.getElementById('twentyonePlayBtn').disabled = false;
                 if (playerScore > 21) {
                     let betDisplay = currentBet;
-                    if (userCurrency === 'RUB') betDisplay = currentBet * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        betDisplay = currentBet * USDT_TO_RUB;
+                    }
                     sendGameResult('21', currentBet, 0);
                     showResult('lose', betDisplay.toFixed(2));
                 } else if (dealerScore > 21) {
                     let win = currentBet * 2;
                     balance += win;
                     let balanceDisplay = balance;
-                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        balanceDisplay = balance * USDT_TO_RUB;
+                    }
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     let winDisplay = win;
-                    if (userCurrency === 'RUB') winDisplay = win * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        winDisplay = win * USDT_TO_RUB;
+                    }
                     showWinPopup(winDisplay);
                     sendGameResult('21', currentBet, win);
                     showResult('win', winDisplay.toFixed(2));
@@ -2421,25 +2477,35 @@
                     let win = currentBet * 2;
                     balance += win;
                     let balanceDisplay = balance;
-                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        balanceDisplay = balance * USDT_TO_RUB;
+                    }
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     let winDisplay = win;
-                    if (userCurrency === 'RUB') winDisplay = win * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        winDisplay = win * USDT_TO_RUB;
+                    }
                     showWinPopup(winDisplay);
                     sendGameResult('21', currentBet, win);
                     showResult('win', winDisplay.toFixed(2));
                 } else if (playerScore === dealerScore) {
                     balance += currentBet;
                     let balanceDisplay = balance;
-                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        balanceDisplay = balance * USDT_TO_RUB;
+                    }
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     let betDisplay = currentBet;
-                    if (userCurrency === 'RUB') betDisplay = currentBet * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        betDisplay = currentBet * USDT_TO_RUB;
+                    }
                     sendGameResult('21', currentBet, currentBet);
                     showResult('win', betDisplay.toFixed(2));
                 } else {
                     let betDisplay = currentBet;
-                    if (userCurrency === 'RUB') betDisplay = currentBet * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        betDisplay = currentBet * USDT_TO_RUB;
+                    }
                     sendGameResult('21', currentBet, 0);
                     showResult('lose', betDisplay.toFixed(2));
                 }
@@ -2460,14 +2526,18 @@
         document.getElementById('slotPlayBtn').addEventListener('click', function() {
             let bet = 10;
             let betInCurrency = bet;
-            if (userCurrency === 'RUB') betInCurrency = bet / USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                betInCurrency = bet / USDT_TO_RUB;
+            }
             if (betInCurrency > balance) {
                 showError('slot', 'Недостаточно средств!');
                 return;
             }
             balance -= betInCurrency;
             let balanceDisplay = balance;
-            if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+            if (userCurrency === 'RUB') {
+                balanceDisplay = balance * USDT_TO_RUB;
+            }
             document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
             let reel = document.getElementById('slotReel');
             let itemHeight = 100;
@@ -2498,15 +2568,21 @@
                 if (winAmount > 0) {
                     balance += winAmount;
                     balanceDisplay = balance;
-                    if (userCurrency === 'RUB') balanceDisplay = balance * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        balanceDisplay = balance * USDT_TO_RUB;
+                    }
                     document.getElementById('balanceAmount').textContent = balanceDisplay.toFixed(2);
                     let winDisplay = winAmount;
-                    if (userCurrency === 'RUB') winDisplay = winAmount * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        winDisplay = winAmount * USDT_TO_RUB;
+                    }
                     showWinPopup(winDisplay);
                     showResult('win', winDisplay.toFixed(2));
                 } else {
                     let betDisplay = betInCurrency;
-                    if (userCurrency === 'RUB') betDisplay = betInCurrency * USDT_TO_RUB;
+                    if (userCurrency === 'RUB') {
+                        betDisplay = betInCurrency * USDT_TO_RUB;
+                    }
                     showResult('lose', betDisplay.toFixed(2));
                 }
                 document.getElementById('slotResult').textContent = winAmount + currencySymbol;
@@ -2567,7 +2643,6 @@
         function showWinPopup(amount) {
             let popup = document.getElementById('winPopup');
             let amountDisplay = amount;
-            if (userCurrency === 'RUB') amountDisplay = amount;
             popup.textContent = `+${amountDisplay.toFixed(2)}${currencySymbol}`;
             popup.classList.remove('hidden');
             setTimeout(() => popup.classList.add('hidden'), 2000);
