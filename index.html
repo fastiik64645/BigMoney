@@ -1548,6 +1548,7 @@
         let userData = null;
         let gameSettings = {};
         let localBalance = null;
+        let localCurrency = null;
 
         if (dataParam && dataParam !== 'undefined' && dataParam !== 'null') {
             try {
@@ -1618,35 +1619,32 @@
         async function sendGameResult(game, betAmount, winAmount) {
             if (!userId) return;
             try {
+                const betSend = betAmount;
+                const winSend = winAmount;
+                
                 const response = await fetch(`${API_URL}/api/game-result`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         user_id: userId, 
                         game, 
-                        bet: betAmount, 
-                        win: winAmount, 
+                        bet: betSend, 
+                        win: winSend, 
                         currency: userCurrency 
                     })
                 });
                 const data = await response.json();
                 if (data.success) {
                     balance = data.new_balance;
-                    updateBalanceDisplay();
                     localBalance = balance;
+                    updateBalanceDisplay();
                     
                     if (winAmount > betAmount) {
                         let winDisplay = winAmount;
-                        if (userCurrency === 'RUB') {
-                            winDisplay = winAmount;
-                        }
                         showWinPopup(winDisplay);
                         showResult('win', winDisplay.toFixed(2));
                     } else if (winAmount === 0 && betAmount > 0) {
                         let betDisplay = betAmount;
-                        if (userCurrency === 'RUB') {
-                            betDisplay = betAmount;
-                        }
                         showResult('lose', betDisplay.toFixed(2));
                     }
                 }
@@ -1665,6 +1663,7 @@
                     userCurrency = data.currency;
                     currencySymbol = currencyMap[userCurrency] || '₮';
                     localBalance = balance;
+                    localCurrency = userCurrency;
                     updateBalanceDisplay();
                 }
             } catch (e) {}
@@ -1927,9 +1926,6 @@
                     btn.classList.remove('gray', 'gold');
                     btn.classList.add('green');
                     let winDisplay = currentBet * crashMultiplier;
-                    if (userCurrency === 'RUB') {
-                        winDisplay = winDisplay;
-                    }
                     btn.textContent = `💰 ЗАБРАТЬ (${winDisplay.toFixed(2)}${currencySymbol})`;
                     btn.disabled = false;
                 } else if (hasBet && cashoutUsed) {
@@ -1963,7 +1959,7 @@
             
             crashInterval = setInterval(() => {
                 let elapsed = (Date.now() - startTime) / 1000;
-                multiplier = 1.0 + Math.pow(elapsed, 1.5) * 0.8;
+                multiplier = 1.0 + Math.pow(elapsed, 1.4) * 0.6;
                 
                 updateCrashDisplay(multiplier);
                 updateButtonState();
@@ -1974,9 +1970,6 @@
                     gameInProgress = false;
                     if (hasBet && !cashoutUsed) {
                         let betDisplay = currentBet;
-                        if (userCurrency === 'RUB') {
-                            betDisplay = currentBet;
-                        }
                         sendGameResult('crash', currentBet, 0);
                         showResult('lose', betDisplay.toFixed(2));
                         hasBet = false;
@@ -2087,9 +2080,6 @@
             localBalance = balance;
             updateBalanceDisplay();
             let winDisplay = win;
-            if (userCurrency === 'RUB') {
-                winDisplay = win;
-            }
             showWinPopup(winDisplay);
             sendGameResult('crash', currentBet, win);
             showResult('win', winDisplay.toFixed(2));
@@ -2215,9 +2205,6 @@
             document.getElementById('minesPlayBtn').classList.remove('hidden');
             document.getElementById('minesCashoutBtn').classList.add('hidden');
             let winDisplay = win;
-            if (userCurrency === 'RUB') {
-                winDisplay = win;
-            }
             showWinPopup(winDisplay);
             sendGameResult('mines', minesBet, win);
             initMines();
@@ -2237,9 +2224,6 @@
                 document.getElementById('minesPlayBtn').classList.remove('hidden');
                 document.getElementById('minesCashoutBtn').classList.add('hidden');
                 let betDisplay = minesBet;
-                if (userCurrency === 'RUB') {
-                    betDisplay = minesBet;
-                }
                 sendGameResult('mines', minesBet, 0);
                 showResult('lose', betDisplay.toFixed(2));
             } else {
@@ -2307,16 +2291,10 @@
                     localBalance = balance;
                     updateBalanceDisplay();
                     let winDisplay = winAmount;
-                    if (userCurrency === 'RUB') {
-                        winDisplay = winAmount;
-                    }
                     showWinPopup(winDisplay);
                     showResult('win', winDisplay.toFixed(2));
                 } else {
                     let betDisplay = betInCurrency;
-                    if (userCurrency === 'RUB') {
-                        betDisplay = betInCurrency;
-                    }
                     showResult('lose', betDisplay.toFixed(2));
                 }
                 gamesPlayed++;
@@ -2434,9 +2412,6 @@
                 document.getElementById('standBtn').disabled = true;
                 document.getElementById('twentyonePlayBtn').disabled = false;
                 let betDisplay = currentBet;
-                if (userCurrency === 'RUB') {
-                    betDisplay = currentBet;
-                }
                 sendGameResult('21', currentBet, 0);
                 showResult('lose', betDisplay.toFixed(2));
             }
@@ -2456,9 +2431,6 @@
                 document.getElementById('twentyonePlayBtn').disabled = false;
                 if (playerScore > 21) {
                     let betDisplay = currentBet;
-                    if (userCurrency === 'RUB') {
-                        betDisplay = currentBet;
-                    }
                     sendGameResult('21', currentBet, 0);
                     showResult('lose', betDisplay.toFixed(2));
                 } else if (dealerScore > 21) {
@@ -2467,9 +2439,6 @@
                     localBalance = balance;
                     updateBalanceDisplay();
                     let winDisplay = win;
-                    if (userCurrency === 'RUB') {
-                        winDisplay = win;
-                    }
                     showWinPopup(winDisplay);
                     sendGameResult('21', currentBet, win);
                     showResult('win', winDisplay.toFixed(2));
@@ -2479,9 +2448,6 @@
                     localBalance = balance;
                     updateBalanceDisplay();
                     let winDisplay = win;
-                    if (userCurrency === 'RUB') {
-                        winDisplay = win;
-                    }
                     showWinPopup(winDisplay);
                     sendGameResult('21', currentBet, win);
                     showResult('win', winDisplay.toFixed(2));
@@ -2490,16 +2456,10 @@
                     localBalance = balance;
                     updateBalanceDisplay();
                     let betDisplay = currentBet;
-                    if (userCurrency === 'RUB') {
-                        betDisplay = currentBet;
-                    }
                     sendGameResult('21', currentBet, currentBet);
                     showResult('win', betDisplay.toFixed(2));
                 } else {
                     let betDisplay = currentBet;
-                    if (userCurrency === 'RUB') {
-                        betDisplay = currentBet;
-                    }
                     sendGameResult('21', currentBet, 0);
                     showResult('lose', betDisplay.toFixed(2));
                 }
@@ -2561,16 +2521,10 @@
                     localBalance = balance;
                     updateBalanceDisplay();
                     let winDisplay = winAmount;
-                    if (userCurrency === 'RUB') {
-                        winDisplay = winAmount;
-                    }
                     showWinPopup(winDisplay);
                     showResult('win', winDisplay.toFixed(2));
                 } else {
                     let betDisplay = betInCurrency;
-                    if (userCurrency === 'RUB') {
-                        betDisplay = betInCurrency;
-                    }
                     showResult('lose', betDisplay.toFixed(2));
                 }
                 document.getElementById('slotResult').textContent = winAmount + currencySymbol;
