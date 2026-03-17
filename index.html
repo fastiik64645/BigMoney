@@ -13,7 +13,6 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
-
         :root {
             --bg: #0a0c0f;
             --card: #14181f;
@@ -31,7 +30,6 @@
             --card-red: #f44336;
             --card-black: #2c3e50;
         }
-
         body {
             background: var(--bg);
             color: var(--text);
@@ -42,7 +40,6 @@
             padding: 8px;
             position: relative;
         }
-
         .fire-effect {
             position: fixed;
             top: 0;
@@ -54,12 +51,7 @@
             z-index: 0;
             animation: firePulse 3s infinite;
         }
-
-        @keyframes firePulse {
-            0%,100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-
+        @keyframes firePulse { 0%,100% { opacity: 0.3; } 50% { opacity: 0.6; } }
         .app {
             max-width: 480px;
             width: 100%;
@@ -72,7 +64,6 @@
             position: relative;
             z-index: 1;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -81,7 +72,6 @@
             background: var(--card);
             border-bottom: 1px solid var(--border);
         }
-
         .logo {
             font-weight: 700;
             font-size: 24px;
@@ -90,12 +80,7 @@
             -webkit-text-fill-color: transparent;
             animation: logoGlow 2s infinite;
         }
-
-        @keyframes logoGlow {
-            0%,100% { filter: drop-shadow(0 0 10px var(--accent)); }
-            50% { filter: drop-shadow(0 0 20px var(--accent)); }
-        }
-
+        @keyframes logoGlow { 0%,100% { filter: drop-shadow(0 0 10px var(--accent)); } 50% { filter: drop-shadow(0 0 20px var(--accent)); } }
         .balance {
             background: linear-gradient(135deg, var(--element), var(--card));
             padding: 8px 16px;
@@ -106,13 +91,11 @@
             font-size: 18px;
             box-shadow: 0 0 20px var(--glow);
         }
-
         .currency-badge {
             font-size: 14px;
             color: var(--text2);
             margin-left: 5px;
         }
-
         .user-info {
             display: flex;
             align-items: center;
@@ -123,7 +106,6 @@
             border-radius: 40px;
             border: 1px solid var(--border);
         }
-
         .avatar {
             width: 44px;
             height: 44px;
@@ -137,12 +119,10 @@
             color: #000;
             box-shadow: 0 0 20px var(--accent);
         }
-
         .username {
             font-weight: 600;
             font-size: 16px;
         }
-
         .rating-section {
             margin: 12px 20px;
             background: var(--card);
@@ -150,7 +130,6 @@
             border: 1px solid var(--border);
             overflow: hidden;
         }
-
         .rating-header {
             display: flex;
             justify-content: space-between;
@@ -160,52 +139,39 @@
             cursor: pointer;
             transition: 0.3s;
         }
-
-        .rating-header:hover {
-            background: var(--border);
-        }
-
+        .rating-header:hover { background: var(--border); }
         .rating-header-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .rating-title {
             font-size: 18px;
             font-weight: 700;
             color: var(--accent);
         }
-
         .rating-arrow {
             font-size: 20px;
             color: var(--text2);
             transition: transform 0.3s;
         }
-
-        .rating-arrow.open {
-            transform: rotate(180deg);
-        }
-
+        .rating-arrow.open { transform: rotate(180deg); }
         .rating-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s ease-out;
             background: var(--card);
         }
-
         .rating-content.open {
             max-height: 600px;
             overflow-y: auto;
         }
-
         .rating-list {
             padding: 16px;
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
-
         .rating-item {
             display: flex;
             align-items: center;
@@ -216,12 +182,7 @@
             border: 1px solid var(--border);
             animation: slideIn 0.3s;
         }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         .rating-place {
             width: 30px;
             height: 30px;
@@ -232,22 +193,9 @@
             font-size: 16px;
             color: var(--text2);
         }
-
-        .rating-place.gold {
-            color: var(--gold);
-            text-shadow: 0 0 10px var(--gold);
-        }
-
-        .rating-place.silver {
-            color: #c0c0c0;
-            text-shadow: 0 0 10px #c0c0c0;
-        }
-
-        .rating-place.bronze {
-            color: #cd7f32;
-            text-shadow: 0 0 10px #cd7f32;
-        }
-
+        .rating-place.gold { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+        .rating-place.silver { color: #c0c0c0; text-shadow: 0 0 10px #c0c0c0; }
+        .rating-place.bronze { color: #cd7f32; text-shadow: 0 0 10px #cd7f32; }
         .rating-avatar {
             width: 40px;
             height: 40px;
@@ -260,23 +208,17 @@
             font-size: 14px;
             color: #000;
         }
-
-        .rating-info {
-            flex: 1;
-        }
-
+        .rating-info { flex: 1; }
         .rating-name {
             font-weight: 600;
             font-size: 14px;
             margin-bottom: 4px;
         }
-
         .rating-amount {
             color: var(--accent);
             font-weight: 700;
             font-size: 13px;
         }
-
         .rating-stats {
             display: flex;
             gap: 12px;
@@ -284,12 +226,7 @@
             font-size: 11px;
             color: var(--text2);
         }
-
-        .rating-stats span {
-            color: var(--success);
-            font-weight: 600;
-        }
-
+        .rating-stats span { color: var(--success); font-weight: 600; }
         .rating-footer {
             padding: 12px 16px;
             border-top: 1px solid var(--border);
@@ -297,14 +234,12 @@
             color: var(--text2);
             font-size: 12px;
         }
-
         .game-selector {
             display: flex;
             flex-direction: column;
             gap: 12px;
             padding: 0 20px 20px;
         }
-
         .game-card {
             background: linear-gradient(135deg, var(--card), var(--element));
             border: 1px solid var(--border);
@@ -315,7 +250,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .game-card::before {
             content: '';
             position: absolute;
@@ -327,33 +261,28 @@
             animation: cardShine 3s infinite;
             pointer-events: none;
         }
-
         .game-card:hover {
             border-color: var(--accent);
             transform: scale(1.02);
             box-shadow: 0 0 30px var(--glow);
         }
-
         .game-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
         }
-
         .game-card-title {
             font-size: 28px;
             font-weight: 800;
             color: var(--accent);
             text-shadow: 0 0 10px var(--accent);
         }
-
         .game-card-desc {
             color: var(--text2);
             font-size: 14px;
             margin-bottom: 8px;
         }
-
         .game-card-stats {
             display: flex;
             gap: 20px;
@@ -361,18 +290,13 @@
             font-size: 14px;
             font-weight: 600;
         }
-
-        .game-container {
-            padding: 0 20px 20px;
-        }
-
+        .game-container { padding: 0 20px 20px; }
         .game-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
-
         .game-title {
             font-size: 36px;
             font-weight: 900;
@@ -381,12 +305,7 @@
             -webkit-text-fill-color: transparent;
             animation: titlePulse 1.5s infinite;
         }
-
-        @keyframes titlePulse {
-            0%,100% { filter: drop-shadow(0 0 10px var(--accent)); }
-            50% { filter: drop-shadow(0 0 30px var(--accent)); }
-        }
-
+        @keyframes titlePulse { 0%,100% { filter: drop-shadow(0 0 10px var(--accent)); } 50% { filter: drop-shadow(0 0 30px var(--accent)); } }
         .back-to-games {
             background: var(--element);
             border: 1px solid var(--border);
@@ -396,11 +315,7 @@
             font-size: 14px;
             transition: 0.3s;
         }
-
-        .back-to-games:hover {
-            border-color: var(--accent);
-        }
-
+        .back-to-games:hover { border-color: var(--accent); }
         .crash-container {
             background: var(--card);
             border-radius: 24px;
@@ -409,7 +324,6 @@
             border: 1px solid var(--border);
             position: relative;
         }
-
         .crash-canvas-container {
             position: relative;
             height: 250px;
@@ -420,29 +334,20 @@
             margin-bottom: 16px;
             border: 1px solid var(--border);
         }
-
         .crash-canvas-container.waiting {
             border: 2px solid var(--accent);
             box-shadow: 0 0 30px var(--glow);
             animation: borderPulse 1s infinite;
         }
-
-        @keyframes borderPulse {
-            0%,100% { border-color: var(--accent); box-shadow: 0 0 30px var(--glow); }
-            50% { border-color: var(--gold); box-shadow: 0 0 50px var(--glow); }
-        }
-
+        @keyframes borderPulse { 0%,100% { border-color: var(--accent); box-shadow: 0 0 30px var(--glow); } 50% { border-color: var(--gold); box-shadow: 0 0 50px var(--glow); } }
         #crashCanvas {
             width: 100%;
             height: 100%;
             display: block;
             background: var(--element);
-            background-image: 
-                linear-gradient(var(--grid) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
             background-size: 30px 30px;
         }
-
         .crash-multiplier {
             position: absolute;
             top: 50%;
@@ -455,12 +360,7 @@
             z-index: 10;
             animation: multiplierPulse 0.5s infinite;
         }
-
-        @keyframes multiplierPulse {
-            0%,100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.02); }
-        }
-
+        @keyframes multiplierPulse { 0%,100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.02); } }
         .crash-waiting {
             position: absolute;
             top: 0;
@@ -477,12 +377,7 @@
             border-radius: 16px;
             animation: fadeIn 0.3s;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .crash-waiting__timer {
             font-size: 96px;
             font-weight: 900;
@@ -491,14 +386,12 @@
             margin-bottom: 20px;
             animation: timerPop 1s infinite;
         }
-
         .crash-waiting__text {
             color: var(--text2);
             font-size: 18px;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
-
         .crash-history {
             margin: 16px 0;
             padding: 16px;
@@ -506,14 +399,12 @@
             border-radius: 16px;
             border: 1px solid var(--border);
         }
-
         .crash-history__title {
             color: var(--text2);
             margin-bottom: 12px;
             font-size: 16px;
             font-weight: 600;
         }
-
         .crash-history__list {
             display: flex;
             gap: 8px;
@@ -522,7 +413,6 @@
             justify-content: flex-start;
             flex-direction: row-reverse;
         }
-
         .crash-history__item {
             background: var(--card);
             border: 1px solid var(--border);
@@ -534,43 +424,12 @@
             font-size: 16px;
             animation: historyPop 0.3s;
         }
-
-        @keyframes historyPop {
-            from { transform: scale(0); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .crash-history__item.big {
-            color: var(--success);
-            font-size: 18px;
-            border-color: var(--success);
-            animation: pulse 1s infinite;
-        }
-
-        .crash-history__item.huge {
-            color: var(--gold);
-            font-size: 20px;
-            border-color: var(--gold);
-            animation: pulse 1s infinite;
-        }
-
-        .crash-history__item.massive {
-            color: var(--danger);
-            font-size: 22px;
-            border-color: var(--danger);
-            animation: bigWin 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%,100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        @keyframes bigWin {
-            0%,100% { transform: scale(1); text-shadow: 0 0 10px var(--danger); }
-            50% { transform: scale(1.1); text-shadow: 0 0 20px var(--danger); }
-        }
-
+        @keyframes historyPop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .crash-history__item.big { color: var(--success); font-size: 18px; border-color: var(--success); animation: pulse 1s infinite; }
+        .crash-history__item.huge { color: var(--gold); font-size: 20px; border-color: var(--gold); animation: pulse 1s infinite; }
+        .crash-history__item.massive { color: var(--danger); font-size: 22px; border-color: var(--danger); animation: bigWin 1s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+        @keyframes bigWin { 0%,100% { transform: scale(1); text-shadow: 0 0 10px var(--danger); } 50% { transform: scale(1.1); text-shadow: 0 0 20px var(--danger); } }
         .crash-auto {
             display: flex;
             align-items: center;
@@ -581,13 +440,11 @@
             margin: 16px 0;
             border: 1px solid var(--border);
         }
-
         .crash-auto__controls {
             display: flex;
             gap: 10px;
             align-items: center;
         }
-
         .crash-auto__input {
             background: var(--card);
             border: 1px solid var(--border);
@@ -599,12 +456,7 @@
             font-size: 16px;
             font-weight: 600;
         }
-
-        .crash-auto__input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
+        .crash-auto__input:focus { outline: none; border-color: var(--accent); }
         .crash-auto__toggle {
             width: 60px;
             height: 32px;
@@ -614,11 +466,7 @@
             cursor: pointer;
             border: 1px solid var(--border);
         }
-
-        .crash-auto__toggle.active {
-            background: var(--accent);
-        }
-
+        .crash-auto__toggle.active { background: var(--accent); }
         .crash-auto__toggle::after {
             content: '';
             position: absolute;
@@ -630,11 +478,7 @@
             left: 2px;
             transition: 0.3s;
         }
-
-        .crash-auto__toggle.active::after {
-            left: 30px;
-        }
-
+        .crash-auto__toggle.active::after { left: 30px; }
         .result-container {
             position: fixed;
             top: 50%;
@@ -649,39 +493,25 @@
             animation: resultPop 0.5s;
             box-shadow: 0 0 100px var(--glow);
         }
-
-        @keyframes resultPop {
-            from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-
+        @keyframes resultPop { from { transform: translate(-50%, -50%) scale(0); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
         .result-label {
             font-size: 24px;
             color: var(--text2);
             margin-bottom: 10px;
         }
-
         .result-value {
             font-size: 48px;
             font-weight: 900;
             color: var(--accent);
             text-shadow: 0 0 20px var(--accent);
         }
-
-        .result-container.win .result-value {
-            color: var(--success);
-        }
-
-        .result-container.lose .result-value {
-            color: var(--danger);
-        }
-
+        .result-container.win .result-value { color: var(--success); }
+        .result-container.lose .result-value { color: var(--danger); }
         .bet-controls {
             display: flex;
             gap: 12px;
             margin: 16px 0;
         }
-
         .bet-input {
             flex: 1;
             background: var(--card);
@@ -692,17 +522,11 @@
             font-size: 18px;
             font-weight: 600;
         }
-
-        .bet-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
+        .bet-input:focus { outline: none; border-color: var(--accent); }
         .bet-multipliers {
             display: flex;
             gap: 8px;
         }
-
         .bet-mult {
             background: var(--element);
             border: 1px solid var(--border);
@@ -713,12 +537,7 @@
             cursor: pointer;
             transition: 0.3s;
         }
-
-        .bet-mult:hover {
-            background: var(--accent);
-            color: #000;
-        }
-
+        .bet-mult:hover { background: var(--accent); color: #000; }
         .play-btn {
             width: 100%;
             border: none;
@@ -735,27 +554,10 @@
             overflow: hidden;
             transition: 0.3s;
         }
-
-        .play-btn.green {
-            background: linear-gradient(135deg, #4caf50, #45a049);
-        }
-
-        .play-btn.gold {
-            background: linear-gradient(135deg, var(--accent), var(--gold));
-        }
-
-        .play-btn.gray {
-            background: linear-gradient(135deg, #666, #444);
-            color: #ccc;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .play-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
+        .play-btn.green { background: linear-gradient(135deg, #4caf50, #45a049); }
+        .play-btn.gold { background: linear-gradient(135deg, var(--accent), var(--gold)); }
+        .play-btn.gray { background: linear-gradient(135deg, #666, #444); color: #ccc; cursor: not-allowed; pointer-events: none; }
+        .play-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .play-btn::before {
             content: '';
             position: absolute;
@@ -766,13 +568,7 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             animation: btnShine 3s infinite;
         }
-
-        @keyframes btnShine {
-            0% { left: -100%; }
-            20% { left: 100%; }
-            100% { left: 100%; }
-        }
-
+        @keyframes btnShine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
         .error-message {
             background: rgba(244,67,54,0.2);
             border: 1px solid var(--danger);
@@ -784,13 +580,7 @@
             font-weight: 600;
             animation: errorShake 0.5s;
         }
-
-        @keyframes errorShake {
-            0%,100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
+        @keyframes errorShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
         .win-popup {
             position: fixed;
             top: 50%;
@@ -808,26 +598,14 @@
             border: 3px solid white;
             white-space: nowrap;
         }
-
-        @keyframes winPop {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-            20% { transform: translate(-50%, -50%) scale(1.2); }
-            40% { transform: translate(-50%, -50%) scale(1); }
-            80% { opacity: 1; }
-            100% { opacity: 0; transform: translate(-50%, -80%); }
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
+        @keyframes winPop { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 20% { transform: translate(-50%, -50%) scale(1.2); } 40% { transform: translate(-50%, -50%) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -80%); } }
+        .hidden { display: none !important; }
         .mines-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 8px;
             margin: 20px 0;
         }
-
         .mine-cell {
             aspect-ratio: 1;
             background: var(--element);
@@ -840,66 +618,26 @@
             cursor: pointer;
             transition: 0.3s;
         }
-
-        .mine-cell::before {
-            content: '?';
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        .mine-cell:hover {
-            border-color: var(--accent);
-            transform: scale(1.05);
-            box-shadow: 0 0 20px var(--glow);
-        }
-
-        .mine-cell.revealed {
-            background: var(--card);
-        }
-
-        .mine-cell.revealed::before {
-            content: '💎';
-            color: var(--success);
-            font-size: 32px;
-            animation: gemRotate 1s infinite;
-        }
-
-        @keyframes gemRotate {
-            0%,100% { transform: rotate(0deg); }
-            50% { transform: rotate(10deg); }
-        }
-
-        .mine-cell.mine.revealed {
-            background: rgba(244,67,54,0.2);
-        }
-
-        .mine-cell.mine.revealed::before {
-            content: '💣';
-            color: var(--danger);
-            font-size: 32px;
-            animation: bombShake 0.3s infinite;
-        }
-
-        @keyframes bombShake {
-            0%,100% { transform: translateX(0); }
-            25% { transform: translateX(-3px); }
-            75% { transform: translateX(3px); }
-        }
-
+        .mine-cell::before { content: '?'; color: var(--accent); font-weight: 700; }
+        .mine-cell:hover { border-color: var(--accent); transform: scale(1.05); box-shadow: 0 0 20px var(--glow); }
+        .mine-cell.revealed { background: var(--card); }
+        .mine-cell.revealed::before { content: '💎'; color: var(--success); font-size: 32px; animation: gemRotate 1s infinite; }
+        @keyframes gemRotate { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(10deg); } }
+        .mine-cell.mine.revealed { background: rgba(244,67,54,0.2); }
+        .mine-cell.mine.revealed::before { content: '💣'; color: var(--danger); font-size: 32px; animation: bombShake 0.3s infinite; }
+        @keyframes bombShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
         .current-multiplier {
             text-align: center;
             margin: 10px 0;
             font-size: 24px;
             color: var(--accent);
         }
-
         .mines-controls {
             display: flex;
             gap: 8px;
             margin: 16px 0;
             flex-wrap: wrap;
         }
-
         .mine-count-btn {
             background: var(--element);
             border: 1px solid var(--border);
@@ -912,24 +650,13 @@
             min-width: 60px;
             text-align: center;
         }
-
-        .mine-count-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #000;
-        }
-
-        .mine-count-btn.special {
-            background: linear-gradient(135deg, var(--accent), var(--gold));
-            color: #000;
-        }
-
+        .mine-count-btn.active { background: var(--accent); border-color: var(--accent); color: #000; }
+        .mine-count-btn.special { background: linear-gradient(135deg, var(--accent), var(--gold)); color: #000; }
         .custom-input-container {
             display: flex;
             gap: 8px;
             margin: 8px 0;
         }
-
         .custom-input {
             flex: 1;
             background: var(--card);
@@ -939,12 +666,7 @@
             color: white;
             font-size: 16px;
         }
-
-        .custom-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
+        .custom-input:focus { outline: none; border-color: var(--accent); }
         .baccarat-history {
             display: flex;
             gap: 8px;
@@ -952,14 +674,12 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-
         .bet-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin: 16px 0;
         }
-
         .bet-option {
             background: var(--element);
             border: 1px solid var(--border);
@@ -969,25 +689,14 @@
             cursor: pointer;
             transition: 0.3s;
         }
-
-        .bet-option:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .bet-option.selected {
-            border-color: var(--accent);
-            background: var(--glow);
-            box-shadow: 0 0 20px var(--glow);
-        }
-
+        .bet-option:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .bet-option.selected { border-color: var(--accent); background: var(--glow); box-shadow: 0 0 20px var(--glow); }
         .bet-option .coeff {
             color: var(--accent);
             font-weight: 800;
             font-size: 24px;
             margin-top: 8px;
         }
-
         .twentyone-table {
             background: var(--card);
             border-radius: 24px;
@@ -996,24 +705,18 @@
             border: 2px solid var(--accent);
             position: relative;
         }
-
-        .dealer-area, .player-area {
-            margin-bottom: 20px;
-        }
-
+        .dealer-area, .player-area { margin-bottom: 20px; }
         .area-label {
             color: var(--text2);
             font-size: 14px;
             margin-bottom: 8px;
         }
-
         .cards {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
             min-height: 100px;
         }
-
         .card {
             width: 60px;
             height: 90px;
@@ -1028,27 +731,15 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             animation: cardAppear 0.3s;
         }
-
-        @keyframes cardAppear {
-            from { transform: scale(0) rotate(-10deg); opacity: 0; }
-            to { transform: scale(1) rotate(0); opacity: 1; }
-        }
-
-        .card.red {
-            color: var(--card-red);
-        }
-
-        .card.black {
-            color: var(--card-black);
-        }
-
+        @keyframes cardAppear { from { transform: scale(0) rotate(-10deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
+        .card.red { color: var(--card-red); }
+        .card.black { color: var(--card-black); }
         .card.back {
             background: linear-gradient(135deg, var(--accent), var(--gold));
             color: transparent;
             position: relative;
             overflow: hidden;
         }
-
         .card.back::after {
             content: '?';
             position: absolute;
@@ -1059,21 +750,18 @@
             font-size: 24px;
             font-weight: 900;
         }
-
         .score {
             margin-top: 8px;
             font-size: 18px;
             color: var(--accent);
             font-weight: 600;
         }
-
         .twentyone-controls {
             display: flex;
             gap: 12px;
             margin: 20px 0;
             flex-wrap: wrap;
         }
-
         .action-btn {
             flex: 1;
             background: var(--element);
@@ -1086,21 +774,9 @@
             transition: 0.3s;
             min-width: 100px;
         }
-
-        .action-btn:hover {
-            border-color: var(--accent);
-        }
-
-        .action-btn.primary {
-            background: linear-gradient(135deg, var(--accent), var(--gold));
-            color: #000;
-        }
-
-        .action-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
+        .action-btn:hover { border-color: var(--accent); }
+        .action-btn.primary { background: linear-gradient(135deg, var(--accent), var(--gold)); color: #000; }
+        .action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .slot-machine {
             background: var(--card);
             border-radius: 24px;
@@ -1110,7 +786,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .slot-window {
             background: #000;
             border-radius: 20px;
@@ -1118,7 +793,6 @@
             border: 3px solid var(--accent);
             box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
         }
-
         .slot-reel-container {
             position: relative;
             height: 100px;
@@ -1127,14 +801,12 @@
             background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
             border: 2px solid var(--border);
         }
-
         .slot-reel {
             position: absolute;
             width: 100%;
             transition: top 4s cubic-bezier(0.1, 0.8, 0.2, 1);
             will-change: top;
         }
-
         .slot-item {
             height: 100px;
             display: flex;
@@ -1146,7 +818,6 @@
             border-bottom: 1px solid var(--border);
             background: linear-gradient(180deg, #222, #111);
         }
-
         .slot-item[data-value="0"] { color: #666; }
         .slot-item[data-value="1"] { color: #666; }
         .slot-item[data-value="2"] { color: #666; }
@@ -1165,12 +836,7 @@
         .slot-item[data-value="80"] { color: var(--danger); }
         .slot-item[data-value="90"] { color: var(--accent); font-size: 56px; }
         .slot-item[data-value="100"] { color: var(--accent); font-size: 64px; animation: jackpotGlow 0.5s infinite; }
-
-        @keyframes jackpotGlow {
-            0%,100% { text-shadow: 0 0 30px var(--accent); transform: scale(1); }
-            50% { text-shadow: 0 0 60px var(--accent); transform: scale(1.1); }
-        }
-
+        @keyframes jackpotGlow { 0%,100% { text-shadow: 0 0 30px var(--accent); transform: scale(1); } 50% { text-shadow: 0 0 60px var(--accent); transform: scale(1.1); } }
         .slot-result {
             text-align: center;
             margin-top: 20px;
@@ -1179,7 +845,6 @@
             color: var(--accent);
             animation: resultPop 0.5s;
         }
-
         .fixed-bet {
             background: var(--element);
             border: 1px solid var(--border);
@@ -1193,21 +858,18 @@
             border: 2px solid var(--accent);
             box-shadow: 0 0 20px var(--glow);
         }
-
         .chat-section {
             margin-top: 20px;
             background: var(--card);
             border-radius: 24px;
             padding: 16px;
         }
-
         .chat-messages {
             min-height: 200px;
             max-height: 300px;
             overflow-y: auto;
             margin-bottom: 12px;
         }
-
         .chat-message {
             background: var(--element);
             padding: 12px 16px;
@@ -1217,33 +879,14 @@
             border: 1px solid var(--border);
             animation: messagePop 0.3s;
         }
-
-        @keyframes messagePop {
-            from { transform: translateX(-20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .chat-message .name {
-            color: var(--accent);
-            font-weight: 700;
-            margin-right: 8px;
-        }
-
-        .chat-message .ad {
-            color: var(--success);
-            font-weight: 600;
-        }
-
-        .chat-message .profit {
-            color: var(--gold);
-            font-weight: 600;
-        }
-
+        @keyframes messagePop { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .chat-message .name { color: var(--accent); font-weight: 700; margin-right: 8px; }
+        .chat-message .ad { color: var(--success); font-weight: 600; }
+        .chat-message .profit { color: var(--gold); font-weight: 600; }
         .chat-input {
             display: flex;
             gap: 8px;
         }
-
         .chat-input input {
             flex: 1;
             background: var(--element);
@@ -1253,12 +896,7 @@
             color: white;
             font-size: 14px;
         }
-
-        .chat-input input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
+        .chat-input input:focus { outline: none; border-color: var(--accent); }
         .chat-input button {
             background: linear-gradient(135deg, var(--accent), var(--gold));
             border: none;
@@ -1269,15 +907,11 @@
             cursor: pointer;
             transition: 0.3s;
         }
-
-        .chat-input button:hover {
-            transform: scale(1.05);
-        }
+        .chat-input button:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
     <div class="fire-effect"></div>
-
     <div class="app">
         <div class="header">
             <div class="logo">BIG MONEY</div>
@@ -1286,12 +920,10 @@
                 <span class="currency-badge" id="currencySymbol">$</span>
             </div>
         </div>
-
         <div class="user-info">
             <div class="avatar" id="userAvatar">👤</div>
             <div class="username" id="userName">Игрок</div>
         </div>
-
         <div class="rating-section" id="ratingSection">
             <div class="rating-header" onclick="toggleRating()">
                 <div class="rating-header-left">
@@ -1304,7 +936,6 @@
                 <div class="rating-footer" id="ratingFooter"></div>
             </div>
         </div>
-
         <div id="gameSelector" class="game-selector">
             <div class="game-card" onclick="selectGame('crash')">
                 <div class="game-card-header">
@@ -1317,7 +948,6 @@
                     <span>⚡ x1.0</span>
                 </div>
             </div>
-
             <div class="game-card" onclick="selectGame('mines')">
                 <div class="game-card-header">
                     <div class="game-card-title">MINES</div>
@@ -1329,7 +959,6 @@
                     <span>💣 2-24 мин</span>
                 </div>
             </div>
-
             <div class="game-card" onclick="selectGame('baccarat')">
                 <div class="game-card-header">
                     <div class="game-card-title">BACCARAT</div>
@@ -1341,7 +970,6 @@
                     <span>🏦 x1.95</span>
                 </div>
             </div>
-
             <div class="game-card" onclick="selectGame('twentyone')">
                 <div class="game-card-header">
                     <div class="game-card-title">21</div>
@@ -1353,7 +981,6 @@
                     <span>💎 x2</span>
                 </div>
             </div>
-
             <div class="game-card" onclick="selectGame('slot')">
                 <div class="game-card-header">
                     <div class="game-card-title">SLOT</div>
@@ -1366,19 +993,16 @@
                 </div>
             </div>
         </div>
-
         <div id="gameContainer" class="game-container hidden">
             <div class="game-header">
                 <div class="game-title" id="currentGameTitle">CRASH</div>
                 <div class="back-to-games" onclick="showGameSelector()">← К ИГРАМ</div>
             </div>
-
             <div id="crash-game" class="game-view">
                 <div class="result-container hidden" id="resultContainer">
                     <div class="result-label" id="resultLabel"></div>
                     <div class="result-value" id="resultValue"></div>
                 </div>
-
                 <div class="crash-container">
                     <div class="crash-canvas-container" id="crashCanvasContainer">
                         <canvas id="crashCanvas" width="400" height="250"></canvas>
@@ -1388,12 +1012,10 @@
                             <div class="crash-waiting__text">ДО СЛЕДУЮЩЕЙ ИГРЫ</div>
                         </div>
                     </div>
-
                     <div class="crash-history">
                         <div class="crash-history__title">🔥 ПОСЛЕДНИЕ ИГРЫ</div>
                         <div class="crash-history__list" id="crashHistory"></div>
                     </div>
-
                     <div class="crash-auto">
                         <span>🎯 АВТОВЫВОД</span>
                         <div class="crash-auto__controls">
@@ -1401,7 +1023,6 @@
                             <div class="crash-auto__toggle" id="autoCashoutToggle"></div>
                         </div>
                     </div>
-
                     <div class="bet-controls">
                         <input type="number" class="bet-input" id="crashBet" value="36" min="1" step="1">
                         <div class="bet-multipliers">
@@ -1410,28 +1031,23 @@
                             <button class="bet-mult" data-mult="10">x10</button>
                         </div>
                     </div>
-
                     <div class="error-message hidden" id="crashError"></div>
                     <button class="play-btn gold" id="crashPlayBtn">🔥 СДЕЛАТЬ СТАВКУ</button>
                 </div>
             </div>
-
             <div id="mines-game" class="game-view hidden">
                 <div class="mines-grid" id="minesGrid"></div>
                 <div class="current-multiplier" id="minesMultiplier">x1.0</div>
-                
                 <div class="mines-controls" id="mineCountControls">
                     <button class="mine-count-btn" data-mines="2">2💣</button>
                     <button class="mine-count-btn" data-mines="5">5💣</button>
                     <button class="mine-count-btn" data-mines="10">10💣</button>
                     <button class="mine-count-btn special" data-mines="custom">Своё</button>
                 </div>
-                
                 <div class="custom-input-container hidden" id="customMineInput">
                     <input type="number" class="custom-input" id="customMines" placeholder="Кол-во мин (2-24)" min="2" max="24" value="3">
                     <button class="mine-count-btn special" id="setCustomMines">OK</button>
                 </div>
-
                 <div class="bet-controls">
                     <input type="number" class="bet-input" id="minesBet" value="36" min="1" step="1">
                     <div class="bet-multipliers">
@@ -1440,15 +1056,12 @@
                         <button class="bet-mult" data-mult="10">x10</button>
                     </div>
                 </div>
-
                 <div class="error-message hidden" id="minesError"></div>
                 <button class="play-btn gold" id="minesPlayBtn">💎 НАЧАТЬ ИГРУ</button>
                 <button class="play-btn green hidden" id="minesCashoutBtn">💰 ЗАБРАТЬ (x<span id="cashoutMultiplier">1.0</span>)</button>
             </div>
-
             <div id="baccarat-game" class="game-view hidden">
                 <div class="baccarat-history" id="baccaratHistory"></div>
-
                 <div class="bet-options" id="baccaratBets">
                     <div class="bet-option" data-bet="player" data-coeff="2">
                         <div>👤 ИГРОК</div>
@@ -1467,7 +1080,6 @@
                         <div class="coeff">x11</div>
                     </div>
                 </div>
-
                 <div class="bet-controls">
                     <input type="number" class="bet-input" id="baccaratBet" value="36" min="1" step="1">
                     <div class="bet-multipliers">
@@ -1476,11 +1088,9 @@
                         <button class="bet-mult" data-mult="10">x10</button>
                     </div>
                 </div>
-
                 <div class="error-message hidden" id="baccaratError"></div>
                 <button class="play-btn gold" id="baccaratPlayBtn">🎴 СДЕЛАТЬ СТАВКУ</button>
             </div>
-
             <div id="twentyone-game" class="game-view hidden">
                 <div class="twentyone-table">
                     <div class="dealer-area">
@@ -1494,20 +1104,16 @@
                         <div class="score" id="playerScore">0</div>
                     </div>
                 </div>
-
                 <div class="twentyone-controls">
                     <button class="action-btn primary" id="hitBtn">Ещё</button>
                     <button class="action-btn" id="standBtn">Хватит</button>
                 </div>
-
                 <div class="bet-controls">
                     <input type="number" class="bet-input" id="twentyoneBet" value="36" min="1" step="1">
                 </div>
-
                 <div class="error-message hidden" id="twentyoneError"></div>
                 <button class="play-btn gold" id="twentyonePlayBtn">🃏 НАЧАТЬ ИГРУ</button>
             </div>
-
             <div id="slot-game" class="game-view hidden">
                 <div class="slot-machine">
                     <div class="slot-window">
@@ -1517,14 +1123,11 @@
                     </div>
                     <div class="slot-result" id="slotResult">?</div>
                 </div>
-
                 <div class="fixed-bet">💰 СТАВКА: 10$</div>
-
                 <div class="error-message hidden" id="slotError"></div>
                 <button class="play-btn gold" id="slotPlayBtn">🎰 КРУТИТЬ</button>
             </div>
         </div>
-
         <div class="chat-section">
             <div class="chat-messages" id="chatMessages"></div>
             <div class="chat-input">
@@ -1533,9 +1136,7 @@
             </div>
         </div>
     </div>
-
     <div class="win-popup hidden" id="winPopup">+0$</div>
-
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
@@ -1576,7 +1177,6 @@
         }
         
         updateBalanceDisplay();
-        
         document.getElementById('userName').textContent = firstName;
         document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
 
@@ -1620,7 +1220,10 @@
             try {
                 const response = await fetch(`${API_URL}/api/game-result`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'
+                    },
                     body: JSON.stringify({ 
                         user_id: userId, 
                         game, 
@@ -1643,7 +1246,9 @@
         async function updateBalanceFromServer() {
             if (!userId) return;
             try {
-                const response = await fetch(`${API_URL}/api/user/${userId}`);
+                const response = await fetch(`${API_URL}/api/user/${userId}`, {
+                    headers: { 'ngrok-skip-browser-warning': 'true' }
+                });
                 const data = await response.json();
                 if (data.success) {
                     balance = data.balance;
