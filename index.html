@@ -1218,6 +1218,10 @@
         async function sendGameResult(game, betAmount, winAmount) {
             if (!userId) return;
             try {
+                if (betAmount > balance) {
+                    console.error('Недостаточно средств для ставки');
+                    return;
+                }
                 const response = await fetch(`${API_URL}/api/game-result`, {
                     method: 'POST',
                     headers: { 
