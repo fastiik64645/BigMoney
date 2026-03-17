@@ -1283,7 +1283,7 @@
             <div class="logo">BIG MONEY</div>
             <div class="balance" id="balanceDisplay">
                 <span id="balanceAmount">0.00</span>
-                <span class="currency-badge" id="currencySymbol">₮</span>
+                <span class="currency-badge" id="currencySymbol">$</span>
             </div>
         </div>
 
@@ -1534,7 +1534,7 @@
         </div>
     </div>
 
-    <div class="win-popup hidden" id="winPopup">+0₮</div>
+    <div class="win-popup hidden" id="winPopup">+0$</div>
 
     <script>
         const tg = window.Telegram.WebApp;
@@ -1542,13 +1542,12 @@
         tg.ready();
 
         const USDT_TO_RUB = 72;
-        const API_URL = 'https://rochel-stimulable-fatidically.ngrok-free.dev';
+        const API_URL = 'https://ваш-новый-туннель.ngrok-free.dev';
         const urlParams = new URLSearchParams(window.location.search);
         const dataParam = urlParams.get('data');
         let userData = null;
         let gameSettings = {};
         let localBalance = null;
-        let localCurrency = null;
 
         if (dataParam && dataParam !== 'undefined' && dataParam !== 'null') {
             try {
@@ -1563,9 +1562,9 @@
         let username = userData?.username || 'player';
         let totalDeposit = userData?.total_deposit || 0;
         let userCurrency = userData?.currency || 'USDT';
-        let currencySymbol = '₮';
-        const currencyMap = {'RUB': '₽', 'USDT': '₮'};
-        currencySymbol = currencyMap[userCurrency] || '₮';
+        let currencySymbol = '$';
+        const currencyMap = {'RUB': '₽', 'USDT': '$'};
+        currencySymbol = currencyMap[userCurrency] || '$';
         
         function updateBalanceDisplay() {
             let balanceDisplay = balance;
@@ -1619,17 +1618,14 @@
         async function sendGameResult(game, betAmount, winAmount) {
             if (!userId) return;
             try {
-                const betSend = betAmount;
-                const winSend = winAmount;
-                
                 const response = await fetch(`${API_URL}/api/game-result`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         user_id: userId, 
                         game, 
-                        bet: betSend, 
-                        win: winSend, 
+                        bet: betAmount, 
+                        win: winAmount, 
                         currency: userCurrency 
                     })
                 });
@@ -1638,15 +1634,6 @@
                     balance = data.new_balance;
                     localBalance = balance;
                     updateBalanceDisplay();
-                    
-                    if (winAmount > betAmount) {
-                        let winDisplay = winAmount;
-                        showWinPopup(winDisplay);
-                        showResult('win', winDisplay.toFixed(2));
-                    } else if (winAmount === 0 && betAmount > 0) {
-                        let betDisplay = betAmount;
-                        showResult('lose', betDisplay.toFixed(2));
-                    }
                 }
             } catch (e) {
                 console.error('Send game result error:', e);
@@ -1661,9 +1648,8 @@
                 if (data.success) {
                     balance = data.balance;
                     userCurrency = data.currency;
-                    currencySymbol = currencyMap[userCurrency] || '₮';
+                    currencySymbol = currencyMap[userCurrency] || '$';
                     localBalance = balance;
-                    localCurrency = userCurrency;
                     updateBalanceDisplay();
                 }
             } catch (e) {}
@@ -1675,94 +1661,6 @@
                 setInterval(updateBalanceFromServer, 5000);
             }
         });
-
-        const chatNames = ['🥩стейк', 'ПСИХ 🧠', 'ворк био 200+', 'БЕЛЫЙ БРАТ', '🥖багет', 'вкусняшка', 'НЯМКА', 'ом ном ном', 'Аноним', '😋вкуснота', 'РАБОТЯГА', '⚡️hard work⚡️', 'ФРИЛАНС', 'удалёнка', 'КЕНТ', 'Аноним', 'Аноним', 'ЭПШТЕЙН НАХУ', 'Аноним', 'Аноним', 'ЧЕЛ', 'Аноним', 'Аноним', 'Палыч', 'Дядя Саша', 'Аноним', 'Аноним', 'Армен', 'Аноним', 'Ашот', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Фраер', 'Аноним', 'Смурф', 'Краш', 'Аноним', 'ебланище', 'Пока не придумал', 'Аноним', 'Лол', 'Аноним', 'Аноним', 'Аноним', 'хуесос', 'бимж', 'Аноним', 'Johnny', 'Аноним', 'Аноним', 'Max - хуйня', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Ken', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним', 'Аноним'];
-
-        const chatMessages = ['забрал 3.2х красава', 'x8.5 упустил блин', '25 баксов за минуту норм', 'а хуле у всех ники аноним', 'слил косарь ну такое', 'В топе сегодня сижу', 'у кого сколько выйгрыш?', 'X15.2 просто бог', 'Реально выйграть можно?', 'первый раз играю научите', 'друн х50 забрал повезло', 'хуйня', 'близко чую', 'ща краш будет выходите', 'Авто 1.3 всегда ставлю', 'в топ залетаю бля', 'Не везет сегодня блин', 'Отыграюсь ща', 'x2.3 норм для начала', 'кто на слоты подпишите?', 'бабки вывел сразу', 'положил 20 норм?', 'а сколько минимум?', 'реально заработать?', 'посоветуйте стратегию', 'на что ставите?', 'какой коэффициент лучше?', 'в минусе жестко ебвный', 'плюсанул немного', 'в ноль вышел ахуено', 'зависло ничего не грузит', 'админ есть?', 'почему не платит?', 'выплатили сразу', 'за 5 минут пришло', 'рекомендую всем', 'скам полный не заходите', 'норм проект давно тут', 'третий день играю', 'луше казино не видел', 'соседи подскажите', 'кто сколько вывел?', 'сегодня мой день', 'фортуна послала меня нахуй', 'вчера слил все', 'отыгрался сегодня', 'в плюсе 200 рублей', 'мелочь но приятно', 'на пиво заработал', 'на сигареты хватит', 'на бензин выйграл', 'на такси норм', 'шавуха сегодня моя', 'сегодня гуляем', 'ставлю последние', 'рискну все поставил', 'ол ин нахуй', 'да ну нафиг', 'бля буду не может быть', 'глазам не верю пиздец', 'да ладно херня какая-то', 'реально х10? ебать', 'повезло повезло сука', 'не верилось но взлетело нахуй', 'система дает', 'матчасть надо учить', 'аналитика рулит пизда', 'по графику четко', 'тех анализ топ', 'фундаментал норм', 'новости отслеживаю', 'тренд поймал', 'на коррекции зашел', 'на дне купил', 'на харе продал', 'идеальный вход бля', 'охуеть просто', 'пиздато получилось', 'господи спасибо сука', 'аллах акбар нахуй', 'чудеса ебаные', 'магия какая-то пиздец', 'фартануло блять', 'обломилось говно', 'не срослось нахуй', 'не прокатило блин', 'пролетел как фанера', 'улетел в минус пизда', 'в даун ушел', 'депозит слил', 'бабки кончились', 'пополнять надо', 'еще кину', 'кредитку взял', 'занял у друга', 'в ломбард сгонял', 'телефон заложил', 'все проиграл сука', 'дома пизда будет', 'жена убьет', 'кредит не отдам', 'в долгах как в шелках', 'кина не будет', 'денег нет но вы держитесь', 'победа бля', 'выйгрыш охуенный', 'крупняк залетел', 'два косаря плюсом', 'пятак поднял', 'черт возьми красава', 'ебейший заход', 'как так то', 'не понимаю блять', 'почему слив', 'алгоритмы шумят', 'нечестное казино', 'наебалово полное', 'лохотрон', 'развод для лохов', 'дураков нет', 'сам дурак', 'слабо зайти?', 'слабо поставить?', 'го в бой', 'кто со мной?', 'вместе веселее', 'за компанию', 'напились с другом', 'бухой играю', 'под газом', 'пьяный в хлам', 'не ведитесь пацаны', 'бросьте это дело', 'завязывай играть', 'последний раз', '100% последний', 'завтра все отыграю', 'в понедельник начну', 'с новой недели', 'с первого числа', 'новый месяц новый я', 'жизнь боль', 'кто ставил на 2.5?', 'авто кэф топ', 'ручкой надежнее', 'сам решаю', 'доверяй но проверяй', 'котлеты отдельно мухи отдельно', 'херня все это', 'надоело проигрывать', 'выйти в ноль и уйти', 'забрал и свалил', 'пассажиры выходят', 'конечная остановка', 'автобус уехал', 'а вот и нихуя', 'опять залетел'];
-
-        function initChat() {
-            let chat = document.getElementById('chatMessages');
-            chat.innerHTML = '';
-            for (let i = 0; i < 25; i++) setTimeout(() => addRandomChatMessage(), i * 2000);
-            setInterval(addRandomChatMessage, 5000);
-        }
-
-        function addRandomChatMessage() {
-            let name = chatNames[Math.floor(Math.random() * chatNames.length)];
-            let msg = chatMessages[Math.floor(Math.random() * chatMessages.length)];
-            let time = new Date().getHours() + ':' + String(new Date().getMinutes()).padStart(2,'0');
-            let div = document.createElement('div');
-            div.className = 'chat-message';
-            if (msg.includes('@') || msg.includes('t.me')) {
-                div.innerHTML = `<span class="name">${name}</span> <span class="ad">${msg}</span> <span style="color:var(--text2); float:right;">${time}</span>`;
-            } else if (msg.includes('+') || msg.includes('x')) {
-                div.innerHTML = `<span class="name">${name}</span> <span class="profit">${msg}</span> <span style="color:var(--text2); float:right;">${time}</span>`;
-            } else {
-                div.innerHTML = `<span class="name">${name}</span> ${msg} <span style="color:var(--text2); float:right;">${time}</span>`;
-            }
-            let chat = document.getElementById('chatMessages');
-            chat.appendChild(div);
-            chat.scrollTop = chat.scrollHeight;
-            if (chat.children.length > 30) chat.removeChild(chat.children[0]);
-        }
-
-        initChat();
-
-        function updateRating() {
-            let ratingList = document.getElementById('ratingList');
-            let ratingFooter = document.getElementById('ratingFooter');
-            let players = [
-                { name: 'KIn_', deposit: 250, games: 35, win: 560.23 },
-                { name: 'ОЛЕГ МОНГОЛ', deposit: 213, games: 289, win: 435.12 },
-                { name: 'Cristi 300+rep', deposit: 178, games: 412, win: 282.32 },
-                { name: 'dev', deposit: 160, games: 156, win: 782.83 },
-                { name: 'Любящий', deposit: 150, games: 234, win: 203.23 },
-                { name: 'HAND', deposit: 150, games: 178, win: 163.60 },
-                { name: 'lllllll', deposit: 115, games: 267, win: 324.23 },
-                { name: 'Пункт обмена', deposit: 100, games: 198, win: 182.57 },
-                { name: 'анличность', deposit: 100, games: 145, win: 232.34 },
-                { name: 'Lxcurt', deposit: 100, games: 167, win: 134.32 }
-            ];
-            players.sort((a, b) => b.deposit - a.deposit);
-            ratingList.innerHTML = '';
-            players.forEach((player, index) => {
-                let placeClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
-                let avatar = player.name.charAt(0).toUpperCase();
-                let item = document.createElement('div');
-                item.className = 'rating-item';
-                item.innerHTML = `
-                    <div class="rating-place ${placeClass}">${index + 1}</div>
-                    <div class="rating-avatar">${avatar}</div>
-                    <div class="rating-info">
-                        <div class="rating-name">${player.name}</div>
-                        <div class="rating-amount">${player.deposit}${currencySymbol}</div>
-                        <div class="rating-stats">
-                            <span>${player.win.toFixed(2)}${currencySymbol}</span> выигрыш • ${player.games} игр
-                        </div>
-                    </div>
-                `;
-                ratingList.appendChild(item);
-            });
-            let userRank = players.findIndex(p => p.name.toLowerCase() === firstName.toLowerCase()) + 1;
-            ratingFooter.textContent = userRank > 0 ? `Ваше место в топе: ${userRank}` : `Ваш депозит: ${totalDeposit}${currencySymbol}`;
-        }
-
-        updateRating();
-
-        window.toggleRating = function() {
-            let content = document.getElementById('ratingContent');
-            let arrow = document.getElementById('ratingArrow');
-            if (ratingOpen) {
-                content.classList.remove('open');
-                arrow.classList.remove('open');
-            } else {
-                content.classList.add('open');
-                arrow.classList.add('open');
-            }
-            ratingOpen = !ratingOpen;
-        };
-
-        for (let i = 0; i < 5; i++) crashHistory.push((Math.random() * 3 + 1).toFixed(2));
 
         function showGameSelector() {
             document.getElementById('gameSelector').classList.remove('hidden');
@@ -1785,11 +1683,11 @@
                 updateBalanceFromServer();
             }
             
+            if (game === 'crash') initCrash();
             if (game === 'mines') initMines();
             if (game === 'baccarat') updateBaccaratHistory();
             if (game === 'slot') initSlot();
             if (game === 'twentyone') initTwentyOne();
-            if (game === 'crash') initCrash();
         }
 
         function clearAllIntervals() {
@@ -1818,17 +1716,20 @@
 
         function generateCrashPoint() {
             let rand = Math.random() * 100;
-            if (rand <= 30) {
-                return 1.0;
-            }
             if (hasBet) {
                 if (rand <= winRate) {
-                    return 2 + Math.random() * 8;
+                    return 1.5 + Math.random() * 4;
                 } else {
                     return 1.01 + Math.random() * 0.49;
                 }
             } else {
-                return 2 + Math.random() * 118;
+                if (rand <= 30) {
+                    return 1.01 + Math.random() * 0.49;
+                } else if (rand <= 70) {
+                    return 1.5 + Math.random() * 3;
+                } else {
+                    return 4 + Math.random() * 116;
+                }
             }
         }
 
@@ -1839,9 +1740,9 @@
             recent.forEach(x => {
                 let item = document.createElement('div');
                 item.className = 'crash-history__item';
-                if (x >= 8) item.classList.add('massive');
+                if (x >= 10) item.classList.add('massive');
                 else if (x >= 5) item.classList.add('huge');
-                else if (x >= 3) item.classList.add('big');
+                else if (x >= 2) item.classList.add('big');
                 item.textContent = x + 'x';
                 historyList.appendChild(item);
             });
@@ -1926,6 +1827,9 @@
                     btn.classList.remove('gray', 'gold');
                     btn.classList.add('green');
                     let winDisplay = currentBet * crashMultiplier;
+                    if (userCurrency === 'RUB') {
+                        winDisplay = winDisplay * USDT_TO_RUB;
+                    }
                     btn.textContent = `💰 ЗАБРАТЬ (${winDisplay.toFixed(2)}${currencySymbol})`;
                     btn.disabled = false;
                 } else if (hasBet && cashoutUsed) {
@@ -1959,7 +1863,13 @@
             
             crashInterval = setInterval(() => {
                 let elapsed = (Date.now() - startTime) / 1000;
-                multiplier = 1.0 + Math.pow(elapsed, 1.4) * 0.6;
+                if (elapsed < 3) {
+                    multiplier = 1.0 + elapsed * 0.2;
+                } else if (elapsed < 8) {
+                    multiplier = 1.6 + (elapsed - 3) * 0.4;
+                } else {
+                    multiplier = 3.6 + (elapsed - 8) * 0.8;
+                }
                 
                 updateCrashDisplay(multiplier);
                 updateButtonState();
@@ -1970,6 +1880,9 @@
                     gameInProgress = false;
                     if (hasBet && !cashoutUsed) {
                         let betDisplay = currentBet;
+                        if (userCurrency === 'RUB') {
+                            betDisplay = currentBet * USDT_TO_RUB;
+                        }
                         sendGameResult('crash', currentBet, 0);
                         showResult('lose', betDisplay.toFixed(2));
                         hasBet = false;
@@ -2080,6 +1993,9 @@
             localBalance = balance;
             updateBalanceDisplay();
             let winDisplay = win;
+            if (userCurrency === 'RUB') {
+                winDisplay = win * USDT_TO_RUB;
+            }
             showWinPopup(winDisplay);
             sendGameResult('crash', currentBet, win);
             showResult('win', winDisplay.toFixed(2));
@@ -2087,486 +2003,6 @@
             currentBet = 0;
             updateButtonState();
         }
-
-        let minesRevealed = [];
-        let minePositions = [];
-        let minesBet = 0;
-        let minesActive = false;
-        let minesMultiplier = 1.0;
-        let minesRevealedCount = 0;
-        let selectedMines = 5;
-
-        function initMines() {
-            let grid = document.getElementById('minesGrid');
-            grid.innerHTML = '';
-            minesRevealed = new Array(25).fill(false);
-            minePositions = [];
-            minesRevealedCount = 0;
-            minesMultiplier = 1.0;
-            selectedMines = 5;
-            document.getElementById('minesMultiplier').textContent = 'x' + minesMultiplier.toFixed(2);
-            document.getElementById('cashoutMultiplier').textContent = minesMultiplier.toFixed(2);
-            document.querySelectorAll('.mine-count-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector('[data-mines="5"]').classList.add('active');
-            for (let i = 0; i < 25; i++) {
-                let cell = document.createElement('div');
-                cell.className = 'mine-cell';
-                cell.dataset.index = i;
-                cell.onclick = () => revealMine(i);
-                grid.appendChild(cell);
-            }
-            minesActive = false;
-            document.getElementById('minesCashoutBtn').classList.add('hidden');
-            document.getElementById('customMineInput').classList.add('hidden');
-        }
-
-        document.querySelectorAll('.mine-count-btn[data-mines]').forEach(btn => {
-            btn.addEventListener('click', function() {
-                let mines = this.dataset.mines;
-                if (mines === 'custom') {
-                    document.getElementById('customMineInput').classList.remove('hidden');
-                    document.querySelectorAll('.mine-count-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                } else {
-                    selectedMines = parseInt(mines);
-                    document.getElementById('customMineInput').classList.add('hidden');
-                    document.querySelectorAll('.mine-count-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                }
-            });
-        });
-
-        document.getElementById('setCustomMines').addEventListener('click', function() {
-            let customValue = parseInt(document.getElementById('customMines').value);
-            if (customValue >= 2 && customValue <= 24) {
-                selectedMines = customValue;
-                document.getElementById('customMineInput').classList.add('hidden');
-            } else showError('mines', 'Введите число от 2 до 24');
-        });
-
-        function calculateMinesMultiplier(minesCount, revealedCount) {
-            if (revealedCount === 0) return 1.0;
-            let baseMultiplier = 1.0;
-            let difficultyFactor = 1.0 + (minesCount / 10);
-            return baseMultiplier + (revealedCount * 0.1 * difficultyFactor);
-        }
-
-        document.getElementById('minesPlayBtn').addEventListener('click', function() {
-            let bet = parseFloat(document.getElementById('minesBet').value);
-            let betInCurrency = bet;
-            if (userCurrency === 'RUB') {
-                betInCurrency = bet / USDT_TO_RUB;
-            }
-            if (betInCurrency > balance) {
-                showError('mines', 'Недостаточно средств!');
-                return;
-            }
-            minesBet = betInCurrency;
-            minesActive = true;
-            minesRevealed = new Array(25).fill(false);
-            minePositions = [];
-            minesRevealedCount = 0;
-            minesMultiplier = 1.0;
-            for (let i = 0; i < selectedMines; i++) {
-                let pos;
-                do { pos = Math.floor(Math.random() * 25); }
-                while (minePositions.includes(pos));
-                minePositions.push(pos);
-            }
-            let grid = document.getElementById('minesGrid');
-            grid.innerHTML = '';
-            for (let i = 0; i < 25; i++) {
-                let cell = document.createElement('div');
-                cell.className = 'mine-cell';
-                cell.dataset.index = i;
-                cell.onclick = () => revealMine(i);
-                grid.appendChild(cell);
-            }
-            balance -= betInCurrency;
-            localBalance = balance;
-            updateBalanceDisplay();
-            document.getElementById('minesPlayBtn').classList.add('hidden');
-            document.getElementById('minesCashoutBtn').classList.remove('hidden');
-            document.getElementById('minesMultiplier').textContent = 'x' + minesMultiplier.toFixed(2);
-            document.getElementById('cashoutMultiplier').textContent = minesMultiplier.toFixed(2);
-        });
-
-        document.getElementById('minesCashoutBtn').addEventListener('click', function() {
-            if (!minesActive) return;
-            if (minesRevealedCount === 0) {
-                showError('mines', 'Откройте клетку');
-                return;
-            }
-            let win = minesBet * minesMultiplier;
-            balance += win;
-            localBalance = balance;
-            updateBalanceDisplay();
-            minesActive = false;
-            document.getElementById('minesPlayBtn').classList.remove('hidden');
-            document.getElementById('minesCashoutBtn').classList.add('hidden');
-            let winDisplay = win;
-            showWinPopup(winDisplay);
-            sendGameResult('mines', minesBet, win);
-            initMines();
-        });
-
-        function revealMine(index) {
-            if (!minesActive || minesRevealed[index]) return;
-            let cell = document.querySelector(`[data-index="${index}"]`);
-            minesRevealed[index] = true;
-            if (minePositions.includes(index)) {
-                cell.classList.add('revealed', 'mine');
-                minePositions.forEach(i => {
-                    let c = document.querySelector(`[data-index="${i}"]`);
-                    if (c) c.classList.add('revealed', 'mine');
-                });
-                minesActive = false;
-                document.getElementById('minesPlayBtn').classList.remove('hidden');
-                document.getElementById('minesCashoutBtn').classList.add('hidden');
-                let betDisplay = minesBet;
-                sendGameResult('mines', minesBet, 0);
-                showResult('lose', betDisplay.toFixed(2));
-            } else {
-                cell.classList.add('revealed');
-                minesRevealedCount++;
-                minesMultiplier = calculateMinesMultiplier(selectedMines, minesRevealedCount);
-                document.getElementById('minesMultiplier').textContent = 'x' + minesMultiplier.toFixed(2);
-                document.getElementById('cashoutMultiplier').textContent = minesMultiplier.toFixed(2);
-            }
-        }
-
-        function updateBaccaratHistory() {
-            let history = document.getElementById('baccaratHistory');
-            history.innerHTML = '';
-            for (let i = 0; i < 8; i++) {
-                let item = document.createElement('div');
-                item.className = 'history-item';
-                let rand = Math.random();
-                if (rand < 0.45) {
-                    item.classList.add('player');
-                    item.textContent = '👤';
-                } else if (rand < 0.9) {
-                    item.classList.add('banker');
-                    item.textContent = '🏦';
-                } else {
-                    item.classList.add('tie');
-                    item.textContent = '🤝';
-                }
-                history.appendChild(item);
-            }
-        }
-
-        document.querySelectorAll('.bet-option').forEach(opt => {
-            opt.addEventListener('click', function() {
-                document.querySelectorAll('.bet-option').forEach(o => o.classList.remove('selected'));
-                this.classList.add('selected');
-            });
-        });
-
-        document.getElementById('baccaratPlayBtn').addEventListener('click', function() {
-            let selected = document.querySelector('.bet-option.selected');
-            if (!selected) {
-                showError('baccarat', 'Выберите ставку');
-                return;
-            }
-            let bet = parseFloat(document.getElementById('baccaratBet').value);
-            let betInCurrency = bet;
-            if (userCurrency === 'RUB') {
-                betInCurrency = bet / USDT_TO_RUB;
-            }
-            if (betInCurrency > balance) {
-                showError('baccarat', 'Недостаточно средств!');
-                return;
-            }
-            balance -= betInCurrency;
-            localBalance = balance;
-            updateBalanceDisplay();
-            setTimeout(() => {
-                let win = Math.random() < 0.25;
-                let mult = parseFloat(selected.dataset.coeff);
-                let winAmount = 0;
-                if (win) {
-                    winAmount = betInCurrency * mult;
-                    balance += winAmount;
-                    localBalance = balance;
-                    updateBalanceDisplay();
-                    let winDisplay = winAmount;
-                    showWinPopup(winDisplay);
-                    showResult('win', winDisplay.toFixed(2));
-                } else {
-                    let betDisplay = betInCurrency;
-                    showResult('lose', betDisplay.toFixed(2));
-                }
-                gamesPlayed++;
-                updateBaccaratHistory();
-                sendGameResult('baccarat', betInCurrency, winAmount);
-            }, 2000);
-        });
-
-        let deck = [];
-        let playerCards = [];
-        let dealerCards = [];
-        let gameActive21 = false;
-
-        function initTwentyOne() {
-            playerCards = [];
-            dealerCards = [];
-            gameActive21 = false;
-            updateTwentyOneDisplay();
-            document.getElementById('hitBtn').disabled = true;
-            document.getElementById('standBtn').disabled = true;
-            document.getElementById('twentyonePlayBtn').disabled = false;
-        }
-
-        function createDeck() {
-            let suits = ['♥', '♦', '♣', '♠'];
-            let values = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-            let deck = [];
-            for (let suit of suits) {
-                for (let value of values) deck.push({ value, suit });
-            }
-            return deck.sort(() => Math.random() - 0.5);
-        }
-
-        function getCardValue(card) {
-            if (card.value === 'A') return 11;
-            if (card.value === 'K') return 4;
-            if (card.value === 'Q') return 3;
-            if (card.value === 'J') return 2;
-            return parseInt(card.value);
-        }
-
-        function calculateScore(cards) {
-            return cards.reduce((sum, card) => sum + getCardValue(card), 0);
-        }
-
-        function getCardSymbol(card) {
-            return card.value + card.suit;
-        }
-
-        function getCardColor(card) {
-            return (card.suit === '♥' || card.suit === '♦') ? 'red' : 'black';
-        }
-
-        function updateTwentyOneDisplay() {
-            let playerCardsDiv = document.getElementById('playerCards');
-            let dealerCardsDiv = document.getElementById('dealerCards');
-            playerCardsDiv.innerHTML = '';
-            dealerCardsDiv.innerHTML = '';
-            playerCards.forEach(card => {
-                let cardDiv = document.createElement('div');
-                cardDiv.className = `card ${getCardColor(card)}`;
-                cardDiv.textContent = getCardSymbol(card);
-                playerCardsDiv.appendChild(cardDiv);
-            });
-            dealerCards.forEach((card, index) => {
-                let cardDiv = document.createElement('div');
-                if (index === 0 && gameActive21) {
-                    cardDiv.className = 'card back';
-                } else {
-                    cardDiv.className = `card ${getCardColor(card)}`;
-                    cardDiv.textContent = getCardSymbol(card);
-                }
-                dealerCardsDiv.appendChild(cardDiv);
-            });
-            document.getElementById('playerScore').textContent = calculateScore(playerCards);
-            if (dealerCards.length > 0 && !gameActive21) {
-                document.getElementById('dealerScore').textContent = calculateScore(dealerCards);
-            } else {
-                document.getElementById('dealerScore').textContent = dealerCards.length > 0 ? getCardValue(dealerCards[0]) : 0;
-            }
-        }
-
-        document.getElementById('twentyonePlayBtn').addEventListener('click', function() {
-            let bet = parseFloat(document.getElementById('twentyoneBet').value);
-            let betInCurrency = bet;
-            if (userCurrency === 'RUB') {
-                betInCurrency = bet / USDT_TO_RUB;
-            }
-            if (betInCurrency > balance) {
-                showError('twentyone', 'Недостаточно средств!');
-                return;
-            }
-            deck = createDeck();
-            playerCards = [deck.pop(), deck.pop()];
-            dealerCards = [deck.pop(), deck.pop()];
-            gameActive21 = true;
-            balance -= betInCurrency;
-            currentBet = betInCurrency;
-            localBalance = balance;
-            updateBalanceDisplay();
-            updateTwentyOneDisplay();
-            document.getElementById('hitBtn').disabled = false;
-            document.getElementById('standBtn').disabled = false;
-            this.disabled = true;
-        });
-
-        document.getElementById('hitBtn').addEventListener('click', function() {
-            if (!gameActive21) return;
-            playerCards.push(deck.pop());
-            updateTwentyOneDisplay();
-            let playerScore = calculateScore(playerCards);
-            if (playerScore > 21) {
-                gameActive21 = false;
-                document.getElementById('hitBtn').disabled = true;
-                document.getElementById('standBtn').disabled = true;
-                document.getElementById('twentyonePlayBtn').disabled = false;
-                let betDisplay = currentBet;
-                sendGameResult('21', currentBet, 0);
-                showResult('lose', betDisplay.toFixed(2));
-            }
-        });
-
-        document.getElementById('standBtn').addEventListener('click', function() {
-            if (!gameActive21) return;
-            gameActive21 = false;
-            updateTwentyOneDisplay();
-            setTimeout(() => {
-                while (calculateScore(dealerCards) < 17) dealerCards.push(deck.pop());
-                updateTwentyOneDisplay();
-                let playerScore = calculateScore(playerCards);
-                let dealerScore = calculateScore(dealerCards);
-                document.getElementById('hitBtn').disabled = true;
-                document.getElementById('standBtn').disabled = true;
-                document.getElementById('twentyonePlayBtn').disabled = false;
-                if (playerScore > 21) {
-                    let betDisplay = currentBet;
-                    sendGameResult('21', currentBet, 0);
-                    showResult('lose', betDisplay.toFixed(2));
-                } else if (dealerScore > 21) {
-                    let win = currentBet * 2;
-                    balance += win;
-                    localBalance = balance;
-                    updateBalanceDisplay();
-                    let winDisplay = win;
-                    showWinPopup(winDisplay);
-                    sendGameResult('21', currentBet, win);
-                    showResult('win', winDisplay.toFixed(2));
-                } else if (playerScore > dealerScore) {
-                    let win = currentBet * 2;
-                    balance += win;
-                    localBalance = balance;
-                    updateBalanceDisplay();
-                    let winDisplay = win;
-                    showWinPopup(winDisplay);
-                    sendGameResult('21', currentBet, win);
-                    showResult('win', winDisplay.toFixed(2));
-                } else if (playerScore === dealerScore) {
-                    balance += currentBet;
-                    localBalance = balance;
-                    updateBalanceDisplay();
-                    let betDisplay = currentBet;
-                    sendGameResult('21', currentBet, currentBet);
-                    showResult('win', betDisplay.toFixed(2));
-                } else {
-                    let betDisplay = currentBet;
-                    sendGameResult('21', currentBet, 0);
-                    showResult('lose', betDisplay.toFixed(2));
-                }
-            }, 500);
-        });
-
-        function initSlot() {
-            let reel = document.getElementById('slotReel');
-            let html = '';
-            let slotValues = [0,1,2,3,4,5,10,15,20,25,30,40,50,60,70,80,90,100];
-            for (let i = 0; i < 150; i++) {
-                let val = slotValues[Math.floor(Math.random() * slotValues.length)];
-                html += `<div class="slot-item" data-value="${val}">${val}</div>`;
-            }
-            reel.innerHTML = html;
-        }
-
-        document.getElementById('slotPlayBtn').addEventListener('click', function() {
-            let bet = 10;
-            let betInCurrency = bet;
-            if (userCurrency === 'RUB') {
-                betInCurrency = bet / USDT_TO_RUB;
-            }
-            if (betInCurrency > balance) {
-                showError('slot', 'Недостаточно средств!');
-                return;
-            }
-            balance -= betInCurrency;
-            localBalance = balance;
-            updateBalanceDisplay();
-            let reel = document.getElementById('slotReel');
-            let itemHeight = 100;
-            let items = reel.children.length;
-            let result;
-            if (Math.random() < 0.9) {
-                let low = [0,1,2,3,4,5];
-                result = low[Math.floor(Math.random() * low.length)];
-            } else {
-                let high = [10,15,20,25,30,40,50,60,70,80,90,100];
-                result = high[Math.floor(Math.random() * high.length)];
-            }
-            if (Math.random() < 0.01) result = 100;
-            let targetIndex = -1;
-            for (let i = 0; i < items; i++) {
-                if (parseInt(reel.children[i].getAttribute('data-value')) === result) {
-                    targetIndex = i;
-                    break;
-                }
-            }
-            if (targetIndex === -1) targetIndex = Math.floor(Math.random() * items);
-            let spins = 30 + Math.floor(Math.random() * 20);
-            let finalPos = -(targetIndex * itemHeight) - (spins * items * itemHeight);
-            reel.style.transition = 'top 4s cubic-bezier(0.1, 0.8, 0.2, 1)';
-            reel.style.top = finalPos + 'px';
-            setTimeout(() => {
-                let winAmount = result;
-                if (winAmount > 0) {
-                    balance += winAmount;
-                    localBalance = balance;
-                    updateBalanceDisplay();
-                    let winDisplay = winAmount;
-                    showWinPopup(winDisplay);
-                    showResult('win', winDisplay.toFixed(2));
-                } else {
-                    let betDisplay = betInCurrency;
-                    showResult('lose', betDisplay.toFixed(2));
-                }
-                document.getElementById('slotResult').textContent = winAmount + currencySymbol;
-                gamesPlayed++;
-                sendGameResult('slot', betInCurrency, winAmount);
-                setTimeout(() => {
-                    reel.style.transition = 'none';
-                    reel.style.top = '0px';
-                    setTimeout(() => {
-                        reel.style.transition = 'top 4s cubic-bezier(0.1, 0.8, 0.2, 1)';
-                    }, 50);
-                }, 3000);
-            }, 4000);
-        });
-
-        document.getElementById('sendChatBtn').addEventListener('click', function() {
-            let input = document.getElementById('chatInput');
-            let msg = input.value.trim();
-            if (!msg) return;
-            let div = document.createElement('div');
-            div.className = 'chat-message';
-            div.innerHTML = `<span class="name">${firstName}</span> ${msg}`;
-            let chat = document.getElementById('chatMessages');
-            chat.appendChild(div);
-            chat.scrollTop = chat.scrollHeight;
-            input.value = '';
-        });
-
-        document.getElementById('chatInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') document.getElementById('sendChatBtn').click();
-        });
-
-        document.querySelectorAll('.bet-mult').forEach(btn => {
-            btn.addEventListener('click', function() {
-                let mult = parseFloat(this.dataset.mult);
-                let input = this.closest('.bet-controls').querySelector('.bet-input');
-                if (input) {
-                    let val = parseFloat(input.value) * mult;
-                    input.value = Math.max(1, Math.floor(val));
-                }
-            });
-        });
 
         function showError(game, msg) {
             let err = document.getElementById(game + 'Error');
